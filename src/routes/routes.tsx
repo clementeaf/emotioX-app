@@ -1,4 +1,4 @@
-import { RouteObject } from 'react-router-dom';
+import { RouteObject, Navigate } from 'react-router-dom';
 import NotFound from '../pages/NotFound';
 import dashboardRoutes from './dashboardRoutes';
 import clientsRoutes from './clientsRoutes';
@@ -7,7 +7,12 @@ import researchRoutes from './researchRoutes';
 import researchHistoryRoutes from './researchHistoryRoutes';
 import componentsTest from './componentTestRoutes';
 
+// Definición única de las rutas
 const routes: RouteObject[] = [
+  {
+    path: '/',
+    element: <Navigate to="/dashboard" replace />,
+  },
   ...dashboardRoutes,
   ...clientsRoutes,
   ...publicStudiesRoutes,

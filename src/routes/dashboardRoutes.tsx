@@ -1,27 +1,39 @@
-import { RouteObject, Navigate } from 'react-router-dom';
-import NotFound from '../pages/NotFound';
-import dashboardRoutes from './dashboardRoutes';
-import clientsRoutes from './clientsRoutes';
-import publicStudiesRoutes from './publicStudyRoutes';
-import researchRoutes from './researchRoutes';
-import researchHistoryRoutes from './researchHistoryRoutes';
-import componentsTest from './componentTestRoutes';
+/* eslint-disable react-refresh/only-export-components */
+// src/routes/dashboardRoutes.tsx
+import { lazy, Suspense } from 'react';
+import { RouteObject } from 'react-router-dom';
+import DashboardLayout from '../components/Layout/DashboardLayout';
 
-const routes: RouteObject[] = [
+const DashboardMain = lazy(() => import('../components/Dashboard/DashboardModule/index'));
+const Clients = lazy(() => import('../components/Dashboard/Clients/index'));
+
+const dashboardRoutes: RouteObject[] = [
   {
-    path: '/',
-    element: <Navigate to="/dashboard" replace />,
-  },
-  ...dashboardRoutes,
-  ...clientsRoutes,
-  ...publicStudiesRoutes,
-  ...researchRoutes,
-  ...researchHistoryRoutes,
-  ...componentsTest,
-  {
-    path: '*',
-    element: <NotFound />,
+    path: '/dashboard',
+    element: (
+      <Suspense fallback={<div>Loading Dashboard ...</div>}>
+        <DashboardLayout />
+      </Suspense>
+    ),
+    children: [
+      {
+        path: '',
+        element: (
+          <Suspense fallback={<div>Loading Dashboard Main ...</div>}>
+            <DashboardMain /> 
+          </Suspense>
+        ),
+      },
+      {
+        path: 'clients',
+        element: (
+          <Suspense fallback={<div>Loading Clients ...</div>}>
+            <Clients />
+          </Suspense>
+        ),
+      },
+    ],
   },
 ];
 
-export default routes;
+export default dashboardRoutes;
