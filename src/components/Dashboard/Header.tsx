@@ -2,14 +2,14 @@ import { Toolbar, Typography, Box, IconButton, Badge, InputBase, Stack } from '@
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
 import { grey } from '@mui/material/colors';
-import vector from "../../assets/vector.png";
+import Vector from "../../assets/vector.png";
 import avatar from '../../assets/avatar.png';
 
 export default function Header() {
   return (
     <Stack sx={{ backgroundColor: '#FFFFF', color: '#000', borderBottom: `1px solid ${grey[200]}`, width: '1180px', height: '60px' }}>
       <Toolbar sx={{ justifyContent: 'space-between', width: '100%' }}>
-        <img src={vector} alt="vector" style={{ marginRight: '20px'}} />
+        <img src={Vector} alt="vector" style={{ marginRight: '20px'}} />
         <Box sx={{ display: 'flex', alignItems: 'center', backgroundColor: '#FFFFF', border: `1px solid ${grey[200]}`, p: 1, borderRadius: 1, width: '100%' }}>
           <SearchIcon />
           <InputBase placeholder="Search" sx={{ width: '885px' }} />
