@@ -2,7 +2,7 @@ import { Toolbar, Typography, Box, IconButton, Badge, InputBase, Stack } from '@
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SearchIcon from '@mui/icons-material/Search';
 import { grey } from '@mui/material/colors';
-import Vector from "../../assets/vector.png";
+import Vector from "../../assets/Vector.png";
 import avatar from '../../assets/avatar.png';
 
 export default function Header() {
