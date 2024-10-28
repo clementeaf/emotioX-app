@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip as RechartsTooltip, TooltipProps, CartesianGrid } from 'recharts';
 
 // Datos de ejemplo
-const dummyData = [
+export const dummyData = [
   { time: '00', benefit: 14.6, attractiveness: 12.4 },
   { time: '03', benefit: 20.0, attractiveness: 18.5 },
   { time: '06', benefit: 36.0, attractiveness: 30.5 },
