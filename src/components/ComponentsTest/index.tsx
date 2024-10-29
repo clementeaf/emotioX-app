@@ -44,7 +44,7 @@ import { ProjectCard } from "../../core-ui/Cards/ProjectCard";
 import EmotionFlowChart from "../../core-ui/Charts/EmotionFlowChart";
 import GradientBar from "../../core-ui/Progress/GradientBar";
 import { EmotionMapsComponent } from "../../core-ui/Charts/EmotionapMapComponent";
-import { HeatmapSelector } from "../../core-ui/Interaction/HeatMapSelector";
+// import { HeatmapSelector } from "../../core-ui/Interaction/HeatMapSelector";
 import { HeatMapOverlay } from "../../core-ui/Interaction/HeatMapOverlay";
 
 // Definición de los componentes disponibles
@@ -93,7 +93,7 @@ const componentsList = [
   { label: "EmotionFlow Chart", component: <EmotionFlowChart/> },
   { label: "Gradient Bar", component: <GradientBar/> },
   { label: "EmotionMaps Component", component: <EmotionMapsComponent/> },
-  { label: "Heatmap Selector", component: <HeatmapSelector/> },
+//   { label: "Heatmap Selector", component: <HeatmapSelector/> },
   { label: "Heatmap Overlay", component:  <HeatMapOverlay /> },
 ];
 

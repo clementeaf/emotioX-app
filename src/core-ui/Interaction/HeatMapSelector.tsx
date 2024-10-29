@@ -1,7 +1,5 @@
 import React, { useState, useRef } from 'react';
 import { Stage, Layer, Rect, Transformer } from 'react-konva';
-import { Stage as PixiStage, Container, Graphics, Sprite } from '@pixi/react';
-import { Graphics as PixiGraphics } from '@pixi/graphics';
 import { Box, Typography, Button } from '@mui/material';
 import Konva from 'konva';
 import heatExample from '../../assets/heatExample.png';
