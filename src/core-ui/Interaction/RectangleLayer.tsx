@@ -2,6 +2,7 @@ import { Stage, Layer, Rect, Transformer } from 'react-konva';
 import { useRef, useState, useEffect } from 'react';
 import type { KonvaEventObject } from 'konva/lib/Node';
 import Konva from 'konva';
+import { Button, Typography } from '@mui/material';
 
 export interface RectZone {
   x: number;
@@ -51,12 +52,13 @@ export const RectangleLayer = ({
 
   return (
     <>
-      <button
+      <Button
         onClick={addRectangle}
-        style={{ position: 'absolute', top: 10, left: 10, zIndex: 4 }}
+        variant='contained'
+        style={{ position: 'absolute', bottom: 150, left: 10, zIndex: 999 }}
       >
-        Agregar Rectángulo
-      </button>
+        <Typography>Agregar Rectángulo</Typography>
+      </Button>
 
       <Stage
         width={containerWidth}
