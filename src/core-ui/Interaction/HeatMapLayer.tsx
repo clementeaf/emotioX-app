@@ -20,21 +20,28 @@ export const HeatMapLayer = ({
 
       if (ctx) {
         canvas.width = 800;
-        canvas.height = 704;
-        ctx.clearRect(0, 0, 800, 704);
+        canvas.height = 475; // Limitar a 475 de altura
+        ctx.clearRect(0, 0, 800, 475);
 
         ctx.fillStyle = 'rgba(0, 0, 255, 0.35)';
-        ctx.fillRect(0, 0, 800, 704);
+        ctx.fillRect(0, 0, 800, 475);
 
         ctx.globalCompositeOperation = 'lighter';
+
         heatZones.forEach((zone) => {
+          // Limitar las coordenadas y el radio para mantenerse dentro del área visible
+          const x = Math.max(zone.radius, Math.min(zone.x, 800 - zone.radius));
+          const y = Math.max(zone.radius, Math.min(zone.y, 475 - zone.radius));
+          const radius = Math.min(zone.radius, Math.min(800 - x, 475 - y));
+
+          // Crear el gradiente
           const gradient = ctx.createRadialGradient(
-            zone.x,
-            zone.y,
-            zone.radius * 0.1,
-            zone.x,
-            zone.y,
-            zone.radius
+            x,
+            y,
+            radius * 0.1,
+            x,
+            y,
+            radius
           );
 
           gradient.addColorStop(0, 'rgba(255, 0, 0, 0.9)');
@@ -44,8 +51,9 @@ export const HeatMapLayer = ({
           gradient.addColorStop(0.8, 'rgba(0, 0, 255, 0.5)');
           gradient.addColorStop(1, 'rgba(0, 0, 255, 0)');
 
+          // Dibujar la zona de calor
           ctx.beginPath();
-          ctx.arc(zone.x, zone.y, zone.radius, 0, 2 * Math.PI);
+          ctx.arc(x, y, radius, 0, 2 * Math.PI);
           ctx.fillStyle = gradient;
           ctx.fill();
         });
@@ -63,7 +71,7 @@ export const HeatMapLayer = ({
         top: 0,
         left: 0,
         width: 800,
-        height: 475,
+        height: 475, // Limitar a 475 de altura
         pointerEvents: 'none',
         zIndex: 1,
       }}
