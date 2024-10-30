@@ -1,8 +1,8 @@
 import { Stage, Layer, Rect, Transformer } from 'react-konva';
 import { useRef, useState, useEffect } from 'react';
 import type { KonvaEventObject } from 'konva/lib/Node';
-import Konva from 'konva';
 import { Button, Typography } from '@mui/material';
+import Konva from 'konva';
 
 export interface RectZone {
   x: number;
@@ -12,31 +12,31 @@ export interface RectZone {
   id: string;
 }
 
+export interface HeatZone {
+  x: number;
+  y: number;
+  radius: number;
+}
+
 export const RectangleLayer = ({
   containerWidth,
   containerHeight,
+  rectangles,
+  setRectangles,
+  heatZones,
+  addLogEntry,
 }: {
   containerWidth: number;
   containerHeight: number;
+  rectangles: RectZone[];
+  setRectangles: React.Dispatch<React.SetStateAction<RectZone[]>>;
+  heatZones: HeatZone[];
+  addLogEntry: (log: string) => void;
 }) => {
-  const [rectangles, setRectangles] = useState<RectZone[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
 
-  // Crear un nuevo rectángulo
-  const addRectangle = () => {
-    const newRect: RectZone = {
-      x: 375,
-      y: 312,
-      width: 120,
-      height: 80,
-      id: `${Date.now()}`,
-    };
-    setRectangles((prev) => [...prev, newRect]);
-    setSelectedId(newRect.id);
-  };
-
-  // Usar el `Transformer` en el rectángulo seleccionado
+  // Usar el Transformer en el rectángulo seleccionado
   useEffect(() => {
     const transformer = transformerRef.current;
     if (transformer && selectedId) {
@@ -50,11 +50,47 @@ export const RectangleLayer = ({
     }
   }, [selectedId, rectangles]);
 
+  // Calcular intersección entre rectángulo y zonas de calor
+  const detectHeatZoneIntersections = (rect: RectZone) => {
+    heatZones.forEach((zone) => {
+      const distX = Math.abs(zone.x - (rect.x + rect.width / 2));
+      const distY = Math.abs(zone.y - (rect.y + rect.height / 2));
+      const distance = Math.sqrt(distX ** 2 + distY ** 2);
+
+      // Verificar si hay superposición
+      if (distance < zone.radius) {
+        const intensity = 1 - distance / zone.radius;
+        const rectArea = rect.width * rect.height;
+        const overlapArea = Math.PI * (zone.radius ** 2) * intensity;
+        const proportion = Math.min(overlapArea / rectArea, 1);
+
+        addLogEntry(
+          `Rect ${rect.id} intersecta con la zona de calor en (${zone.x.toFixed(2)}, ${zone.y.toFixed(2)}) ` +
+          `con intensidad ${(intensity * 100).toFixed(1)}% y proporción ${(proportion * 100).toFixed(1)}%.`
+        );
+      }
+    });
+  };
+
+  // Crear un nuevo rectángulo
+  const addRectangle = () => {
+    const newRect: RectZone = {
+      x: 375,
+      y: 312,
+      width: 120,
+      height: 80,
+      id: `${Date.now()}`,
+    };
+    setRectangles((prev) => [...prev, newRect]);
+    setSelectedId(newRect.id);
+    detectHeatZoneIntersections(newRect);
+  };
+
   return (
     <>
       <Button
         onClick={addRectangle}
-        variant='contained'
+        variant="contained"
         style={{ position: 'absolute', bottom: 150, left: 10, zIndex: 999 }}
       >
         <Typography>Agregar Rectángulo</Typography>
@@ -65,7 +101,6 @@ export const RectangleLayer = ({
         height={containerHeight}
         style={{ position: 'absolute', top: 0, left: 0, zIndex: 3 }}
         onMouseDown={(e: KonvaEventObject<MouseEvent>) => {
-          // Desactivar la selección si se hace clic en el fondo
           if (e.target === e.target.getStage()) {
             setSelectedId(null);
           }
@@ -86,63 +121,67 @@ export const RectangleLayer = ({
               draggable
               onClick={() => setSelectedId(rect.id)}
               onDragMove={(e) => {
-                // Limitar el arrastre en tiempo real dentro del área visible
                 const node = e.target;
-                const newX = Math.max(0, Math.min(node.x(), 800 - rect.width));
-                const newY = Math.max(0, Math.min(node.y(), 475 - rect.height));
+
+                // Calcular nuevas coordenadas, limitadas dentro del contenedor
+                const newX = Math.max(0, Math.min(node.x(), containerWidth - rect.width));
+                const newY = Math.max(0, Math.min(node.y(), containerHeight - rect.height));
 
                 node.x(newX);
                 node.y(newY);
               }}
               onDragEnd={(e) => {
                 const node = e.target;
-                const newX = Math.max(0, Math.min(node.x(), 800 - rect.width));
-                const newY = Math.max(0, Math.min(node.y(), 475 - rect.height));
+                const newX = Math.max(0, Math.min(node.x(), containerWidth - rect.width));
+                const newY = Math.max(0, Math.min(node.y(), containerHeight - rect.height));
 
                 setRectangles((prev) =>
-                  prev.map((r) =>
-                    r.id === rect.id ? { ...r, x: newX, y: newY } : r
-                  )
+                  prev.map((r) => (r.id === rect.id ? { ...r, x: newX, y: newY } : r))
                 );
+
+                // Detectar intersección después de mover el rectángulo
+                detectHeatZoneIntersections({ ...rect, x: newX, y: newY });
               }}
               onTransformEnd={(e) => {
                 const node = e.target as Konva.Rect;
-                let newWidth = node.width() * node.scaleX();
-                let newHeight = node.height() * node.scaleY();
-                
-                // Limitar ancho y alto dentro del área visible
-                const newX = Math.max(0, Math.min(node.x(), 800 - newWidth));
-                const newY = Math.max(0, Math.min(node.y(), 475 - newHeight));
+                const newWidth = Math.max(20, node.width() * node.scaleX());
+                const newHeight = Math.max(20, node.height() * node.scaleY());
 
-                // Ajustar ancho y alto si exceden el límite
-                if (newX + newWidth > 800) {
-                  newWidth = 800 - newX;
+                // Limitar la posición y dimensiones del rectángulo dentro del contenedor
+                let newX = Math.max(0, Math.min(node.x(), containerWidth - newWidth));
+                let newY = Math.max(0, Math.min(node.y(), containerHeight - newHeight));
+
+                // Ajustar el ancho y alto si el rectángulo se sale del contenedor
+                if (newY + newHeight > containerHeight) {
+                  newY = containerHeight - newHeight;
                 }
-                if (newY + newHeight > 475) {
-                  newHeight = 475 - newY;
+                if (newX + newWidth > containerWidth) {
+                  newX = containerWidth - newWidth;
                 }
 
                 setRectangles((prev) =>
                   prev.map((r) =>
                     r.id === rect.id
-                      ? {
-                          ...r,
-                          x: newX,
-                          y: newY,
-                          width: newWidth,
-                          height: newHeight,
-                        }
+                      ? { ...r, x: newX, y: newY, width: newWidth, height: newHeight }
                       : r
                   )
                 );
 
-                // Resetear la escala después de la transformación
                 node.scaleX(1);
                 node.scaleY(1);
                 node.x(newX);
                 node.y(newY);
                 node.width(newWidth);
                 node.height(newHeight);
+
+                // Detectar intersección después de redimensionar
+                detectHeatZoneIntersections({
+                  ...rect,
+                  x: newX,
+                  y: newY,
+                  width: newWidth,
+                  height: newHeight,
+                });
               }}
               ref={(node) => {
                 if (node && node.id() === selectedId) {
