@@ -1,6 +1,22 @@
-import { useEffect, useRef } from 'react';
-import { Stage, Layer, Rect } from 'react-konva';
+import { useEffect, useRef, useState } from 'react';
+import { Stage, Layer, Rect, Transformer } from 'react-konva';
+import Konva from 'konva';
 import heatExample from '../../assets/heatExample.png';
+import type { KonvaEventObject } from 'konva/lib/Node';
+
+interface RectZone {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  id: string;
+}
+
+interface HeatZone {
+  x: number;
+  y: number;
+  radius: number;
+}
 
 const HeatMapLayer = ({
   containerWidth,
@@ -9,7 +25,7 @@ const HeatMapLayer = ({
 }: {
   containerWidth: number;
   containerHeight: number;
-  heatZones: { x: number; y: number; radius: number }[];
+  heatZones: HeatZone[];
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -19,16 +35,13 @@ const HeatMapLayer = ({
       const ctx = canvas.getContext('2d');
 
       if (ctx) {
-        // Establecer el tamaño del canvas
         canvas.width = containerWidth;
         canvas.height = containerHeight;
         ctx.clearRect(0, 0, containerWidth, containerHeight);
 
-        // Capa azul de fondo
         ctx.fillStyle = 'rgba(0, 0, 255, 0.35)';
         ctx.fillRect(0, 0, containerWidth, containerHeight);
 
-        // Dibujar las zonas de calor
         ctx.globalCompositeOperation = 'lighter';
         heatZones.forEach((zone) => {
           const gradient = ctx.createRadialGradient(
@@ -74,48 +87,136 @@ const HeatMapLayer = ({
 };
 
 const RectangleLayer = ({
-  heatZones,
+  containerWidth,
+  containerHeight,
 }: {
-  heatZones: { x: number; y: number; radius: number; intensity: number }[];
   containerWidth: number;
   containerHeight: number;
 }) => {
-  const rectSize = 80;
+  const [rectangles, setRectangles] = useState<RectZone[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const transformerRef = useRef<Konva.Transformer>(null);
+
+  // Crear un nuevo rectángulo
+  const addRectangle = () => {
+    const newRect: RectZone = {
+      x: containerWidth / 2 - 50,
+      y: containerHeight / 2 - 50,
+      width: 120,
+      height: 80,
+      id: `${Date.now()}`,
+    };
+    setRectangles((prev) => [...prev, newRect]);
+    setSelectedId(newRect.id);
+  };
+
+  // Usar el `Transformer` en el rectángulo seleccionado
+  useEffect(() => {
+    const transformer = transformerRef.current;
+    if (transformer && selectedId) {
+      const selectedNode = transformer.getStage()?.findOne<Konva.Rect>(`#${selectedId}`);
+      if (selectedNode) {
+        transformer.nodes([selectedNode]);
+        transformer.getLayer()?.batchDraw();
+      }
+    }
+  }, [selectedId]);
 
   return (
-    <Stage width={800} height={475} style={{ position: 'absolute', zIndex: 3, top: 115 }}>
-      <Layer>
-        {heatZones.map((zone, index) => (
-          <Rect
-            key={index}
-            x={zone.x - rectSize / 2}
-            y={zone.y - rectSize / 2}
-            width={rectSize}
-            height={rectSize}
-            fill="rgba(255, 255, 255, 0.3)"
-            stroke="red"
-            strokeWidth={1}
-            opacity={0.5}
+    <>
+      <button
+        onClick={addRectangle}
+        style={{ position: 'absolute', top: 10, left: 10, zIndex: 4 }}
+      >
+        Agregar Rectángulo
+      </button>
+
+      <Stage
+        width={containerWidth}
+        height={containerHeight}
+        style={{ position: 'absolute', zIndex: 3, top: 115 }}
+        onMouseDown={(e: KonvaEventObject<MouseEvent>) => {
+          // Desactivar la selección si se hace clic en el fondo
+          if (e.target === e.target.getStage()) {
+            setSelectedId(null);
+          }
+        }}
+      >
+        <Layer>
+          {rectangles.map((rect) => (
+            <Rect
+              key={rect.id}
+              id={rect.id}
+              x={rect.x}
+              y={rect.y}
+              width={rect.width}
+              height={rect.height}
+              fill="rgba(255, 255, 255, 0.3)"
+              stroke="red"
+              strokeWidth={1}
+              draggable
+              onClick={() => setSelectedId(rect.id)}
+              onDragEnd={(e) => {
+                setRectangles((prev) =>
+                  prev.map((r) =>
+                    r.id === rect.id ? { ...r, x: e.target.x(), y: e.target.y() } : r
+                  )
+                );
+              }}
+              onTransformEnd={(e) => {
+                const node = e.target as Konva.Rect;
+                const scaleX = node.scaleX();
+                const scaleY = node.scaleY();
+
+                setRectangles((prev) =>
+                  prev.map((r) =>
+                    r.id === rect.id
+                      ? {
+                          ...r,
+                          x: node.x(),
+                          y: node.y(),
+                          width: node.width() * scaleX,
+                          height: node.height() * scaleY,
+                        }
+                      : r
+                  )
+                );
+
+                // Resetear la escala después de la transformación
+                node.scaleX(1);
+                node.scaleY(1);
+              }}
+              ref={(node) => {
+                if (node && node.id() === selectedId) {
+                  transformerRef.current?.nodes([node]);
+                }
+              }}
+            />
+          ))}
+          <Transformer
+            ref={transformerRef}
+            resizeEnabled={true}
+            rotateEnabled={false}
+            keepRatio={false}
+            enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right']}
           />
-        ))}
-      </Layer>
-    </Stage>
+        </Layer>
+      </Stage>
+    </>
   );
 };
 
 export const HeatMapOverlay = () => {
-  const heatZonesRef = useRef<{ x: number; y: number; radius: number; intensity: number }[]>([]);
+  const heatZonesRef = useRef<HeatZone[]>([]);
   const containerWidth = 800;
   const containerHeight = 704;
 
-  // Generar zonas de calor solo la primera vez
   if (heatZonesRef.current.length === 0) {
     const numZones = 10;
     const zones = Array.from({ length: numZones }, () => ({
       x: Math.random() * containerWidth,
       y: Math.random() * containerHeight,
       radius: 50 + Math.random() * 50,
-      intensity: Math.random(),
     }));
 
     heatZonesRef.current = zones;
@@ -144,35 +245,7 @@ export const HeatMapOverlay = () => {
           heatZones={heatZonesRef.current}
         />
 
-        <RectangleLayer
-          heatZones={heatZonesRef.current}
-          containerWidth={containerWidth}
-          containerHeight={containerHeight}
-        />
-      </div>
-
-      <div style={{ maxHeight: `${780 - containerHeight}px`, overflowY: 'auto', marginTop: '10px', color: '#000', zIndex: 4 }}>
-        <h3>Información captada por los rectángulos:</h3>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Rectángulo</th>
-              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Posición (x, y)</th>
-              <th style={{ border: '1px solid #ccc', padding: '8px' }}>Intensidad</th>
-            </tr>
-          </thead>
-          <tbody>
-            {heatZonesRef.current.map((zone, index) => (
-              <tr key={index}>
-                <td style={{ border: '1px solid #ccc', padding: '8px' }}>{index + 1}</td>
-                <td style={{ border: '1px solid #ccc', padding: '8px' }}>
-                  ({Math.round(zone.x)}, {Math.round(zone.y)})
-                </td>
-                <td style={{ border: '1px solid #ccc', padding: '8px' }}>{zone.intensity.toFixed(2)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <RectangleLayer containerWidth={containerWidth} containerHeight={containerHeight} />
       </div>
     </div>
   );
