@@ -118,9 +118,11 @@ const RectangleLayer = ({
       if (selectedNode) {
         transformer.nodes([selectedNode]);
         transformer.getLayer()?.batchDraw();
+      } else {
+        transformer.nodes([]);
       }
     }
-  }, [selectedId]);
+  }, [selectedId, rectangles]);
 
   return (
     <>
@@ -152,8 +154,8 @@ const RectangleLayer = ({
               width={rect.width}
               height={rect.height}
               fill="rgba(255, 255, 255, 0.3)"
-              stroke="red"
-              strokeWidth={1}
+              stroke={rect.id === selectedId ? 'blue' : 'red'}
+              strokeWidth={rect.id === selectedId ? 2 : 1}
               draggable
               onClick={() => setSelectedId(rect.id)}
               onDragEnd={(e) => {
@@ -165,8 +167,8 @@ const RectangleLayer = ({
               }}
               onTransformEnd={(e) => {
                 const node = e.target as Konva.Rect;
-                const scaleX = node.scaleX();
-                const scaleY = node.scaleY();
+                const newWidth = node.width() * node.scaleX();
+                const newHeight = node.height() * node.scaleY();
 
                 setRectangles((prev) =>
                   prev.map((r) =>
@@ -175,8 +177,8 @@ const RectangleLayer = ({
                           ...r,
                           x: node.x(),
                           y: node.y(),
-                          width: node.width() * scaleX,
-                          height: node.height() * scaleY,
+                          width: newWidth,
+                          height: newHeight,
                         }
                       : r
                   )
@@ -193,13 +195,15 @@ const RectangleLayer = ({
               }}
             />
           ))}
-          <Transformer
-            ref={transformerRef}
-            resizeEnabled={true}
-            rotateEnabled={false}
-            keepRatio={false}
-            enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right']}
-          />
+          {selectedId && (
+            <Transformer
+              ref={transformerRef}
+              resizeEnabled={true}
+              rotateEnabled={false}
+              keepRatio={false}
+              enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right']}
+            />
+          )}
         </Layer>
       </Stage>
     </>
