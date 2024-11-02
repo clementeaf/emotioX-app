@@ -1,5 +1,6 @@
 import { RouteObject, Navigate } from 'react-router-dom';
 import NotFound from '../pages/NotFound';
+import PrivateRoute from './PrivateRoute';
 import dashboardRoutes from './dashboardRoutes';
 import clientsRoutes from './clientsRoutes';
 import publicStudiesRoutes from './publicStudyRoutes';
@@ -14,12 +15,18 @@ const routes: RouteObject[] = [
     path: '/',
     element: <Navigate to="/login" replace />,
   },
-  ...dashboardRoutes,
-  ...clientsRoutes,
-  ...publicStudiesRoutes,
-  ...researchRoutes,
-  ...researchHistoryRoutes,
-  ...componentsTest,
+  {
+    path: '/',
+    element: <PrivateRoute />,
+    children: [
+      ...dashboardRoutes,
+      ...clientsRoutes,
+      ...publicStudiesRoutes,
+      ...researchRoutes,
+      ...researchHistoryRoutes,
+      ...componentsTest,
+    ],
+  },
   ...authRoutes,
   {
     path: '*',
