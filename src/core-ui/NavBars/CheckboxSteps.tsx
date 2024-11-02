@@ -8,7 +8,6 @@ import dashIcon from '../../assets/line.png';
 
 // Definir la estructura de la lista
 const stages = [
-  'Screener',
   'Welcome screen',
   'Implicit Association',
   'Cognitive task',
@@ -60,7 +59,7 @@ const ResearchStages: React.FC = () => {
 
   return (
     <Box sx={{ width: 'auto', mt: 4 }}>
-      <Typography sx={{ mb: 2 }}>Research’ stages</Typography>
+      <Typography sx={{ mb: 2, ml: 2, color: '#8C8C8C', fontWeight: 500, fontSize: 12, lineHeight: '20px' }}>Research’ stages</Typography>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
           {(provided) => (
