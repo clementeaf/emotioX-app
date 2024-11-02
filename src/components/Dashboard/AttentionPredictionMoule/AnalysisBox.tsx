@@ -12,7 +12,7 @@ export function AnalysisBox({ image }: { image: string }) {
         borderRadius: 3,
         width: '760px',
         height: '100px',
-        backgroundColor: '#E3E3E3',
+        backgroundColor: '#F4F7FE',
         p: 1,
         display: 'flex',
         alignItems: 'center',

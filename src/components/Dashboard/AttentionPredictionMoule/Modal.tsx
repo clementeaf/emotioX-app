@@ -56,6 +56,8 @@ export function Modal({handleOpen}: {handleOpen: () => void}) {
       <Box sx={{
         display: 'flex',
         flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
         gap: 1,
         mb: 2,
       }}>
