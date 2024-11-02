@@ -6,12 +6,13 @@ import publicStudiesRoutes from './publicStudyRoutes';
 import researchRoutes from './researchRoutes';
 import researchHistoryRoutes from './researchHistoryRoutes';
 import componentsTest from './componentTestRoutes';
+import authRoutes from './authRoutes';
 
 // Definición única de las rutas
 const routes: RouteObject[] = [
   {
     path: '/',
-    element: <Navigate to="/dashboard" replace />,
+    element: <Navigate to="/login" replace />,
   },
   ...dashboardRoutes,
   ...clientsRoutes,
@@ -19,6 +20,7 @@ const routes: RouteObject[] = [
   ...researchRoutes,
   ...researchHistoryRoutes,
   ...componentsTest,
+  ...authRoutes,
   {
     path: '*',
     element: <NotFound />,

@@ -1,8 +1,13 @@
 import { useState } from 'react';
-import { Box, Button, Link, Stack, TextField, Typography, Container, Paper, CssBaseline, FormControlLabel, Checkbox, IconButton, InputAdornment, LinearProgress } from '@mui/material';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { Box, Button, Link, Stack, TextField, Typography, Container, Paper, CssBaseline, FormControlLabel, Checkbox, IconButton, InputAdornment, LinearProgress, CircularProgress } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import bg from '../assets/bg.jpg';
+import { useNavigate } from 'react-router-dom';
+
+// const loginEndpoint = 'https://dg1geuc9wi.execute-api.us-east-1.amazonaws.com/login';
 
 // TODO:
 // 1.- Agregar el footer
@@ -36,45 +41,101 @@ const theme = createTheme({
 // Función para calcular la fortaleza de la contraseña
 function calculatePasswordStrength(password: string) {
     let strength = 0;
-  
+
     // Evaluar si tiene letras (mayúsculas y minúsculas mezcladas)
     if (/[A-Z]/.test(password) && /[a-z]/.test(password)) strength += 1;
     // Evaluar si contiene números
     if (/[0-9]/.test(password)) strength += 1;
     // Evaluar si contiene caracteres especiales
     if (/[^A-Za-z0-9]/.test(password)) strength += 1;
-    
+
     // Bonus por longitud: 3 puntos por longitud de 20 caracteres o más
     const lengthBonus = Math.min((password.length / MAX_PASSWORD_LENGTH) * 3, 3); // Máximo de 3 puntos por longitud
     strength += lengthBonus;
-  
+
     return strength;
-  }
-  
-  // Función para obtener el label y color de la fortaleza
-  function getStrengthLabel(strength: number) {
+}
+
+// Función para obtener el label y color de la fortaleza
+function getStrengthLabel(strength: number) {
     if (strength <= 1) {
-      return { label: 'Poor', color: 'red' };
+        return { label: 'Poor', color: 'red' };
     } else if (strength <= 3) {
-      return { label: 'Medium', color: 'orange' };
+        return { label: 'Medium', color: 'orange' };
     } else if (strength > 3 && strength < 5) {
-      return { label: 'Strong', color: 'green' };
+        return { label: 'Strong', color: 'green' };
     } else if (strength >= 5) {
-      return { label: 'Very Strong', color: 'darkgreen' }; // Añadimos un nivel "Very Strong"
+        return { label: 'Very Strong', color: 'darkgreen' }; // Añadimos un nivel "Very Strong"
     } else {
-      return { label: '', color: '' };
+        return { label: '', color: '' };
     }
-  }
+}
 
 export default function Login() {
-    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+    });
+    const [showPassword, setShowPassword] = useState(false);
+    const [isLoginSuccessful, setIsLoginSuccessful] = useState(false);
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [isEmailSent, setIsEmailSent] = useState(false);
     const [isResetPassword, setIsResetPassword] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const strength = calculatePasswordStrength(password);
+    const strength = calculatePasswordStrength(formData.password);
     const { label, color } = getStrengthLabel(strength);
-    const progressValue = password.length === 0 ? 10 : Math.min((strength / 5) * 100, 100);
+    const progressValue = formData.password.length === 0 ? 10 : Math.min((strength / 5) * 100, 100);
+
+    const handleLogin = async (loginData: { identifier: string; password: string }) => {
+        try {
+            const response = await axios.post('https://dg1geuc9wi.execute-api.us-east-1.amazonaws.com/login', loginData, {
+                headers: { 'Content-Type': 'application/json' }
+            });
+            return response;
+        } catch (error) {
+            console.error('Error during login:', error);
+            throw error;
+        }
+    };
+
+    const mutation = useMutation({
+        mutationFn: handleLogin,
+        onSuccess: (data) => {
+            const status = data.status;
+            const token = data.data?.accessToken;
+            if (status === 200 && token) {
+                localStorage.setItem('accessToken', token);
+                setIsLoginSuccessful(true); // Mostrar mensaje de éxito
+
+                setTimeout(() => {
+                    navigate('/dashboard');
+                }, 1500); // Esperar 1.5 segundos antes de redirigir
+            } else {
+                console.error('Access token not found');
+            }
+        },
+        onError: (error) => {
+            console.error('Login failed:', error);
+        },
+    });
+
+    const handleSubmit = () => {
+        const { email, password } = formData;
+        const loginForm = {
+            identifier: email,
+            password,
+        };
+        mutation.mutate(loginForm);
+    };
+
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
 
     // Simular el envío del correo de recuperación de contraseña
     const handleForgotPasswordSubmit = () => {
@@ -89,9 +150,9 @@ export default function Login() {
     };
 
     // Función para manejar el clic en "Sign In" y mostrar el formulario de Reset Password
-    const handleGoToResetPassword = () => {
-        setIsResetPassword(true); // Mostramos el formulario de Reset Password
-    };
+    // const handleGoToResetPassword = () => {
+    //     setIsResetPassword(true); // Mostramos el formulario de Reset Password
+    // };
 
     // Mostrar/Ocultar contraseña
     const togglePasswordVisibility = () => {
@@ -166,8 +227,8 @@ export default function Login() {
                                         type={showPassword ? 'text' : 'password'}
                                         id="new-password"
                                         placeholder="Min. 8 characters"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        value={formData.password}
+                                        onChange={handleInputChange}
                                         slotProps={{
                                             inputLabel: {
                                                 shrink: true,
@@ -253,7 +314,7 @@ export default function Login() {
                                     We have sent password recovery instructions to your email.
                                 </Typography>
                                 {/* Simular enlace de correo redirigiendo al formulario de Reset Password */}
-                                <Button fullWidth variant="contained" color="primary" sx={{ my: 2 }} onClick={handleGoToResetPassword}>
+                                <Button fullWidth variant="contained" color="primary" sx={{ my: 2 }} onClick={handleSubmit}>
                                     <Typography textTransform='initial'>
                                         Sign in
                                     </Typography>
@@ -329,6 +390,16 @@ export default function Login() {
                                     </Stack>
                                 </Box>
 
+                                {mutation.status === 'pending' ? (
+                                    <Box display="flex" justifyContent="center" mb={2}>
+                                        <CircularProgress /> {/* Spinner mientras carga */}
+                                    </Box>
+                                ) : isLoginSuccessful ? (
+                                    <Typography variant="body1" color="green" align="center" mb={2}>
+                                        Login successful! Redirecting to dashboard...
+                                    </Typography>
+                                ) : null}
+
                                 <Stack spacing={4}>
                                     <TextField
                                         variant="outlined"
@@ -341,12 +412,11 @@ export default function Login() {
                                         name="email"
                                         autoComplete="email"
                                         autoFocus
+                                        value={formData.email}
+                                        onChange={handleInputChange}
                                         slotProps={{
                                             inputLabel: {
                                                 shrink: true,
-                                            },
-                                            input: {
-                                                // Propiedades adicionales para el input si se necesitan
                                             },
                                         }}
                                     />
@@ -361,6 +431,8 @@ export default function Login() {
                                         id="password"
                                         autoComplete="current-password"
                                         placeholder="Min. 8 characters"
+                                        value={formData.password}
+                                        onChange={handleInputChange}
                                         slotProps={{
                                             input: {
                                                 endAdornment: (
@@ -381,7 +453,7 @@ export default function Login() {
                                         }}
                                     />
 
-                                    <Button type="submit" fullWidth variant="contained" color="primary" sx={{ mt: 2 }}>
+                                    <Button type="submit" fullWidth variant="contained" color="primary" sx={{ mt: 2 }} onClick={handleSubmit} disabled={mutation.isPending}>
                                         <Typography textTransform='initial'>Sign in</Typography>
                                     </Button>
 
