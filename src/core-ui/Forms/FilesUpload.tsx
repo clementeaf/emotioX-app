@@ -41,7 +41,7 @@ export const FilesUpload: React.FC<FileUploadProps> = () => {
     };
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 2 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             {/* Área de arrastre y carga de archivos */}
             <Paper
                 elevation={0}

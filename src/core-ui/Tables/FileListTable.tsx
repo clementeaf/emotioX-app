@@ -31,7 +31,7 @@ export const FileListTable: React.FC = () => {
   };
 
   return (
-    <TableContainer sx={{ border: '1px solid #E0E0E0', borderRadius: 2, width: '482px' }}>
+    <TableContainer sx={{ border: '1px solid #E0E0E0', height: 'auto', borderRadius: 2, width: '482px' }}>
       <Table>
         <TableHead>
           <TableRow sx={{ height: 50, bgcolor: '#FAFAFA' }}>

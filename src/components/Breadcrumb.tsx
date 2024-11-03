@@ -18,23 +18,24 @@ export default function Breadcrumb() {
   return (
     <Stack
       sx={{
-        display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
         gap: 1,
         bgcolor: 'white',
         height: '40px',
+        minHeight: '40px',  // Asegura una altura mínima de 40px
         border: `1px solid ${grey[200]}`,
         pl: 2,
         py: 1,
         mb: 2,
       }}
     >
-      <img src={homeIcon} alt="Home icon" style={{ marginBottom: '4px'}}/>
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <img src={homeIcon} alt="Home icon" style={{ height: '20px', width: '20px', marginBottom: '0px' }} />
+      </Box>
       <Stack
         sx={{
-          display: 'flex',
           flexDirection: 'row',
           alignItems: 'center',
           gap: 1,
@@ -45,29 +46,29 @@ export default function Breadcrumb() {
           const path = `/${pathSegments.slice(0, index + 1).join('/')}`;
 
           return (
-            <Box key={index} sx={{
+            <Box
+              key={index}
+              sx={{
                 display: 'flex',
                 flexDirection: 'row',
                 alignItems: 'center',
-            }}>
-            <Typography
-              key={index}
-              fontWeight={200}
-              color={isLast ? grey[700] : grey[500]}
-              fontSize={14}
-              px={1}
+              }}
             >
-              {isLast ? (
-                pathNames[segment] || segment
-              ) : (
-                <>
+              <Typography
+                fontWeight={200}
+                color={isLast ? grey[700] : grey[500]}
+                fontSize={14}
+                px={1}
+              >
+                {isLast ? (
+                  pathNames[segment] || segment
+                ) : (
                   <Link to={path} style={{ textDecoration: 'none', color: grey[500] }}>
                     {pathNames[segment] || segment}
                   </Link>
-                </>
-              )}
-            </Typography>
-            {' /'}
+                )}
+              </Typography>
+              {!isLast && <Typography sx={{ color: grey[500] }}>/</Typography>}
             </Box>
           );
         })}

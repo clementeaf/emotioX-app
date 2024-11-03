@@ -1,84 +1,95 @@
-import { Active, closestCenter, DndContext, Over } from '@dnd-kit/core'
-import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { CSS } from '@dnd-kit/utilities';
-import { Box, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
+import { Box, Typography, IconButton } from '@mui/material';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { EligibilityInput } from './ElegibilityInput';
+import { DndContext, closestCenter, useSensor, useSensors, PointerSensor, DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { AddChoiceButton } from './Forms/AddCoiceButton';
 
+// Valores iniciales
 const initialItems = [
-    { id: '1', text: 'Option 1' },
-    { id: '2', text: 'Option 2' },
-    { id: '3', text: 'Option 3' },
+    { id: '1', text: 'Option 1', eligibility: 'Qualify' },
+    { id: '2', text: 'Option 2', eligibility: 'Qualify' },
+    { id: '3', text: 'Option 3', eligibility: 'Qualify' },
 ];
 
+// Componente principal
 export function SorteableOptions() {
     const [items, setItems] = useState(initialItems);
+    const sensors = useSensors(useSensor(PointerSensor));
 
-    const handleOnDragEnd = ({ active, over }: { active: Active; over: Over | null }) => {
-        if (!over || active.id === over.id) {
-            return;
-        }
+    // Manejar el cambio de elegibilidad
+    const handleEligibilityChange = (id: string, newEligibility: string) => {
+        setItems((prevItems) =>
+            prevItems.map((item) =>
+                item.id === id ? { ...item, eligibility: newEligibility } : item
+            )
+        );
+    };
 
-        setItems((items) => {
-            const oldIndex = items.findIndex((item) => item.id === active.id);
-            const newIndex = items.findIndex((item) => item.id === over.id);
-            return arrayMove(items, oldIndex, newIndex);
+    // Manejar la reorganización de los elementos después del arrastre
+    const handleDragEnd = ({ active, over }: DragEndEvent) => {
+        if (!over || active.id === over.id) return;
+
+        setItems((prevItems) => {
+            const oldIndex = prevItems.findIndex((item) => item.id === active.id);
+            const newIndex = prevItems.findIndex((item) => item.id === over.id);
+            return arrayMove(prevItems, oldIndex, newIndex);
         });
     };
+
+    // Añadir un nuevo elemento a la lista
+    const handleAddChoice = () => {
+        const newId = (items.length + 1).toString(); // Genera un nuevo ID
+        const newItem = { id: newId, text: `Option ${newId}`, eligibility: 'Qualify' };
+        setItems((prevItems) => [...prevItems, newItem]);
+    };
+
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            width: '844px',
-            alignItems: 'flex-start',
-            justifyContent: 'flex-start',
-            ml: 2,
-        }}>
-            <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                width: '580px',
-            }}>
-                <Typography color='#8C8C8C' fontSize={14} fontWeight={400} lineHeight='22px'>Choices (Press ENTER for new line or paste a list)</Typography>
-                <DndContext
-                    collisionDetection={closestCenter}
-                    onDragEnd={handleOnDragEnd}>
-                    <SortableContext
-                        items={items.map(item => item.id)}
-                        strategy={verticalListSortingStrategy}
-                    >
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                mt: 4,
-                            }}
-                        >
-                            {items.map((item) => (
-                                <SortableItem key={item.id} id={item.id} text={item.text} />
-                            ))}
-                        </Box>
-                    </SortableContext>
-                </DndContext>
-            </Box>
-            <EligibilityInput />
+        <Box sx={{ width: '100%', ml: 2 }}>
+            <Typography color='#8C8C8C' fontSize={14} fontWeight={400} lineHeight='22px'>
+                Choices (Press ENTER for new line or paste a list)
+            </Typography>
+            <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+            >
+                <SortableContext items={items} strategy={verticalListSortingStrategy}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', mt: 2 }}>
+                        {items.map((item) => (
+                            <SortableItem
+                                key={item.id}
+                                id={item.id}
+                                text={item.text}
+                                eligibility={item.eligibility}
+                                onEligibilityChange={(newEligibility) => handleEligibilityChange(item.id, newEligibility)}
+                            />
+                        ))}
+                    </Box>
+                </SortableContext>
+            </DndContext>
+
+            <AddChoiceButton handleAddChoice={handleAddChoice}/>
         </Box>
-    )
+    );
 }
 
-function SortableItem({ id, text }: { id: string; text: string }) {
+// Componente individual de cada elemento de la lista, con un selector de elegibilidad
+function SortableItem({ id, text, eligibility, onEligibilityChange }: { id: string; text: string; eligibility: string; onEligibilityChange: (value: string) => void }) {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
-    const combinedTransition = `${transition || ''} background-color 0.2s ease`;
-
+    
     const style = {
         transform: CSS.Transform.toString(transform),
-        transition: combinedTransition,
+        transition,
     };
 
     return (
         <Box
             ref={setNodeRef}
+            style={style}
             {...attributes}
             {...listeners}
             sx={{
@@ -88,23 +99,21 @@ function SortableItem({ id, text }: { id: string; text: string }) {
                 bgcolor: '#fff',
                 p: 1,
                 borderRadius: '4px',
-                width: '580px',
                 border: '1px solid #e0e0e0',
-                ...style,
+                width: '804px',
             }}
         >
-            <Typography sx={{ mr: 2, fontWeight: 700 }}>{id}</Typography>
             <DragIndicatorIcon sx={{ color: 'gray', mr: 2 }} />
-            <TextField
-                variant="outlined"
-                value={text}
-                sx={{ flexGrow: 1 }}
-                slotProps={{
-                    input: {
-                        readOnly: true,
-                    },
-                }}
+            <Box sx={{ flexGrow: 1 }}>
+                <Typography>{text}</Typography>
+            </Box>
+            <EligibilityInput
+                value={eligibility}
+                onChange={onEligibilityChange}
             />
+            <IconButton sx={{ color: 'red', ml: 2 }}>
+                <DeleteIcon />
+            </IconButton>
         </Box>
     );
 }

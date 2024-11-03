@@ -58,7 +58,6 @@ export function UploadSection({ deviceFrame, setDeviceFrame }: UploadSectionProp
         alignItems: 'flex-start',
         justifyContent: 'space-between',
         gap: 2,
-        ml: 1,
       }}
     >
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
