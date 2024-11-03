@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material';
 import { styled } from '@mui/system';
+import { useAIMFrameWorkNavigationStore } from '../../store/useAIMFrameWorkNavigationStore';
 
 const StyledBottomNavigationAction = styled(BottomNavigationAction)<{ selected?: boolean }>(
   ({ selected }) => ({
@@ -10,7 +11,7 @@ const StyledBottomNavigationAction = styled(BottomNavigationAction)<{ selected?:
 );
 
 const NavBar: React.FC = () => {
-  const [value, setValue] = useState<number>(0);
+  const { selectedScreen, setSelectedScreen } = useAIMFrameWorkNavigationStore();
 
   return (
     <Box
@@ -22,24 +23,24 @@ const NavBar: React.FC = () => {
       }}
     >
       <BottomNavigation
-        value={value}
+        value={selectedScreen}
         onChange={(_, newValue) => {
-          setValue(newValue);
+          setSelectedScreen(newValue);
         }}
         showLabels
         sx={{ width: '250px' }}
       >
         <StyledBottomNavigationAction
           label="Build"
-          selected={value === 0}
+          selected={selectedScreen === 0}
         />
         <StyledBottomNavigationAction
           label="Recruit"
-          selected={value === 1}
+          selected={selectedScreen === 1}
         />
         <StyledBottomNavigationAction
           label="Results"
-          selected={value === 2}
+          selected={selectedScreen === 2}
         />
       </BottomNavigation>
     </Box>
