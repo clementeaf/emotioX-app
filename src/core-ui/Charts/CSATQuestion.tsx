@@ -31,7 +31,7 @@ export const CSATQuestion = () => {
                 borderRadius: '2px',
                 width: '100%',
                 height: '252px',
-                maxWidth: '600px',
+                // maxWidth: '600px',
             }}
         >
             {/* Sección de las barras de progreso */}

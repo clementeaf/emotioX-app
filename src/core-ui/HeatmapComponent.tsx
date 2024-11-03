@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box, Tab, Tabs, Button } from '@mui/material';
 import heatMap from '../assets/heatMapAnalysis.png';
-import RespondentTable from './Tables/RespondentTable';
+// import RespondentTable from './Tables/RespondentTable';
 
 // Componente principal
 export const HeatmapComponent = () => {
@@ -55,7 +55,7 @@ export const HeatmapComponent = () => {
                         objectFit: 'cover',
                     }} />
                 </Box>
-                <RespondentTable />
+                {/* <RespondentTable /> */}
             </Box>
         </Box>
     );

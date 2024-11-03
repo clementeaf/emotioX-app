@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LabelList, Cell } from 'recharts';
 
@@ -49,11 +48,9 @@ export const EmotionalStatesChart = () => {
     <Box 
       sx={{ 
         p: 2, 
-        border: '1px solid #e0e0e0', 
-        borderRadius: 2, 
-        bgcolor: 'white',
         width: '600px',
         height: '388px',
+        border: '1px solid #e0e0e0', borderRadius: 2, 
       }}
     >
       <Box sx={{

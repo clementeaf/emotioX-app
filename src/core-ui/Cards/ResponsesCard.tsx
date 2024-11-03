@@ -6,8 +6,7 @@ export const ResponsesCard = () => {
     <Box 
       sx={{ 
         p: 2, 
-        border: '1px solid #e0e0e0', 
-        bgcolor: 'blue', 
+        border: '1px solid #e0e0e0',  
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
