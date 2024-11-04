@@ -21,7 +21,7 @@ export function SmartVocFormV2() {
   const { title, description, questions } = smartVocConfig;
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'row', gap: 3 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'row', gap: 3, }}>
       <Box sx={{ display: 'flex', width: '845px', bgcolor: 'white', flexDirection: 'column' }}>
         <InvestigationTitleRequirement
           showConditionality={false}

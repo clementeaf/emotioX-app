@@ -1,27 +1,40 @@
-// ResultsSidebar.tsx
-import { Box, Typography, List, ListItem, ListItemText } from '@mui/material';
+import { Box, Typography, List, ListItem } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { Section, useResultsStore } from '../../../store/useResultStore';
 
 export default function ResultsSidebar() {
-  // Extrae `sections` y `setSelectedSection` del store sin usar `shallow`
   const sections = useResultsStore((state) => state.sections);
+  const selectedSection = useResultsStore((state) => state.selectedSection);
   const setSelectedSection = useResultsStore((state) => state.setSelectedSection);
-  console.log('sections: ', sections);
 
   return (
-    <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 2 }}>
-      <Typography sx={{ mb: 2, color: '#8C8C8C', fontWeight: 500, fontSize: 12, lineHeight: '20px' }}>
+    <Box sx={{ p: 2, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 2 }}>
+      <Typography sx={{ color: '#8C8C8C', fontWeight: 500, fontSize: 12, lineHeight: '20px' }}>
         Research Stages
       </Typography>
-      <List>
-        {sections.map((section: Section) => ( // Especifica el tipo `Section` para `section`
-          <ListItem 
-            key={section.id} 
+      <List sx={{ width: '100%' }}>
+        {sections.map((section: Section) => (
+          <ListItem
+            key={section.id}
             disablePadding
-            onClick={() => setSelectedSection(section.label)} // Evita actualizar el estado si no es necesario
+            onClick={() => setSelectedSection(section.label)}
+            sx={{
+              py: 1,
+              borderBottom: `1px solid ${grey[200]}`,
+              width: '100%',
+              cursor: 'pointer',
+            }}
           >
-            <ListItemText primary={section.label} sx={{ cursor: 'pointer' }} />
+            <Typography 
+              sx={{ 
+                color: section.label === selectedSection ? 'blue' : '#262626',
+                fontWeight: section.label === selectedSection ? 500 : 400,
+                fontSize: 14, 
+                lineHeight: '22px' 
+              }}
+            >
+              {section.label}
+            </Typography>
           </ListItem>
         ))}
       </List>

@@ -80,7 +80,7 @@ export default function ResultsMainScreenV2() {
   }, [configData, selectedSection]);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", width: "100%", alignItems: "center" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", width: "100%", alignItems: "flex-start", }}>
       <Typography color="#262626" fontWeight={700} fontSize={20} lineHeight="28px">
         {selectedSection} - {stageConfig ? stageConfig.name : "Results"}
       </Typography>
@@ -91,7 +91,6 @@ export default function ResultsMainScreenV2() {
 
 // Renderizado de filas basado en la configuración JSON
 function renderRows(rows: Row[]): JSX.Element[] {
-  console.log("Rendering rows:", rows); 
   return rows.map((row, rowIndex) => (
     <Box
       key={rowIndex}

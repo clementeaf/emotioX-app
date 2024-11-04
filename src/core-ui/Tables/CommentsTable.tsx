@@ -69,7 +69,7 @@ export const CommentsTable = () => {
   };
 
   return (
-    <TableContainer component={Paper} sx={{ maxHeight: 546, maxWidth: 400, overflowY: 'auto' }}>
+    <TableContainer component={Paper} sx={{ minHeight: 546, maxWidth: 400, overflowY: 'auto', height: '576px' }}>
       <Table stickyHeader>
         <TableHead>
           <TableRow>
