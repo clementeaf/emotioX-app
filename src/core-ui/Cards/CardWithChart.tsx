@@ -46,7 +46,8 @@ export default function CardWithChart() {
     <Box
       sx={{
         width: '368.42px',
-        height: '367px',
+        height: '100%',
+        minHeight: '367px',
         background: 'linear-gradient(135deg, #252BE6 0%, #25A5E6 100%)',
         borderRadius: '4px',
         color: '#fff',

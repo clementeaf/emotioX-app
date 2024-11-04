@@ -28,7 +28,7 @@ const NavBar: React.FC = () => {
           setSelectedScreen(newValue);
         }}
         showLabels
-        sx={{ width: '250px' }}
+        sx={{ width: '100%' }}
       >
         <StyledBottomNavigationAction
           label="Build"

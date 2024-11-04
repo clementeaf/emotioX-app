@@ -48,7 +48,7 @@ export const EmotionalStatesChart = () => {
     <Box 
       sx={{ 
         p: 2, 
-        width: '600px',
+        width: '500px',
         height: '388px',
         border: '1px solid #e0e0e0', borderRadius: 2, 
       }}
@@ -67,7 +67,7 @@ export const EmotionalStatesChart = () => {
       </Typography>
       </Box>
 
-      <ResponsiveContainer width={660} height={400}>
+      <ResponsiveContainer width={580} height={400}>
         <BarChart 
           data={data} 
           margin={{ top: 30, right: 90, left: -40, bottom: 120 }} 

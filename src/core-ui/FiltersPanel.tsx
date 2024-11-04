@@ -75,7 +75,7 @@ export const FiltersPanel = () => {
   };
 
   return (
-    <Box sx={{ width: 300, p: 2, border: '1px solid #e0e0e0', borderRadius: 2, bgcolor: 'white', maxHeight: '100%', height: 'auto'}}>
+    <Box sx={{ width: 300, p: 2, border: '1px solid #e0e0e0', borderRadius: 2, bgcolor: 'white', maxHeight: '1130px', height: 'auto'}}>
       {/* Encabezado */}
       <Typography variant="h6" fontWeight="bold" gutterBottom>
         Filters

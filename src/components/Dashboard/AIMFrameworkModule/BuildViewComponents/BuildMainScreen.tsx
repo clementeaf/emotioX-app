@@ -1,42 +1,25 @@
-import { useStepStore } from '../../../../store/useStepStore';
 import { Box, Typography } from '@mui/material';
+import { useSelectedResearchStore } from '../../../../store/useSelectedResearchStore';
+import { researchStagesConfig } from '../../../../config/researchConfig';
 import { AddQuestionSection } from '../../../../core-ui/AddQuestionSection';
-import { WelcomeScreenContainer } from './WelcomeScreenContainer';
-import { SmartVocForm } from './SmartVocForm';
-import { CognitiveTaskForm } from './CognitiveTaskForm';
-import { ThankYouScreenContainer } from './ThankYouScreenContainer';
 
 export default function BuildMainScreen() {
-    const { step } = useStepStore();
+  const { researchType, stageIndex } = useSelectedResearchStore();
+  const stages = researchStagesConfig[researchType];
 
   const renderContent = () => {
-    switch (step) {
-      case 0:
-        return <WelcomeScreenContainer />;
-      case 1:
-        return <SmartVocForm />;
-      case 2:
-        return <CognitiveTaskForm />;
-      case 3:
-        return <ThankYouScreenContainer />;
-      default:
-        return <Typography>Seleccione una etapa</Typography>;
-    }
+    return stages[stageIndex]?.component || <Typography>Seleccione una etapa</Typography>;
   };
+
   return (
-    <Box sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      width: '100%',
-      height: 'auto',
-    }}>
-      <Typography mb={3} mt={1} color='#262626' fontWeight={700} fontSize={20} lineHeight='28px'>AIM Framework Stage 3’s name</Typography>
+    <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', height: 'auto' }}>
+      <Typography mb={3} mt={1} color='#262626' fontWeight={700} fontSize={20} lineHeight='28px'>
+        {researchType} - {stages[stageIndex]?.label || "Stage"}
+      </Typography>
       {renderContent()}
-      <Box sx={{
-        mt: 2,
-      }}>
-        {step !== 0 && step !== 3 && <AddQuestionSection />}
+      <Box sx={{ mt: 2 }}>
+        {stageIndex !== 0 && stageIndex !== stages.length - 1 && <AddQuestionSection />}
       </Box>
     </Box>
-  )
+  );
 }

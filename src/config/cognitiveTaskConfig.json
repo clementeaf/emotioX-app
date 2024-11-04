@@ -1,0 +1,73 @@
+{
+    "title": "3.0.- Cognitive Task",
+    "description": "In this section you can go deeper in the understanding of the participants by using declarative questions oriented to the working memory and comprehension of the previous elements exposed",
+    "questions": [
+      {
+        "type": "QuestionTitleInput",
+        "header": "3.1.- Question _italic_ **bold** - bullet list 1. ordered list",
+        "questionText": "",
+        "questionType": "Single choice",
+        "required": false,
+        "uploadSection": true
+      },
+      {
+        "type": "QuestionTitleInput",
+        "header": "3.2.- Question _italic_ **bold** - bullet list 1. ordered list",
+        "questionText": "",
+        "questionType": "Single choice",
+        "required": false,
+        "uploadSection": true
+      },
+      {
+        "type": "QuestionTitleInput",
+        "header": "3.3.- Question _italic_ **bold** - bullet list 1. ordered list",
+        "questionText": "",
+        "questionType": "Single choice",
+        "required": false,
+        "sortableOptions": true,
+        "uploadSection": true
+      },
+      {
+        "type": "QuestionTitleInput",
+        "header": "3.4.- Question _italic_ **bold** - bullet list 1. ordered list",
+        "questionText": "",
+        "questionType": "Single choice",
+        "required": false,
+        "sortableOptions": true,
+        "uploadSection": true
+      },
+      {
+        "type": "QuestionTitleInput",
+        "header": "3.5.- Question _italic_ **bold** - bullet list 1. ordered list",
+        "questionText": "",
+        "questionType": "Single choice",
+        "required": false,
+        "extraText": "Choices (Press ENTER for new line or paste a list)",
+        "rangeInput": {
+          "startValue": 1,
+          "endValue": 5,
+          "startLabel": "",
+          "endLabel": ""
+        },
+        "uploadSection": true
+      },
+      {
+        "type": "QuestionTitleInput",
+        "header": "3.6.- Question _italic_ **bold** - bullet list 1. ordered list",
+        "questionText": "",
+        "questionType": "Single choice",
+        "required": false,
+        "sortableOptions": true
+      },
+      {
+        "type": "QuestionTitleInput",
+        "header": "3.7.- Question _italic_ **bold** - bullet list 1. ordered list",
+        "questionText": "",
+        "questionType": "Single choice",
+        "required": false,
+        "fileTestSection": true,
+        "fileUpload": true
+      }
+    ]
+  }
+  

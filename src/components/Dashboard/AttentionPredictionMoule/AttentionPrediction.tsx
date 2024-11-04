@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import ProgressDetails from '../ProgressDetails';
+import ProgressDetails from './ProgressDetails';
 import ProgressBar from '../../../core-ui/Progress/ProgressBar';
 import { Modal } from './Modal';
 import { ConfigModal } from './ConfigModal';

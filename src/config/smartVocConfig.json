@@ -1,0 +1,43 @@
+{
+    "title": "2.0.- Smart VOC",
+    "description": "In this section you can go deeper in the understanding of the participants by using declarative questions oriented to the working memory and comprehension of the previous elements exposed",
+    "questions": [
+      {
+        "type": "CustomerSatisfactionScoreQuestion",
+        "header": "2.1.- Question: Customer Satisfaction Score (CSAT)",
+        "title": "How would you rate your overall satisfaction level with [company]?"
+      },
+      {
+        "type": "CustomerEffortScoreQuestion",
+        "header": "2.2.- Question: Customer Effort Score (CES)",
+        "title": "It was easy for me to handle my issue today"
+      },
+      {
+        "type": "CognitiveValueQuestion",
+        "header": "2.3.- Question: Cognitive Value (CV)",
+        "title": "Example: This was the best app my eyes had see",
+        "extraText": "Choices (Press ENTER for new line or paste a list)",
+        "rangeInput": {
+          "startValue": 1,
+          "endValue": 5,
+          "startLabel": "",
+          "endLabel": ""
+        }
+      },
+      {
+        "type": "NewEmotionalValueQuestion",
+        "header": "2.4.- Question: Net Emotional Value (NEV)",
+        "title": "How do you feel about the experience offered by the [company]?"
+      },
+      {
+        "type": "NewEmotionalValueQuestion",
+        "header": "2.5.- Question: Net Promoter Score (NPS)",
+        "title": "On a scale from 0-10, how likely are you to recommend [company] to a friend or colleague?"
+      },
+      {
+        "type": "CognitiveValueQuestion",
+        "header": "2.6.- Question: Voice of Customer (VOC)",
+        "title": "How can we improve the service?"
+      }
+    ]
+  }

@@ -33,7 +33,7 @@ export default function InvestigationTitleRequirement({
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 1, mr: 2, }}>
             <FormControlLabel
                 control={<AntSwitch defaultChecked={showConditionality} onClick={onToggleConditionality}/>}
-                label={<Typography fontSize='14px' fontWeight={400} color='#8C8C8C'>Show conditionality</Typography>}
+                label={<Typography fontSize='14px' fontWeight={400} color='#8C8C8C'>Required</Typography>}
                 labelPlacement="start"
             />
             </Box>

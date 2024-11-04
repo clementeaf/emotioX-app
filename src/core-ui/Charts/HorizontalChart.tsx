@@ -6,14 +6,14 @@ import { ResponsesCard } from '../Cards/ResponsesCard';
 export default function HorizontalChart() {
     return (
         <Box sx={{
-            width: 844,
+            width: '820px',
             height: '358px',
             display: 'flex',
             flexDirection: 'column',
         }}
         >
             <Box sx={{
-                width: '844px',
+                width: '820px',
                 height: '358px',
                 display: 'flex',
                 flexDirection: 'column',
@@ -25,7 +25,6 @@ export default function HorizontalChart() {
                     flexDirection: 'row',
                     alignItems: 'flex-start',
                     pt: 2,
-                    pl: 2,
                     gap: 3,
                 }}>
                     <Typography fontWeight={400} fontSize={14} lineHeight='22px' color='black'>2.1.- Question: Customer Satisfaction Score (CSAT)</Typography>

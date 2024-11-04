@@ -1,7 +1,7 @@
 import { Box, Typography, Button } from '@mui/material';
 import { grey } from '@mui/material/colors';
-import documentationIcon from '../../assets/documentationIcon.png';
-import logo from '../../assets/logo-useremotion-black 1.png';
+import documentationIcon from '../../../assets/documentationIcon.png';
+import logo from '../../../assets/logo-useremotion-black 1.png';
 
 export default function DocumentationSection() {
   return (

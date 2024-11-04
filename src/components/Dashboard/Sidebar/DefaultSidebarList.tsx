@@ -1,35 +1,21 @@
 import { Box, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
-import { BsSpeedometer2 } from 'react-icons/bs';
-import { IoDocumentTextOutline } from 'react-icons/io5';
-import { FaChartBar } from 'react-icons/fa';
-import { LuUser2 } from 'react-icons/lu';
-import {  useLocation, useNavigate } from 'react-router-dom';
-import { useResearchStore } from '../../store/useResearchStore';
+import { useLocation, useNavigate } from 'react-router-dom';
+import sidebarRoutes from '../../../routes/sidebarRoutes';
 
 export default function DefaultSidebarList() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { resetForm } = useResearchStore();
 
-    const routes = [
-        { path: '/dashboard', label: 'Dashboard', icon: <BsSpeedometer2 size={24} /> },
-        { path: '/newResearch', label: 'New Research', icon: <IoDocumentTextOutline size={24} />, action: resetForm },
-        { path: '/researchHistory', label: "Research's history", icon: <FaChartBar size={24} /> },
-        { path: '/clients', label: 'Clients', icon: <LuUser2 size={24} /> },
-        { path: '/componentsTest', label: 'ComponentTest', icon: <BsSpeedometer2 size={24} /> },
-    ];
-
-    type Route = { path: string; label: string; icon: JSX.Element; action?: () => void };
-
-    const handleRouteClick = (route: Route) => {
+    const handleRouteClick = async (route: typeof sidebarRoutes[0]) => {
         if (route.action) route.action();
         navigate(route.path);
     };
 
     return (
-        <List sx={{ width: '100%', height: '100ch' }}>
-            {routes.map((route) => {
+        <List sx={{ width: '100%', height: '100%' }}>
+            {sidebarRoutes.map((route) => {
                 const isActive = location.pathname === route.path;
+                const IconComponent = route.icon;
 
                 return (
                     <ListItem key={route.path} disablePadding sx={{ width: '100%' }}>
@@ -53,7 +39,8 @@ export default function DefaultSidebarList() {
                                     color: isActive ? '#007BFF' : '#4F4F4F',
                                 }}
                             >
-                                {route.icon}
+                                {/* Renderizamos el icono dinámicamente */}
+                                <IconComponent />
                             </Box>
 
                             {/* Texto */}

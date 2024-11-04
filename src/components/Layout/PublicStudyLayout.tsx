@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material';
-import Sidebar from '../Dashboard/Slidebar';
+import Sidebar from '../Dashboard/Sidebar/Slidebar';
 import { Outlet } from 'react-router-dom';
 import Header from '../Dashboard/Header';
 

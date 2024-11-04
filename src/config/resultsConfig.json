@@ -1,0 +1,99 @@
+{
+  "stages": [
+    {
+      "id": "1",
+      "name": "Smart VOC Results",
+      "rows": [
+        {
+          "type": "row",
+          "styles": { "gap": "16px", "justifyContent": "flex-start", "width": "1134px" },
+          "components": ["CardWithChart", "TrustRelationshipFlow"]
+        },
+        {
+          "type": "row",
+          "styles": { "gap": "24px", "width": "1134px" },
+          "components": ["CardNoAxisChart", "CardNoAxisChart", "CardNoAxisChart"]
+        },
+        {
+          "type": "row",
+          "styles": { "justifyContent": "space-between", "width": "1134px" },
+          "components": [
+            {
+              "type": "section",
+              "title": "1.0.- Smart VOC",
+              "subcomponents": [
+                "HorizontalChart",
+                "HorizontalChart",
+                "HorizontalChart",
+                "HorizontalChart",
+                {
+                  "type": "group",
+                  "components": ["EmotionalStatesChart", "ClusterDisplay"],
+                  "layout": "row",
+                  "styles": { "gap": "16px", "width": "100%" }
+                },
+                "HorizontalChart",
+                "NPSChart",
+                {
+                  "type": "group",
+                  "components": ["CommentsTable", "AnalysisTabs"],
+                  "layout": "row",
+                  "styles": { "gap": "16px", "width": "100%" }
+                }
+              ],
+              "styles": { "width": "845px", "padding": "16px" }
+            },
+            {
+              "type": "FiltersPanel",
+              "styles": { "width": "267px", "height": "1334px" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Cognitive Task Results",
+      "rows": [
+        {
+          "type": "row",
+          "styles": { "gap": "60px" },
+          "components": [
+            {
+              "type": "section",
+              "title": "Cognitive Task",
+              "subcomponents": [
+                "QuestionHeader",
+                {
+                  "type": "group",
+                  "components": ["CommentsTable", "AnalysisTabs"],
+                  "layout": "row",
+                  "styles": { "gap": "16px", "width": "100%" }
+                },
+                "HorizontalChart",
+                "HorizontalChart",
+                "HorizontalChart",
+                "OptionsTable",
+                {
+                  "type": "group",
+                  "components": ["StepCard", "StepCard", "StepCard"],
+                  "styles": { "gap": "16px", "width": "100%" }
+                },
+                {
+                  "type": "group",
+                  "components": ["HeatmapComponent", "StepCard", "StepCard", "StepCard"],
+                  "styles": { "gap": "16px", "width": "100%" }
+                }
+              ],
+              "styles": { "width": "845px", "padding": "16px" }
+            },
+            {
+              "type": "FiltersPanel",
+              "styles": { "width": "267px", "height": "1334px" }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

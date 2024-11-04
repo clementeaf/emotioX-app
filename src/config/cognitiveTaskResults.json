@@ -1,0 +1,111 @@
+{
+    "stages": [
+      {
+        "id": "1",
+        "name": "Cognitive Task Results",
+        "rows": [
+          {
+            "type": "row",
+            "styles": { "gap": "24px", "justifyContent": "flex-start", "width": "1134px" },
+            "components": [
+              {
+                "type": "section",
+                "subcomponents": [
+                  {
+                    "type": "group",
+                    "components": [
+                      "QuestionHeader",
+                      {
+                        "type": "group",
+                        "components": ["CommentsTable", "AnalysisTabs"],
+                        "layout": "row",
+                        "styles": { "gap": "40px" }
+                      }
+                    ],
+                    "styles": { "gap": "16px", "width": "100%", "mb": "32px" }
+                  },
+                  {
+                    "type": "group",
+                    "components": [
+                      "QuestionHeader",
+                      {
+                        "type": "group",
+                        "components": ["CommentsTable", "AnalysisTabs"],
+                        "layout": "row",
+                        "styles": { "gap": "40px" }
+                      }
+                    ],
+                    "styles": { "gap": "16px", "width": "100%", "mb": "32px" }
+                  },
+                  {
+                    "type": "group",
+                    "components": ["HorizontalChart", "HorizontalChart", "HorizontalChart"],
+                    "layout": "column",
+                    "styles": { "padding": "16px" }
+                  },
+                  {
+                    "type": "group",
+                    "components": ["QuestionHeader", "OptionsTable"],
+                    "styles": { "width": "100%", "mt": "16px" }
+                  },
+                  {
+                    "type": "group",
+                    "components": ["QuestionHeader", "StepCard", "StepCard", "StepCard"],
+                    "styles": { "gap": "16px", "width": "100%", "my": "16px" }
+                  },
+                  {
+                    "type": "group",
+                    "components": [
+                      "QuestionHeader",
+                      "StepCard",
+                      {
+                        "type": "group",
+                        "components": [
+                          {
+                            "type": "header",
+                            "content": "Step 1 and task description",
+                            "styles": { "fontWeight": 500, "fontSize": 18, "color": "#2B3674" }
+                          },
+                          {
+                            "type": "infoBox",
+                            "content": "New data was obtained. Please update graph",
+                            "styles": {
+                              "width": 395,
+                              "height": 42,
+                              "bgcolor": "#E6F7FF",
+                              "borderColor": "#E0E0E0",
+                              "textColor": "#252BE6"
+                            }
+                          }
+                        ],
+                        "layout": "column",
+                        "styles": { "gap": "16px", "width": "100%" }
+                      },
+                      "HeatmapComponent",
+                      "StepCard",
+                      "StepCard",
+                      "StepCard",
+                      "StepCard"
+                    ],
+                    "styles": { "gap": "16px", "width": "100%", "my": "16px" }
+                  }
+                ],
+                "styles": {
+                  "width": "845px",
+                  "padding": "16px",
+                  "border": "1px solid #E0E0E0",
+                  "bgcolor": "white",
+                  "borderRadius": 1
+                }
+              },
+              {
+                "type": "FiltersPanel",
+                "styles": { "width": "267px", "height": "1334px" }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  

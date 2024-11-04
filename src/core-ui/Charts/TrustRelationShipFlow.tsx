@@ -63,7 +63,8 @@ export default function TrustRelationshipFlow() {
   return (
     <Box
       sx={{
-        width: '744px',
+        minWidth: '650px',
+        width: '745px',
         height: '367px',
         borderRadius: '4px',
         padding: '16px',
@@ -99,7 +100,7 @@ export default function TrustRelationshipFlow() {
       </Box>
 
       {/* Gráfico de líneas */}
-      <Box sx={{ mt: 2, width: '100%', height: '100%' }}>
+      <Box sx={{ mt: 2, width: '660px', height: '100%' }}>
         <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
