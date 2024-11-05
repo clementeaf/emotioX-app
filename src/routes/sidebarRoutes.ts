@@ -1,4 +1,3 @@
-// sidebarRoutes.ts
 import { BsSpeedometer2 } from 'react-icons/bs';
 import { IoDocumentTextOutline } from 'react-icons/io5';
 import { FaChartBar } from 'react-icons/fa';
@@ -8,7 +7,7 @@ type SidebarRoute = {
   path: string;
   label: string;
   icon: React.ComponentType;
-  actionType?: 'RESET_FORM'; // Define un tipo de acción en lugar de una función
+  actionType?: 'RESET_FORM';
 };
 
 const sidebarRoutes: SidebarRoute[] = [
@@ -21,7 +20,7 @@ const sidebarRoutes: SidebarRoute[] = [
     path: '/newResearch',
     label: 'New Research',
     icon: IoDocumentTextOutline,
-    actionType: 'RESET_FORM', // Aquí definimos la acción como un tipo de señal
+    actionType: 'RESET_FORM',
   },
   {
     path: '/researchHistory',

@@ -9,6 +9,7 @@ import CognitiveTaskView from '../components/Dashboard/BehaviouralResearch/Build
 import EyeTrackingView from '../components/Dashboard/BehaviouralResearch/BuildViewComponents/EyeTrackingView';
 import ResumenComponent from '../components/Dashboard/BehaviouralResearch/ResultsViewComponents/ResumenComponent';
 import ImplicitAssociationResultsComponent from '../components/Dashboard/BehaviouralResearch/ResultsViewComponents/ImplicitAssociationResultsComponent';
+import ResultsMainScreenV2 from '../components/Dashboard/AIMFrameworkModule/ResultsViewComponents/ResultsMainScreenV2';
 
 type ResearchStage = {
   label: string;
@@ -22,11 +23,9 @@ export const researchStagesConfig: Record<'AIMFramework' | 'BehaviouralResearch'
 }> = {
   AIMFramework: {
     Build: [
-      { label: 'Screener', component: <ScreenerScreenContainer /> },
       { label: 'Welcome Screen', component: <WelcomeScreenContainer /> },
       { label: 'Smart VOC', component: <SmartVocFormV2 /> },
       { label: 'Cognitive Task', component: <CognitiveTaskFormV2 /> },
-      { label: 'Eye Tracking', component: <EyeTrackingView /> },
       { label: 'Thank You', component: <ThankYouScreenContainer /> },
     ],
     Recruit: [
@@ -38,8 +37,8 @@ export const researchStagesConfig: Record<'AIMFramework' | 'BehaviouralResearch'
       { label: 'Thank You', component: <ThankYouScreenContainer /> },
     ],
     Result: [
-      { label: 'Smart VOC', component: <SmartVocFormV2 /> },
-      { label: 'Cognitive Task', component: <CognitiveTaskFormV2 /> },
+      { label: 'Smart VOC', component: <ResultsMainScreenV2 /> },
+      { label: 'Cognitive Task', component: <ResultsMainScreenV2 /> },
     ],
   },
   BehaviouralResearch: {

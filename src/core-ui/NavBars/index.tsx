@@ -13,8 +13,6 @@ const StyledBottomNavigationAction = styled(BottomNavigationAction)<{ selected?:
 const NavBar: React.FC = () => {
   const { selectedScreen, setSelectedScreen } = useNavigationStore();
 
-  console.log('selectedScreen: ', selectedScreen);
-
   return (
     <Box
       sx={{

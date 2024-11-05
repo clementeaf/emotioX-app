@@ -18,7 +18,6 @@ export interface ResultsStore {
 }
 
 export const useResultsStore = create<ResultsStore>((set) => {
-  // Define la configuración inicial basada en el frameworkType por defecto
   const initialFrameworkType: FrameworkType = 'AIMFramework';
   const initialSections: Section[] = initialFrameworkType === 'BehaviouralResearch'
     ? [
@@ -33,7 +32,7 @@ export const useResultsStore = create<ResultsStore>((set) => {
   return {
     frameworkType: initialFrameworkType,
     selectedSection: 'Smart VOC',
-    sections: initialSections, // Inicializa sections basado en el frameworkType
+    sections: initialSections,
 
     setFrameworkType: (type) =>
       set({
@@ -52,7 +51,7 @@ export const useResultsStore = create<ResultsStore>((set) => {
 
     setSections: (sections) => set({ sections }),
 
-    setSelectedSection: (section) => 
-      set((state) => state.selectedSection !== section ? { selectedSection: section } : state),
+    setSelectedSection: (section) =>
+      set((state) => (state.selectedSection !== section ? { selectedSection: section } : state)),
   };
 });
