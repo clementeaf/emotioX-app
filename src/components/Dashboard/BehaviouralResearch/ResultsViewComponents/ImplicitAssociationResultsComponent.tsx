@@ -38,18 +38,16 @@ export default function ImplicitAssociationResultsComponent() {
             }}>
                 <Box sx={{ width: '100%', borderBottom: `1px solid ${grey[300]}` }}>
                     <Typography m={2} fontWeight={700} fontSize={16} color='#212121'>
-                        3.0.- Implicit Association
+                        3.0.- Implicit Association AQUI
                     </Typography>
                 </Box>
 
-                {/* Tabs for switching between components */}
                 <Tabs value={selectedTab} onChange={handleTabChange} sx={{ borderBottom: `1px solid ${grey[300]}`, width: '100%' }}>
                     <Tab label="Radar Chart" />
                     <Tab label="StackedBar Chart" />
                     <Tab label="HorizontalBar Chart" />
                 </Tabs>
 
-                {/* Render content based on the selected tab */}
                 <Box sx={{ p: 2, width: '100%' }}>
                     {selectedTab === 0 && <RadarChartComponent />}
                     {selectedTab === 1 && <StackedBarChartComponent />}
@@ -57,7 +55,6 @@ export default function ImplicitAssociationResultsComponent() {
                 </Box>
             </Box>
 
-            {/* Filters Panel */}
             <Box>
                 <FiltersPanel />
             </Box>

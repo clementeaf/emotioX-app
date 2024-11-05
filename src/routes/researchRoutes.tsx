@@ -1,13 +1,12 @@
-/* eslint-disable react-refresh/only-export-components */
-// src/routes/dashboardRoutes.tsx
+// src/routes/researchRoutes.tsx
 import { lazy, Suspense } from 'react';
 import { RouteObject } from 'react-router-dom';
 import DashboardLayout from '../components/Layout/DashboardLayout';
 
 const ResearchForm = lazy(() => import('../components/ResearchCreationForm/ResearchForm'));
 const AttentionPrediction = lazy(() => import('../components/Dashboard/AttentionPredictionMoule/AttentionPrediction'));
-const AIMFramework = lazy(() => import('../components/Dashboard/AIMFrameworkModule/index'));
-const BehaviouralResearch = lazy(() => import('../components/Dashboard/BehaviouralResearch/index'));
+const AIMFrameworkWrapper = lazy(() => import('../components/Dashboard/AIMFrameworkModule/AIMFrameworkWrapper'));
+const BehaviouralResearchWrapper = lazy(() => import('../components/Dashboard/BehaviouralResearch/BehaviouralResearchWrapper'));
 
 const researchRoutes: RouteObject[] = [
   {
@@ -38,7 +37,7 @@ const researchRoutes: RouteObject[] = [
         path: 'aim-framework',
         element: (
           <Suspense fallback={<div>Loading AIM Framework...</div>}>
-            <AIMFramework />
+            <AIMFrameworkWrapper />
           </Suspense>
         ),
       },
@@ -46,7 +45,7 @@ const researchRoutes: RouteObject[] = [
         path: 'behavioural-research',
         element: (
           <Suspense fallback={<div>Loading Behavioural Research...</div>}>
-            <BehaviouralResearch />
+            <BehaviouralResearchWrapper />
           </Suspense>
         ),
       },

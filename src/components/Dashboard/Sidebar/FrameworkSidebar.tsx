@@ -1,22 +1,20 @@
 import NavBar from '../../../core-ui/NavBars';
-import { useAIMFrameWorkNavigationStore } from '../../../store/useAIMFrameWorkNavigationStore';
-import { BuildSidebar } from './BuildSidebar';
-import { RecruitSidebar } from './RecruitSidebar';
-import ResultsSidebar from './ResultsSidebar';
+import { useNavigationStore } from '../../../store/useNavigationStore';
+import { ResearchSidebar } from './ResearchSideBar';
 
 type FrameworkSidebarProps = {
   frameworkType: 'BehaviouralResearch' | 'AIMFramework';
 };
 
 export default function FrameworkSidebar({ frameworkType }: FrameworkSidebarProps) {
-  const { selectedScreen } = useAIMFrameWorkNavigationStore();
+  const { selectedScreen } = useNavigationStore();
+  const stageTypeMap = ['Build', 'Recruit', 'Result'] as const;
+  const stageType = stageTypeMap[selectedScreen];
 
   return (
     <div>
       <NavBar />
-      {selectedScreen === 0 && <BuildSidebar frameworkType={frameworkType} />}
-      {selectedScreen === 1 && <RecruitSidebar frameworkType={frameworkType} />}
-      {selectedScreen === 2 && <ResultsSidebar frameworkType={frameworkType} />}
+      <ResearchSidebar frameworkType={frameworkType} stageType={stageType} />
     </div>
   );
 }

@@ -3,25 +3,29 @@ import { grey } from '@mui/material/colors';
 import { useSelectedResearchStore } from '../../../store/useSelectedResearchStore';
 import { researchStagesConfig } from '../../../config/researchConfig';
 
-type BuildSidebarProps = {
+type StageType = 'Build' | 'Recruit' | 'Result';
+
+type ResearchSidebarProps = {
   frameworkType: 'BehaviouralResearch' | 'AIMFramework';
+  stageType: StageType;
 };
 
-export function BuildSidebar({ frameworkType }: BuildSidebarProps) {
+export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarProps) {
   const { setStageIndex } = useSelectedResearchStore();
-  const stages = researchStagesConfig[frameworkType];
+  const stages = researchStagesConfig[frameworkType][stageType];
 
   return (
     <Box sx={{ width: '250px' }}>
       <Typography variant="body2" sx={{ color: grey[600], mb: 2, mt: 3, ml: 2 }}>
-        Research Stages
+        Research Stages {stageType}
       </Typography>
 
       <List sx={{ width: '100%', height: 'auto', gap: 0.5, display: 'flex', flexDirection: 'column', ml: 1 }}>
         {stages.map((stage, index) => (
           <ListItem
-            key={index}
+            key={stage.label}
             onClick={() => setStageIndex(index)}
+            disablePadding
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -38,6 +42,28 @@ export function BuildSidebar({ frameworkType }: BuildSidebarProps) {
           </ListItem>
         ))}
       </List>
+
+      {stageType === 'Result' && (
+        <Box sx={{ mt: 2 }}>
+          <Typography
+            component="a"
+            href="#"
+            sx={{
+              display: 'inline-block',
+              color: grey[600],
+              fontWeight: 400,
+              fontSize: 14,
+              lineHeight: '22px',
+              textDecoration: 'none',
+              cursor: 'pointer',
+              borderBottom: `1px solid ${grey[100]}`,
+              '&:hover': { textDecoration: 'underline' },
+            }}
+          >
+            Download Raw Data in .csv
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 }

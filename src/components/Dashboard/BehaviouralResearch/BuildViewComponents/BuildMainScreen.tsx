@@ -1,4 +1,3 @@
-// BuildMainScreen.tsx
 import { Box, Typography } from '@mui/material';
 import { useSelectedResearchStore } from '../../../../store/useSelectedResearchStore';
 import { researchStagesConfig } from '../../../../config/researchConfig';
@@ -6,8 +5,7 @@ import { AddQuestionSection } from '../../../../core-ui/AddQuestionSection';
 
 export default function BuildMainScreen() {
   const { researchType, stageIndex } = useSelectedResearchStore();
-  const stages = researchStagesConfig[researchType];
-  console.log('stages: ', stages);
+  const stages = researchStagesConfig[researchType].Build;
 
   const renderContent = () => {
     return stages[stageIndex]?.component || <Typography>Seleccione una etapa</Typography>;

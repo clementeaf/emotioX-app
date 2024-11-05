@@ -1,7 +1,7 @@
 import React from 'react';
 import { BottomNavigation, BottomNavigationAction, Box } from '@mui/material';
 import { styled } from '@mui/system';
-import { useAIMFrameWorkNavigationStore } from '../../store/useAIMFrameWorkNavigationStore';
+import { useNavigationStore } from '../../store/useNavigationStore';
 
 const StyledBottomNavigationAction = styled(BottomNavigationAction)<{ selected?: boolean }>(
   ({ selected }) => ({
@@ -11,7 +11,9 @@ const StyledBottomNavigationAction = styled(BottomNavigationAction)<{ selected?:
 );
 
 const NavBar: React.FC = () => {
-  const { selectedScreen, setSelectedScreen } = useAIMFrameWorkNavigationStore();
+  const { selectedScreen, setSelectedScreen } = useNavigationStore();
+
+  console.log('selectedScreen: ', selectedScreen);
 
   return (
     <Box

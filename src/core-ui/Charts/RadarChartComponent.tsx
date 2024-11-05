@@ -31,7 +31,7 @@ export const RadarChartComponent = () => {
       </Typography>
 
       {/* Gráfico de Radar */}
-      <ResponsiveContainer width={745} height={745}>
+      <ResponsiveContainer width='100%' height='100%'>
         <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
           <PolarGrid />
           <PolarAngleAxis dataKey="atributo" />

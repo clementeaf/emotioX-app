@@ -13,16 +13,14 @@ export default function Sidebar() {
   const location = useLocation();
   const { setResearchType, setCustomFormat } = useSelectedResearchStore();
 
-  // Actualiza el tipo de investigación y el formato en base a la ruta actual
   useEffect(() => {
     if (location.pathname.includes('/behavioural-research')) {
       setResearchType('BehaviouralResearch');
-      setCustomFormat(false); // Puedes establecerlo dinámicamente
+      setCustomFormat(false);
     } else if (location.pathname.includes('/aim-framework')) {
       setResearchType('AIMFramework');
       setCustomFormat(false);
     }
-    // Agrega más condiciones para otros tipos de investigación
   }, [location.pathname, setResearchType, setCustomFormat]);
 
   const currentConfig = sidebarConfig.find((item) => item.path === location.pathname);

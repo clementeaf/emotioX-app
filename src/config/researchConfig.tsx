@@ -1,4 +1,3 @@
-// researchConfig.ts
 import { ReactNode } from 'react';
 import { WelcomeScreenContainer } from '../core-ui/WelcomeScreenContainer';
 import { ThankYouScreenContainer } from '../components/Dashboard/AIMFrameworkModule/BuildViewComponents/ThankYouScreenContainer';
@@ -16,21 +15,55 @@ type ResearchStage = {
   component: ReactNode;
 };
 
-export const researchStagesConfig: Record<'AIMFramework' | 'BehaviouralResearch', ResearchStage[]> = {
-  AIMFramework: [
-    { label: 'Welcome Screen', component: <WelcomeScreenContainer /> },
-    { label: 'Smart VOC', component: <SmartVocFormV2 /> },
-    { label: 'Cognitive Task', component: <CognitiveTaskFormV2 /> },
-    { label: 'Thank You', component: <ThankYouScreenContainer /> },
-  ],
-  BehaviouralResearch: [
-    { label: 'Screener', component: <ScreenerScreenContainer /> },
-    { label: 'Welcome screen', component: <WelcomeScreenContainer /> },
-    { label: 'Implicit Association', component: <ImplicitAssociationView /> },
-    { label: 'Cognitive task', component: <CognitiveTaskView /> },
-    { label: 'Eye Tracking', component: <EyeTrackingView /> },
-    { label: 'Thank you screen', component: <ThankYouScreenContainer /> },
-    { label: 'Resumen', component: <ResumenComponent /> },
-    { label: 'Implicit Association Results', component: <ImplicitAssociationResultsComponent /> },
-  ],
+export const researchStagesConfig: Record<'AIMFramework' | 'BehaviouralResearch', {
+  Build: ResearchStage[];
+  Recruit: ResearchStage[];
+  Result: ResearchStage[];
+}> = {
+  AIMFramework: {
+    Build: [
+      { label: 'Screener', component: <ScreenerScreenContainer /> },
+      { label: 'Welcome Screen', component: <WelcomeScreenContainer /> },
+      { label: 'Smart VOC', component: <SmartVocFormV2 /> },
+      { label: 'Cognitive Task', component: <CognitiveTaskFormV2 /> },
+      { label: 'Eye Tracking', component: <EyeTrackingView /> },
+      { label: 'Thank You', component: <ThankYouScreenContainer /> },
+    ],
+    Recruit: [
+      { label: 'Screener', component: <ScreenerScreenContainer /> },
+      { label: 'Welcome screen', component: <WelcomeScreenContainer /> },
+      { label: 'Implicit Association', component: <ImplicitAssociationView /> },
+      { label: 'Cognitive Task', component: <CognitiveTaskFormV2 /> },
+      { label: 'Eye Tracking', component: <EyeTrackingView /> },
+      { label: 'Thank You', component: <ThankYouScreenContainer /> },
+    ],
+    Result: [
+      { label: 'Smart VOC', component: <SmartVocFormV2 /> },
+      { label: 'Cognitive Task', component: <CognitiveTaskFormV2 /> },
+    ],
+  },
+  BehaviouralResearch: {
+    Build: [
+      { label: 'Screener', component: <ScreenerScreenContainer /> },
+      { label: 'Welcome screen', component: <WelcomeScreenContainer /> },
+      { label: 'Implicit Association', component: <ImplicitAssociationView /> },
+      { label: 'Cognitive task', component: <CognitiveTaskView /> },
+      { label: 'Eye Tracking', component: <EyeTrackingView /> },
+      { label: 'Thank you screen', component: <ThankYouScreenContainer /> },
+    ],
+    Recruit: [
+      { label: 'Screener', component: <ScreenerScreenContainer /> },
+      { label: 'Welcome screen', component: <WelcomeScreenContainer /> },
+      { label: 'Implicit Association', component: <ImplicitAssociationView /> },
+      { label: 'Cognitive task', component: <CognitiveTaskView /> },
+      { label: 'Eye Tracking', component: <EyeTrackingView /> },
+      { label: 'Thank you screen', component: <ThankYouScreenContainer /> },
+    ],
+    Result: [
+      { label: 'Resumen', component: <ResumenComponent /> },
+      { label: 'Implicit Association Results', component: <ImplicitAssociationResultsComponent /> },
+      { label: 'Cognitive task', component: <CognitiveTaskView /> },
+      { label: 'Eye Tracking', component: <EyeTrackingView /> },
+    ],
+  },
 };

@@ -5,7 +5,7 @@ export default function SidebarHeader() {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/dashboard'); // Redirige a /dashboard
+    navigate('/dashboard');
   };
   return (
     <Stack

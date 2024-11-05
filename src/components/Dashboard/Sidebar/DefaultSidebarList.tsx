@@ -1,13 +1,17 @@
 import { Box, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import sidebarRoutes from '../../../routes/sidebarRoutes';
+import { useResearchStore } from '../../../store/useResearchStore';
 
 export default function DefaultSidebarList() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { resetForm } = useResearchStore();
 
-    const handleRouteClick = async (route: typeof sidebarRoutes[0]) => {
-        if (route.action) route.action();
+    const handleRouteClick = (route: typeof sidebarRoutes[0]) => {
+        if (route.actionType === 'RESET_FORM') {
+            resetForm();
+        }
         navigate(route.path);
     };
 
@@ -30,7 +34,6 @@ export default function DefaultSidebarList() {
                                 },
                             }}
                         >
-                            {/* Icono */}
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -39,11 +42,9 @@ export default function DefaultSidebarList() {
                                     color: isActive ? '#007BFF' : '#4F4F4F',
                                 }}
                             >
-                                {/* Renderizamos el icono dinámicamente */}
                                 <IconComponent />
                             </Box>
 
-                            {/* Texto */}
                             <ListItemText
                                 primary={route.label}
                                 primaryTypographyProps={{

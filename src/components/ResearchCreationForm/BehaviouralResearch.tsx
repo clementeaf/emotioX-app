@@ -3,7 +3,6 @@ import { useResearchStore } from '../../store/useResearchStore';
 
 export default function BehaviouralResearch({ title }: { title: string }) {
     const { selectedResearchType, setResearchModule, selectedResearchModule } = useResearchStore();
-    console.log('selectedResearchModule: ', selectedResearchModule);
 
     const researchTypes = [
         {
