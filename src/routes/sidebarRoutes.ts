@@ -33,6 +33,11 @@ const sidebarRoutes: SidebarRoute[] = [
     icon: LuUser2,
   },
   {
+    path: '/studies',
+    label: 'Studies',
+    icon: LuUser2,
+  },
+  {
     path: '/componentsTest',
     label: 'ComponentTest',
     icon: BsSpeedometer2,

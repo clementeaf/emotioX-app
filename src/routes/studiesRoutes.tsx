@@ -3,11 +3,11 @@ import { lazy, Suspense } from 'react';
 import { RouteObject } from 'react-router-dom';
 import PublicStudyLayout from '../components/Layout/PublicStudyLayout';
 
-const Clients = lazy(() => import('../components/Dashboard/Clients/index'));
+const StudysHistory = lazy(() => import('../components/Clients/StudysHistory'));
 
-const clientsRoutes: RouteObject[] = [
+const studiesRoutes: RouteObject[] = [
   {
-    path: '/clients',
+    path: '/studies',
     element: (
       <Suspense fallback={<div>Loading Dashboard ...</div>}>
         <PublicStudyLayout />
@@ -18,7 +18,7 @@ const clientsRoutes: RouteObject[] = [
         path: '',
         element: (
           <Suspense fallback={<div>Loading Dashboard Main ...</div>}>
-            <Clients /> 
+            <StudysHistory /> 
           </Suspense>
         ),
       },
@@ -26,4 +26,4 @@ const clientsRoutes: RouteObject[] = [
   },
 ];
 
-export default clientsRoutes;
+export default studiesRoutes;

@@ -5,7 +5,6 @@ import { RouteObject } from 'react-router-dom';
 import DashboardLayout from '../components/Layout/DashboardLayout';
 
 const DashboardMain = lazy(() => import('../components/Dashboard/DashboardModule/index'));
-const Clients = lazy(() => import('../components/Dashboard/Clients/index'));
 
 const dashboardRoutes: RouteObject[] = [
   {
@@ -21,14 +20,6 @@ const dashboardRoutes: RouteObject[] = [
         element: (
           <Suspense fallback={<div>Loading Dashboard Main ...</div>}>
             <DashboardMain /> 
-          </Suspense>
-        ),
-      },
-      {
-        path: 'clients',
-        element: (
-          <Suspense fallback={<div>Loading Clients ...</div>}>
-            <Clients />
           </Suspense>
         ),
       },

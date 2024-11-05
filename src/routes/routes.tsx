@@ -8,6 +8,7 @@ import researchRoutes from './researchRoutes';
 import researchHistoryRoutes from './researchHistoryRoutes';
 import componentsTest from './componentTestRoutes';
 import authRoutes from './authRoutes';
+import studiesRoutes from './studiesRoutes';
 
 // Definición única de las rutas
 const routes: RouteObject[] = [
@@ -25,6 +26,7 @@ const routes: RouteObject[] = [
       ...researchRoutes,
       ...researchHistoryRoutes,
       ...componentsTest,
+      ...studiesRoutes,
     ],
   },
   ...authRoutes,
