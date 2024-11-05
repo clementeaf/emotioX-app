@@ -23,11 +23,10 @@ const data = [
 export const RadarChartComponent = () => {
   return (
     <Box sx={{ p: 3, width: 844, height: 889 }}>
-      {/* Título */}
-      <Typography variant="h6" sx={{ mb: 1 }}>
+      <Typography variant="subtitle1" sx={{ mb: 1 }}>
         IAT - Reaction Time Test
       </Typography>
-      <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
+      <Typography variant="body2" color="textSecondary" sx={{ mb: 3 }}>
         Priming display time set in 400 ms
       </Typography>
 

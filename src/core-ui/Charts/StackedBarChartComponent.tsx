@@ -1,8 +1,6 @@
-import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LabelList, ResponsiveContainer, ReferenceLine } from 'recharts';
 
-// Datos de ejemplo
 const data = [
   { atributo: 'Attribute 1', Target1: 35, Target2: 83 },
   { atributo: 'Attribute 2', Target1: 90, Target2: 85 },
@@ -13,13 +11,7 @@ const data = [
 
 export const StackedBarChartComponent = () => {
   return (
-    <Box sx={{ p: 3, bgcolor: '#fff', borderRadius: 2, boxShadow: 1 }}>
-      {/* Título */}
-      <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>
-        O.O.- Implicit Association
-      </Typography>
-
-      {/* Subtítulo */}
+    <Box sx={{ p: 3, maxWidth: '845px' }}>
       <Typography variant="subtitle1" sx={{ mb: 1 }}>
         IAT - Comparing Attribute
       </Typography>
