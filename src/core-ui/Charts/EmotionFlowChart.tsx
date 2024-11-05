@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
   ReferenceLine
 } from 'recharts';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 
 // Datos de ejemplo
 const data = [
@@ -32,14 +32,9 @@ const COLORS = {
   Disgusto: '#E08B7F',
 };
 
-const EmotionFlowChart = () => {
+const EmotionFlowChart = ({maxWidth}: {maxWidth?: number}) => {
   return (
-    <Box sx={{ p: 3, bgcolor: '#fff', borderRadius: 2, boxShadow: 1 }}>
-      {/* Título del gráfico */}
-      <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
-        Flujo de emociones
-      </Typography>
-
+    <Box sx={{ p: 3, maxWidth: maxWidth ?? '', width: '100%' }}>
       <ResponsiveContainer width="100%" height={400}>
         <AreaChart
           data={data}

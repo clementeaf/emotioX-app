@@ -1,8 +1,8 @@
 import { Box, Typography } from '@mui/material';
 
-const GradientBar = () => {
+const GradientBar = ({maxWidth}: {maxWidth: number}) => {
   return (
-    <Box sx={{ width: '100%', maxWidth: 600, mt: 2 }}>
+    <Box sx={{ width: '100%', maxWidth: maxWidth ?? 600, mt: 2 }}>
       {/* Título */}
       <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>
         Atención promedio

@@ -14,9 +14,9 @@ export const DiscardOptionsComponent = () => {
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
-    <Box sx={{ maxWidth: 240 }}>
+    <Box sx={{ maxWidth: 240, maxHeight: 287 }}>
       {/* Título */}
-      <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
+      <Typography sx={{ py: 1, fontWeight: 'bold', fontSize: 14, color: '#262626' }}>
         Discard ID’s by:
       </Typography>
 
@@ -29,7 +29,7 @@ export const DiscardOptionsComponent = () => {
             onClick={() => setSelected(option)}
             sx={{
               width: 'fit-content',
-              padding: '12px 24px',
+              height: 40,
               borderRadius: '4px',
               fontWeight: 'light',
               fontSize: '16px',

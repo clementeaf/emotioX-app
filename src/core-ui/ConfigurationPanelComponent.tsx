@@ -40,7 +40,7 @@ const OptionsGroup = ({ title, options, selected, onSelect }: {
     selected: string;
     onSelect: (option: string) => void;
 }) => (
-    <Box sx={{ mb: 3, width: 240 }}>
+    <Box sx={{ width: 240 }}>
         <Typography variant="body2" sx={{ mb: 1, fontWeight: 'bold' }}>
             {title}
         </Typography>
@@ -55,7 +55,7 @@ const OptionsGroup = ({ title, options, selected, onSelect }: {
                         alignItems: 'center',
                         justifyContent: 'center',
                         width: '100%',
-                        height: 40,
+                        height: 32,
                         fontWeight: 'medium',
                         fontSize: 12,
                         cursor: 'pointer',
@@ -96,7 +96,7 @@ export const ConfigurationPanelComponent = () => {
     };
 
     return (
-        <Box sx={{ p: 3, maxWidth: 400, border: '1px solid #e0e0e0', borderRadius: 2, bgcolor: 'white' }}>
+        <Box sx={{ maxWidth: 400, }}>
             {settingsData.map((setting) => (
                 <OptionsGroup
                     key={setting.title}
