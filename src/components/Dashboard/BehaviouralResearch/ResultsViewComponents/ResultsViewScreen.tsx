@@ -1,18 +1,14 @@
-// BuildMainScreen.tsx
-import { Box, Typography } from '@mui/material';
-import { useSelectedResearchStore } from '../../../../store/useSelectedResearchStore';
-import { researchStagesConfig } from '../../../../config/researchConfig';
-import { AddQuestionSection } from '../../../../core-ui/AddQuestionSection';
+import { Box, Typography } from "@mui/material";
+import { researchStagesConfig } from "../../../../config/researchConfig";
+import { useSelectedResearchStore } from "../../../../store/useSelectedResearchStore";
 
-export default function BuildMainScreen() {
+export default function ResultsViewScreen() {
   const { researchType, stageIndex } = useSelectedResearchStore();
   const stages = researchStagesConfig[researchType];
-  console.log('stages: ', stages);
 
   const renderContent = () => {
     return stages[stageIndex]?.component || <Typography>Seleccione una etapa</Typography>;
   };
-
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%' }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', height: 'auto' }}>
@@ -20,10 +16,7 @@ export default function BuildMainScreen() {
           {researchType} - {stages[stageIndex]?.label || "Stage"}
         </Typography>
         {renderContent()}
-        <Box sx={{ mt: 2 }}>
-          {stageIndex !== 0 && stageIndex !== stages.length - 1 && <AddQuestionSection />}
-        </Box>
       </Box>
     </Box>
-  );
+  )
 }

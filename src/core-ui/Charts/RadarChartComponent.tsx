@@ -22,7 +22,7 @@ const data = [
 
 export const RadarChartComponent = () => {
   return (
-    <Box sx={{ p: 3, width: 844, height: 889, bgcolor: '#fff', borderRadius: 2, boxShadow: 1 }}>
+    <Box sx={{ p: 3, width: 844, height: 889 }}>
       {/* Título */}
       <Typography variant="h6" sx={{ mb: 1 }}>
         IAT - Reaction Time Test

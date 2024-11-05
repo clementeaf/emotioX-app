@@ -30,7 +30,7 @@ export const UserDistributionCard = () => {
         borderRadius: 2,
         border: '1px solid #e0e0e0',
         bgcolor: '#fff',
-        width: 380,
+        width: 360,
         height: 457,
       }}
     >

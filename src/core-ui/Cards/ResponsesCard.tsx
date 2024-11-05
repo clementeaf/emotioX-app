@@ -83,7 +83,7 @@ export const ResponsesCardV2 = () => {
         p: 4,
         borderRadius: 4,
         background: 'linear-gradient(135deg, #3A86FF 0%, #073B99 100%)',
-        width: 368,
+        width: 330,
         height: 139,
         color: '#fff',
         position: 'relative',

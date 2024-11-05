@@ -1,5 +1,7 @@
 import { Box, Typography, List, ListItem, ListItemText } from '@mui/material';
 import { grey, blue } from '@mui/material/colors';
+import { useSelectedResearchStore } from '../../../store/useSelectedResearchStore';
+import { researchStagesConfig } from '../../../config/researchConfig';
 import { MdScreenShare, MdPerson, MdPsychology, MdVisibility } from 'react-icons/md';
 import { GiBrain } from 'react-icons/gi';
 
@@ -7,37 +9,37 @@ type RecruitSidebarProps = {
   frameworkType: 'BehaviouralResearch' | 'AIMFramework';
 };
 
+// Icon map to assign icons based on label
+const ICONS: Record<string, JSX.Element> = {
+  Screener: <MdScreenShare />,
+  'Welcome screen': <MdPerson />,
+  'Implicit Association': <MdPsychology />,
+  'Cognitive task': <GiBrain />,
+  'Eye Tracking': <MdVisibility />,
+  'Thank you screen': <MdScreenShare />,
+};
+
 export function RecruitSidebar({ frameworkType }: RecruitSidebarProps) {
-  const items = frameworkType === 'AIMFramework'
-    ? [
-        { label: 'Screener', icon: <MdScreenShare /> },
-        { label: 'Welcome screen', icon: <MdPerson /> },
-        { label: 'Implicit Association', icon: <MdPsychology /> },
-        { label: 'Cognitive task', icon: <GiBrain /> },
-        { label: 'Eye Tracking', icon: <MdVisibility />, color: blue[700] },
-        { label: 'Thank you screen', icon: <MdScreenShare /> },
-      ]
-    : [
-        { label: 'Participant Screening', icon: <MdPerson /> },
-        { label: 'Behaviour Analysis', icon: <MdPsychology /> },
-      ];
+  const { setStageIndex } = useSelectedResearchStore();
+  const stages = researchStagesConfig[frameworkType]; // Get stages based on framework type
 
   return (
     <Box sx={{ p: 2, width: '100%' }}>
       <Typography variant="body2" sx={{ color: grey[600], mb: 1 }}>
-        Research' stages
+        Research Stages
       </Typography>
       <List>
-        {items.map((item, index) => (
+        {stages.map((stage, index) => (
           <ListItem
             key={index}
+            onClick={() => setStageIndex(index)} // Update global state with selected stage index
             disablePadding
             sx={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
               padding: '8px 16px',
-              backgroundColor: item.color ? blue[50] : 'white',
+              backgroundColor: stage.label === 'Eye Tracking' ? blue[50] : 'white',
               cursor: 'pointer',
               borderBottom: `1px solid ${grey[200]}`,
               '&:hover': {
@@ -46,12 +48,14 @@ export function RecruitSidebar({ frameworkType }: RecruitSidebarProps) {
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Box sx={{ color: item.color || grey[700], pr: 1 }}>{item.icon}</Box>
+              <Box sx={{ color: stage.label === 'Eye Tracking' ? blue[700] : grey[700], pr: 1 }}>
+                {ICONS[stage.label] || <MdScreenShare />} {/* Default icon if label not in ICONS */}
+              </Box>
               <ListItemText
-                primary={item.label}
+                primary={stage.label}
                 primaryTypographyProps={{
-                  fontWeight: item.color ? 'bold' : 'normal',
-                  color: item.color || grey[800],
+                  fontWeight: stage.label === 'Eye Tracking' ? 'bold' : 'normal',
+                  color: stage.label === 'Eye Tracking' ? blue[700] : grey[800],
                 }}
               />
             </Box>

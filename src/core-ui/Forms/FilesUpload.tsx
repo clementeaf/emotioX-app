@@ -9,9 +9,12 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-type FileUploadProps = unknown
+type FileUploadProps = {
+    width?: number;
+    height?: number;
+}
 
-export const FilesUpload: React.FC<FileUploadProps> = () => {
+export const FilesUpload: React.FC<FileUploadProps> = ({ width, height }) => {   
     const [files, setFiles] = useState<File[]>([]);
 
     // Manejo de carga de archivos
@@ -51,8 +54,8 @@ export const FilesUpload: React.FC<FileUploadProps> = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     p: 3,
-                    width: 300,
-                    height: 250,
+                    width: `${width || '350px'}`,
+                    height: `${height || '250px'}`,
                     border: '1px dashed #D0D5DD',
                     cursor: 'pointer',
                     gap: 1,
@@ -109,7 +112,7 @@ export const FilesUpload: React.FC<FileUploadProps> = () => {
             </Paper>
 
             {/* Lista de archivos cargados */}
-            <Box sx={{ width: '350px' }}>
+            <Box sx={{ width: `${width || '350px'}` }}>
                 {files.map((file, index) => (
                     <Box
                         key={index}

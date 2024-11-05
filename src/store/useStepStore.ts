@@ -1,4 +1,4 @@
-// stores/useStepStore.ts
+// store/useStepStore.ts
 import { create } from 'zustand';
 
 interface StepStore {
@@ -7,6 +7,6 @@ interface StepStore {
 }
 
 export const useStepStore = create<StepStore>((set) => ({
-  step: 0,
+  step: 0, // Etapa inicial
   setStep: (step) => set({ step }),
 }));

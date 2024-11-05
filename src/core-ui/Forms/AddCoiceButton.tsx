@@ -2,8 +2,7 @@ import { Box, Button, Checkbox, FormControlLabel, Typography } from "@mui/materi
 
 export function AddChoiceButton({handleAddChoice}: {handleAddChoice: () => void}) {
     return (
-        <Box>
-             {/* Botón para agregar una nueva opción */}
+        <Box sx={{ width: '100%'}}>
              <Button
                 onClick={handleAddChoice}
                 variant="contained"

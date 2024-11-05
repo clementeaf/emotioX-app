@@ -1,6 +1,8 @@
 import { Box } from '@mui/material';
 import { useBevahiouralResearchNavigationStore } from '../../../store/useBevahiouralResearchNavigationStore';
 import BuildMainScreen from './BuildViewComponents/BuildMainScreen';
+import RecruitViewScreen from './RecruitViewComponents/RecruitViewScreen';
+import ResultsViewScreen from './ResultsViewComponents/ResultsViewScreen';
 
 export default function Index() {
     const { selectedScreen } = useBevahiouralResearchNavigationStore();
@@ -8,11 +10,13 @@ export default function Index() {
         <Box sx={{
             display: 'flex',
             flexDirection: 'column',
-            width: '100%',
+            minHeight: '100vh',
             gap: 2,
             mb: 3,
         }}>
             {selectedScreen === 0 && <BuildMainScreen />}
+            {selectedScreen === 1 && <RecruitViewScreen />}
+            {selectedScreen === 2 && <ResultsViewScreen />}
         </Box>
     )
 }

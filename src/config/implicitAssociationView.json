@@ -1,0 +1,67 @@
+{
+    "title": "3.0.- Implicit Association",
+    "description": "Our Implicit Association Test is fully automated technology. You just need to do is add objects or attributes to be tested.",
+    "sections": [
+      {
+        "type": "objectCard",
+        "title": "Object 1",
+        "description": "You can use an image or a name for this.",
+        "fields": [
+          {
+            "type": "text",
+            "label": "Name of the object",
+            "placeholder": "Text the name here"
+          },
+          {
+            "type": "fileUpload",
+            "label": "Click or drag file to this area to upload",
+            "fileTypes": ["image/jpeg", "image/png", "image/gif"],
+            "maxFiles": 10,
+            "maxSize": 5242880
+          }
+        ]
+      },
+      {
+        "type": "dimensionsInput",
+        "title": "Name the dimensions for the objects",
+        "dimensions": ["Dimension 1", "Dimension 2"]
+      },
+      {
+        "type": "criteriaTable",
+        "title": "Criteria",
+        "primingTimes": [300, 400, 500],
+        "rows": 15,
+        "columns": [
+          { "header": "Order", "field": "order" },
+          { "header": "Attribute name", "field": "attributeName" },
+          { "header": "Actions", "field": "actions" }
+        ]
+      },
+      {
+        "type": "instructionFields",
+        "fields": [
+          {
+            "label": "Exercise instructions",
+            "placeholder": "Enter exercise instructions...",
+            "maxChars": 100
+          },
+          {
+            "label": "Test instructions",
+            "placeholder": "Enter test instructions...",
+            "maxChars": 100
+          }
+        ]
+      },
+      {
+        "type": "testConfiguration",
+        "title": "Test configuration",
+        "options": [
+          { "label": "Shuffle Keys", "key": "shuffleKeys" },
+          { "label": "Skip Training", "key": "skipTraining" },
+          { "label": "Make test shorter", "key": "makeTestShorter" },
+          { "label": "Hide test progress bar", "key": "hideProgressBar" }
+        ]
+      }
+    ]
+  }
+  

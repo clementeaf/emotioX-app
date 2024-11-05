@@ -106,7 +106,7 @@ const MetricCard = ({ title, value, change, changeLabel, chartType, data, color 
 // Componente principal
 const DashboardMetrics = () => {
   return (
-    <Grid container spacing={2} sx={{ p: 2 }}>
+    <Grid container spacing={1}>
       <Grid item xs={12} sm={6} md={3}>
         <MetricCard
           title="Visual Attractiveness"

@@ -48,7 +48,7 @@ export function SorteableOptions() {
     };
 
     return (
-        <Box sx={{ width: '100%', ml: 2 }}>
+        <Box sx={{ width: '100%' }}>
             <Typography color='#8C8C8C' fontSize={14} fontWeight={400} lineHeight='22px'>
                 Choices (Press ENTER for new line or paste a list)
             </Typography>

@@ -1,13 +1,14 @@
 import {
   Box,
   FormControl,
+  FormControlLabel,
   MenuItem,
   Select,
-  Switch,
   TextField,
   Typography,
 } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import { AntSwitch } from '../Switch';
 
 interface QuestionInputProps {
   questionText: string;
@@ -21,7 +22,6 @@ interface QuestionInputProps {
 export function QuestionTitleInput({
   questionText,
   questionType,
-  required,
   onQuestionTextChange,
   onQuestionTypeChange,
   onRequiredToggle,
@@ -78,14 +78,12 @@ export function QuestionTitleInput({
       </FormControl>
 
       {/* Switch de "Requerido" */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Typography variant="body2">Required</Typography>
-        <Switch
-          checked={required}
-          onChange={onRequiredToggle}
-          color="primary"
-        />
-      </Box>
+      <FormControlLabel
+        sx={{ mr: 2 }}
+        control={<AntSwitch onChange={onRequiredToggle} />}
+        label={<Typography fontSize='14px' fontWeight={400} color='#8C8C8C'>Required</Typography>}
+        labelPlacement="start"
+      />
     </Box>
   );
 }
