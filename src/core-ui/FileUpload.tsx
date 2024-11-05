@@ -15,7 +15,7 @@ interface FileUploadProps {
     removeFile: (file: File) => void;
 }
 
-export default function FileUpload({ title, accept, maxSize, onUpload, uploadedFiles, removeFile }: FileUploadProps) {
+export default function FileUpload({ accept, maxSize, onUpload, uploadedFiles, removeFile }: FileUploadProps) {
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop: onUpload,
         accept,
@@ -23,25 +23,19 @@ export default function FileUpload({ title, accept, maxSize, onUpload, uploadedF
     });
 
     return (
-        <Box width='395px'>
-            <Typography fontWeight={700} fontSize='20px' lineHeight='22px' color='#565656'>
-                {title || 'Title'}
-            </Typography>
-            <Typography fontWeight={400} fontSize='14px' lineHeight='22px' color='#8c8c8c' mt={2}>
-                Please, upload the images or video for this prediction.
-            </Typography>
-
+        <Box width='100%'>
             <Box
                 {...getRootProps()}
                 sx={{
                     border: `1px solid ${grey[300]}`,
-                    width: '395px',
-                    height: '238px',
+                    width: '100%',
+                    height: '100%',
                     mt: 2,
+                    pb: 2,
                     textAlign: 'center',
                     justifyContent: 'center',
                     cursor: 'pointer',
-                    backgroundColor: isDragActive ? grey[100] : 'transparent',
+                    backgroundColor: grey[100],
                 }}
             >
                 <input {...getInputProps()} />

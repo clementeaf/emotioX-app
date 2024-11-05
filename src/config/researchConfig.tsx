@@ -10,6 +10,7 @@ import EyeTrackingView from '../components/Dashboard/BehaviouralResearch/BuildVi
 import ResumenComponent from '../components/Dashboard/BehaviouralResearch/ResultsViewComponents/ResumenComponent';
 import ImplicitAssociationResultsComponent from '../components/Dashboard/BehaviouralResearch/ResultsViewComponents/ImplicitAssociationResultsComponent';
 import ResultsMainScreenV2 from '../components/Dashboard/AIMFrameworkModule/ResultsViewComponents/ResultsMainScreenV2';
+import EyeTrackingResults from '../components/Dashboard/BehaviouralResearch/ResultsViewComponents/EyeTrackingResults';
 
 type ResearchStage = {
   label: string;
@@ -62,7 +63,7 @@ export const researchStagesConfig: Record<'AIMFramework' | 'BehaviouralResearch'
       { label: 'Resumen', component: <ResumenComponent /> },
       { label: 'Implicit Association Results', component: <ImplicitAssociationResultsComponent /> },
       { label: 'Cognitive task', component: <CognitiveTaskView /> },
-      { label: 'Eye Tracking', component: <EyeTrackingView /> },
+      { label: 'Eye Tracking', component: <EyeTrackingResults /> },
     ],
   },
 };

@@ -63,7 +63,6 @@ interface Row {
 
 export default function ResultsMainScreenV2() {
   const selectedSection = useResultsStore((state) => state.selectedSection);
-  console.log('selectedSection: ', selectedSection);
 
   // Determina la configuración de JSON adecuada
   const configData = useMemo(

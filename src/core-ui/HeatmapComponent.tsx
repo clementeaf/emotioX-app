@@ -13,8 +13,7 @@ export const HeatmapComponent = () => {
     };
 
     return (
-        <Box sx={{ p: 2, width: 800, border: '1px solid #e0e0e0', borderRadius: 2, bgcolor: '#fff' }}>
-            {/* Navegación de pestañas */}
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
             <Tabs
                 value={selectedTab}
                 onChange={handleTabChange}
@@ -23,7 +22,7 @@ export const HeatmapComponent = () => {
                 aria-label="heatmap tabs"
                 sx={{ mb: 2, display: 'flex', alignItems: 'center', height: 40 }}
             >
-                <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', height: '100%'}}>
+                <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', maxWidth: 800, height: '100%'}}>
                 <Tab label="Heat map" iconPosition="start" icon={<Box component="span" sx={{ color: '#FF6B6B' }}>🔥</Box>} />
                 <Tab label="Opacity map" iconPosition="start" icon={<Box component="span" sx={{ color: '#FFD700' }}>☀️</Box>} />
                 <Tab label="Scan Path" iconPosition="start" icon={<Box component="span" sx={{ color: '#3A86FF' }}>👁️</Box>} />
@@ -44,7 +43,7 @@ export const HeatmapComponent = () => {
                 flexDirection: 'column',
                 alignItems: 'flex-start',
                 justifyContent: 'flex-start',
-                width: '800px',
+                width: '100%',
                 height: '100%',
                 mb: 2,
             }}>
