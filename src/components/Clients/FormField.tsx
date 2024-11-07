@@ -3,17 +3,29 @@ import { TextField, FormControl, FormLabel, RadioGroup, Radio, FormControlLabel,
 import { useFormStore } from "../../store/useFormStore";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 
+interface OptionObject {
+  label: string;
+  action: string;
+}
+
 interface FormFieldProps {
   id: string;
   type: string;
   content: string;
-  options?: string[];
+  options?: string[] | OptionObject[];
   images?: string[];
   scale?: number;
   placeholder?: string;
   maxLength?: number;
   maxSelections?: number;
-  hideLabel?: boolean;  // Nuevo prop para controlar la visibilidad del FormLabel
+  hideLabel?: boolean;
+  progress?: {
+    step: number;
+    totalSteps: number;
+    percentage: number;
+  };
+  icon?: string;
+  imageUrl?: string;
 }
 
 const FormField: React.FC<FormFieldProps> = ({ id, type, content, options, images, scale, placeholder, maxLength, maxSelections, hideLabel }) => {
@@ -61,8 +73,13 @@ const FormField: React.FC<FormFieldProps> = ({ id, type, content, options, image
           <FormControl component="fieldset" margin="normal">
             {!hideLabel && <FormLabel component="legend">{content}</FormLabel>}
             <RadioGroup value={responses[id] || ""} onChange={handleChange}>
-              {options?.map((option) => (
-                <FormControlLabel key={option} value={option} control={<Radio />} label={option} />
+              {options?.map((option, index) => (
+                <FormControlLabel
+                  key={typeof option === "string" ? option : `option-${index}`}
+                  value={typeof option === "string" ? option : (option as unknown as { value: string }).value || ''}
+                  control={<Radio />}
+                  label={typeof option === "string" ? option : (option as unknown as { label: string }).label || ''}
+                />
               ))}
             </RadioGroup>
           </FormControl>
@@ -72,16 +89,16 @@ const FormField: React.FC<FormFieldProps> = ({ id, type, content, options, image
         return (
           <FormControl component="fieldset" margin="normal">
             {!hideLabel && <FormLabel component="legend">{content}</FormLabel>}
-            {options?.map((option) => (
+            {options?.map((option, index) => (
               <FormControlLabel
-                key={option}
+                key={typeof option === "string" ? option : `option-${index}`}
                 control={
                   <Checkbox
-                    checked={(responses[id] as string[])?.includes(option) || false}
-                    onChange={() => handleCheckboxChange(option)}
+                    checked={(responses[id] as string[])?.includes(typeof option === "string" ? option : (option as unknown as { value: string }).value || '') || false}
+                    onChange={() => handleCheckboxChange(typeof option === "string" ? option : (option as unknown as { value: string }).value || '')}
                   />
                 }
-                label={option}
+                label={typeof option === "string" ? option : (option as unknown as { label: string }).label || ''}
               />
             ))}
           </FormControl>
@@ -106,7 +123,7 @@ const FormField: React.FC<FormFieldProps> = ({ id, type, content, options, image
             {!hideLabel && <FormLabel component="legend">{content}</FormLabel>}
             <RadioGroup value={responses[id] || ""} onChange={handleChange} row>
               {options?.map((option, index) => (
-                <FormControlLabel key={index} value={option} control={<Radio />} label={option} />
+                <FormControlLabel key={index} value={typeof option === 'string' ? option : (option as { label: string }).label} control={<Radio />} label={typeof option === 'string' ? option : (option as { label: string }).label} />
               ))}
             </RadioGroup>
           </FormControl>
@@ -119,13 +136,12 @@ const FormField: React.FC<FormFieldProps> = ({ id, type, content, options, image
             <Box display="flex" flexWrap="wrap" gap={1} mt={1}>
               {options?.map((option) => (
                 <Button
-                  key={option}
-                  variant={(responses[id] as string[])?.includes(option) ? "contained" : "outlined"}
-                  color={(responses[id] as string[])?.includes(option) ? "primary" : "inherit"}
-                  onClick={() => handleCheckboxChange(option)}
-                  size="small"
-                >
-                  {option}
+                  key={typeof option === 'string' ? option : (option as { label: string }).label}
+                  variant={(responses[id] as string[])?.includes(typeof option === 'string' ? option : (option as { label: string }).label) ? "contained" : "outlined"}
+                  color={(responses[id] as string[])?.includes(typeof option === 'string' ? option : (option as { label: string }).label) ? "primary" : "inherit"}
+                  onClick={() => handleCheckboxChange(typeof option === 'string' ? option : (option as { label: string }).label)}
+                  size="small">
+                  {typeof option === 'string' ? option : (option as { label: string }).label}
                 </Button>
               ))}
             </Box>
@@ -210,6 +226,36 @@ const FormField: React.FC<FormFieldProps> = ({ id, type, content, options, image
 
       case "text":
         return <Typography variant="body1">{content}</Typography>;
+
+      case "classification":
+        return (
+          <Typography variant="h4" align="center">
+            {content}
+          </Typography>
+        );
+
+      case "feedback":
+        return (
+          <Typography variant="h4" align="center" color={content === "oops!" ? "error" : "success"}>
+            {content}
+          </Typography>
+        );
+
+      case "instruction":
+        return (
+          <Box>
+            <Typography variant="body1" paragraph>
+              {content}
+            </Typography>
+            <Box display="flex" justifyContent="center" gap={2}>
+              {(options as OptionObject[]).map(({ label }) => (
+                <Button key={label} variant="contained">
+                  {label}
+                </Button>
+              ))}
+            </Box>
+          </Box>
+        );
 
       default:
         return null;

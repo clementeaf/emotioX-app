@@ -1,0 +1,136 @@
+[
+    {
+        "id": "1",
+        "type": "text",
+        "content": "In this section, you will be presented with words or images to classify into categories using either the 'A' or 'L' key. Try to go as fast as possible while making as few mistakes as possible.",
+        "buttonText": "Next"
+    },
+    {
+        "id": "2",
+        "type": "video",
+        "content": "Por favor, mira el video con las instrucciones para una óptima calibración",
+        "videoUrl": "https://example.com/calibration-instructions.mp4",
+        "buttonText": "Start Calibration"
+    },
+    {
+        "id": "3",
+        "type": "cameraSetup",
+        "content": "To continue",
+        "instructions": "Please confirm that you meet all of the requirements mentioned below by ticking each of the checkboxes.",
+        "checkboxes": [
+            "I am sitting comfortably in front of my camera and will not lie down, stand, nor move out of position.",
+            "My device is stable and on the same level as my face.",
+            "My face is well lit with no bright light behind me or from my side.",
+            "I will not wear glasses, unless they are required for vision. If they are required, they are not reflecting light and my eyes are clearly visible."
+        ],
+        "cameraLabel": "How to set up camera",
+        "buttonText": "Ready",
+        "progress": {
+            "step": 1,
+            "totalSteps": 3,
+            "percentage": 30
+        }
+    },
+    {
+        "id": "4",
+        "type": "preparation",
+        "content": "Preparing eye tracking session...",
+        "progress": {
+            "step": 1,
+            "totalSteps": 3,
+            "percentage": 30
+        }
+    },
+    {
+        "id": "5",
+        "type": "calibration",
+        "content": "Eye-tracking calibration",
+        "instructions": "Follow the red dots with your eyes.",
+        "calibrationPoints": [
+            {"x": 10, "y": 10, "color": "red"},
+            {"x": 50, "y": 10, "color": "red"},
+            {"x": 90, "y": 10, "color": "red"},
+            {"x": 10, "y": 50, "color": "red"},
+            {"x": 50, "y": 50, "color": "red"},
+            {"x": 90, "y": 50, "color": "red"},
+            {"x": 10, "y": 90, "color": "red"},
+            {"x": 50, "y": 90, "color": "red"},
+            {"x": 90, "y": 90, "color": "red"}
+        ],
+        "buttonText": "Continue",
+        "progress": {
+            "step": 1,
+            "totalSteps": 3,
+            "percentage": 30
+        }
+    },
+    {
+        "id": "6",
+        "type": "imageStimulus",
+        "content": "Focus on the image",
+        "imageUrl": "https://example.com/image1.jpg",
+        "buttonText": "Next",
+        "progress": {
+            "step": 2,
+            "totalSteps": 3,
+            "percentage": 60
+        }
+    },
+    {
+        "id": "7",
+        "type": "imageStimulus",
+        "content": "Focus on the image",
+        "imageUrl": "https://example.com/image2.jpg",
+        "buttonText": "Next",
+        "progress": {
+            "step": 2,
+            "totalSteps": 3,
+            "percentage": 70
+        }
+    },
+    {
+        "id": "8",
+        "type": "imageStimulus",
+        "content": "Focus on the image",
+        "imageUrl": "https://example.com/image3.jpg",
+        "buttonText": "Next",
+        "progress": {
+            "step": 2,
+            "totalSteps": 3,
+            "percentage": 80
+        }
+    },
+    {
+        "id": "9",
+        "type": "classification",
+        "content": "Classify the image",
+        "imageUrl": "https://example.com/image4.jpg",
+        "options": [
+            {"label": "A = Positive", "action": "A"},
+            {"label": "L = Negative", "action": "L"}
+        ],
+        "buttonText": "Classify",
+        "progress": {
+            "step": 3,
+            "totalSteps": 3,
+            "percentage": 90
+        }
+    },
+    {
+        "id": "10",
+        "type": "feedback",
+        "content": "Correct",
+        "icon": "success",
+        "progress": {
+            "step": 3,
+            "totalSteps": 3,
+            "percentage": 100
+        }
+    },
+    {
+        "id": "11",
+        "type": "end",
+        "content": "Thank you for completing the study.",
+        "buttonText": "Finish"
+    }
+]
