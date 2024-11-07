@@ -1,0 +1,128 @@
+[
+    {
+      "id": "1",
+      "type": "text",
+      "content": "In this section, you will be presented with words or images to classify into categories using either the 'A' or 'L' key. Try to go as fast as possible while making as few mistakes as possible.",
+      "buttonText": "Next"
+    },
+    {
+      "id": "2",
+      "type": "text",
+      "content": "Keep in mind:\n\n1) Labels at the top of the screen indicate which category goes with which key.\n\n2) Each word or image has a correct category classification.\n\n3) Keep your index fingers on the A and L keys to enable a rapid response.\n\n4) The test gives no results if you go slow, please try to go as fast as possible.",
+      "buttonText": "Start",
+      "progress": {
+        "step": 1,
+        "totalSteps": 3,
+        "percentage": 30
+      }
+    },
+    {
+      "id": "3",
+      "type": "instruction",
+      "content": "Take note:\n\n- Take note of the categories below\n- Position your index fingers\n\nPress the space bar (or one of the purple buttons) to begin",
+      "options": [
+        { "label": "A = Positive", "action": "A" },
+        { "label": "L = Negative", "action": "L" }
+      ],
+      "buttonText": "Begin",
+      "progress": {
+        "step": 1,
+        "totalSteps": 3,
+        "percentage": 30
+      }
+    },
+    {
+      "id": "4",
+      "type": "classification",
+      "content": "Bad",
+      "options": [
+        { "label": "A = Positive", "action": "A" },
+        { "label": "L = Negative", "action": "L" }
+      ],
+      "progress": {
+        "step": 1,
+        "totalSteps": 3,
+        "percentage": 30
+      }
+    },
+    {
+      "id": "5",
+      "type": "classification",
+      "content": "Object 2\nCriteria 3",
+      "options": [
+        { "label": "No", "action": "A" },
+        { "label": "Yes", "action": "L" }
+      ],
+      "progress": {
+        "step": 1,
+        "totalSteps": 3,
+        "percentage": 30
+      }
+    },
+    {
+      "id": "6",
+      "type": "feedback",
+      "content": "oops!",
+      "icon": "error",
+      "progress": {
+        "step": 1,
+        "totalSteps": 3,
+        "percentage": 30
+      }
+    },
+    {
+      "id": "7",
+      "type": "feedback",
+      "content": "Correct",
+      "icon": "success",
+      "progress": {
+        "step": 1,
+        "totalSteps": 3,
+        "percentage": 30
+      }
+    },
+    {
+      "id": "8",
+      "type": "instruction",
+      "content": "Take note:\n\n- Take note of the categories below\n- Position your index fingers\n\nPress the space bar (or one of the purple buttons) to begin",
+      "options": [
+        { "label": "A = Black", "action": "A" },
+        { "label": "L = White", "action": "L" }
+      ],
+      "progress": {
+        "step": 2,
+        "totalSteps": 3,
+        "percentage": 66
+      }
+    },
+    {
+      "id": "9",
+      "type": "classification",
+      "content": "Image",
+      "imageUrl": "https://path/to/image.jpg",
+      "options": [
+        { "label": "A = Black", "action": "A" },
+        { "label": "L = White", "action": "L" }
+      ],
+      "progress": {
+        "step": 2,
+        "totalSteps": 3,
+        "percentage": 66
+      }
+    },
+    {
+      "id": "10",
+      "type": "instruction",
+      "content": "Take note:\n\n- Take note of the categories below\n- Position your index fingers\n\nPress the space bar (or one of the purple buttons) to begin",
+      "options": [
+        { "label": "A = Black or positive", "action": "A" },
+        { "label": "L = White or negative", "action": "L" }
+      ],
+      "progress": {
+        "step": 3,
+        "totalSteps": 3,
+        "percentage": 100
+      }
+    }
+  ]
+  

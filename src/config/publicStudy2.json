@@ -1,0 +1,52 @@
+[
+    {
+      "id": "1",
+      "type": "rating",
+      "content": "How would you rate your overall satisfaction level with [company]?",
+      "scale": 5,
+      "buttonText": "Next"
+    },
+    {
+      "id": "2",
+      "type": "scale",
+      "content": "It was easy for me to handle my issue today",
+      "options": ["Quite Difficult", "Neutral", "Super Easy"],
+      "buttonText": "Continue"
+    },
+    {
+      "id": "3",
+      "type": "scale",
+      "content": "This was the best app my eyes had seen",
+      "options": ["Strongly Disagree", "Neutral", "Strongly Agree"],
+      "buttonText": "Continue"
+    },
+    {
+      "id": "4",
+      "type": "multiSelect",
+      "content": "¿Cómo te sientes con la experiencia que ofrece el servicio?",
+      "options": [
+        "Muy Bueno", "Bueno", "Satisfactorio", "Neutral", "Mejorable",
+        "Regular", "Malo", "Terrible", "Amable", "Educado",
+        "Paciente", "Simpático", "Rápido", "Preciso", "Amoroso"
+      ],
+      "maxSelections": 3,
+      "buttonText": "Continue"
+    },
+    {
+      "id": "5",
+      "type": "scale",
+      "content": "This was the best app my eyes had seen",
+      "options": ["Strongly Disagree", "Neutral", "Strongly Agree"],
+      "scale": 10,
+      "buttonText": "Continue"
+    },
+    {
+      "id": "6",
+      "type": "textArea",
+      "content": "¿Cómo podemos mejorar el servicio?",
+      "placeholder": "e.g., ofrecer furniture, designer",
+      "maxLength": 1000,
+      "buttonText": "Continue"
+    }
+  ]
+  

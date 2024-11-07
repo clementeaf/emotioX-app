@@ -1,44 +1,19 @@
+// src/components/PublicClientsFormSteps.tsx
+
 import { Box } from '@mui/material';
 import { useState } from 'react';
 import { usePublicStudyStepperStore } from '../../store/usePublicStudyStepperStore';
-import RatingStep, { FinishStep, GenderStep, InitialEvaluationStep, InstructionsStep, OptionsStep, ProblemSolveStep, SocialMediaStep, TestAppNavigationStep, TestAppNavigationStepV2 } from './PublishedSteps';
+import stepConfig from '../../config/stepConfig';
 
 export default function PublicClientsFormSteps() {
     const { activeStep } = usePublicStudyStepperStore();
     const [activateStep, setActivateStep] = useState<number>(0);
 
     const handleNextStep = () => {
-        setActivateStep((prevActiveStep: number) => prevActiveStep + 1);
+        setActivateStep((prevStep) => Math.min(prevStep + 1, stepConfig.length - 1));
     };
 
-    const manageStep = () => {
-        switch (activateStep || activeStep) {
-            case 0:
-                return <InitialEvaluationStep handleNextStep={handleNextStep}/>;
-            case 1:
-                return <RatingStep handleNextStep={handleNextStep}/>;
-            case 2:
-                return <InstructionsStep handleNextStep={handleNextStep}/>;
-            case 3:
-                return <GenderStep handleNextStep={handleNextStep}/>;
-            case 4:
-                return <SocialMediaStep handleNextStep={handleNextStep}/>;
-            case 5:
-                return <ProblemSolveStep handleNextStep={handleNextStep}/>;
-            case 6:
-                return <RatingStep handleNextStep={handleNextStep}/>;
-            case 7:
-                return <OptionsStep handleNextStep={handleNextStep}/>;
-            case 8:
-                return <TestAppNavigationStep handleNextStep={handleNextStep}/>;
-            case 9:
-                return <TestAppNavigationStepV2 handleNextStep={handleNextStep}/>;
-            case 10:
-                return <FinishStep />;
-            default:
-                return <InitialEvaluationStep handleNextStep={handleNextStep}/>;
-        }
-    };
+    const StepComponent = stepConfig[activateStep || activeStep]?.component || stepConfig[0].component;
 
     return (
         <Box sx={{
@@ -50,7 +25,7 @@ export default function PublicClientsFormSteps() {
             height: '100%',
             gap: 2,
         }}>
-            {manageStep()}
+            <StepComponent handleNextStep={handleNextStep} />
         </Box>
     );
 }

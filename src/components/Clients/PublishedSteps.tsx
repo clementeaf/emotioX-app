@@ -7,8 +7,7 @@ import PublicStepSorteable from '../../core-ui/Sorteables/PublicStepSorteable';
 import { StepProps } from '../../types/types';
 import testApp from '../../assets/testApp.png';
 
-export function InitialEvaluationStep({ handleNextStep }: StepProps) {
-    const [value, setValue] = useState<number | null>(null);
+function StepsCommonGrid({ children }: { children: React.ReactNode }) {
     return (
         <Box sx={{
             display: 'flex',
@@ -18,7 +17,14 @@ export function InitialEvaluationStep({ handleNextStep }: StepProps) {
             width: '100%',
             height: '100%',
             gap: 2,
-        }}>
+        }}>{children}</Box>
+    )
+}
+
+export function InitialEvaluationStep({ handleNextStep }: StepProps) {
+    const [value, setValue] = useState<number | null>(null);
+    return (
+        <StepsCommonGrid>
             <Box
                 display="flex"
                 flexDirection="column"
@@ -54,21 +60,13 @@ export function InitialEvaluationStep({ handleNextStep }: StepProps) {
                 <SocialStepButton handleNextStep={handleNextStep} label='Next'/>
             </Box>
 
-        </Box>
+        </StepsCommonGrid>
     )
 }
 
 export function SelectCityStep({ handleNextStep }: StepProps) {
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            height: '100%',
-            gap: 2,
-        }}>
+        <StepsCommonGrid>
             <Stack sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -80,21 +78,13 @@ export function SelectCityStep({ handleNextStep }: StepProps) {
                 <CitySelector />
                 <SocialStepButton handleNextStep={handleNextStep} />
             </Stack>
-        </Box>
+        </StepsCommonGrid>
     )
 }
 
 export function InstructionsStep({ handleNextStep }: StepProps) {
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            height: '100%',
-            gap: 2,
-        }}>
+        <StepsCommonGrid>
             <Stack sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -105,21 +95,13 @@ export function InstructionsStep({ handleNextStep }: StepProps) {
                 <Typography width='400px' height='92' textAlign='left' fontWeight={400} fontSize={18} lineHeight='23.4px' color='#8C8C8C'>You have been invited to participate in a survey to improve the future experience of our customers, so we need your help to make this the best experience possible.</Typography>
                 <SocialStepButton handleNextStep={handleNextStep} label='Start' />
             </Stack>
-        </Box>
+        </StepsCommonGrid>
     )
 }
 
 export function GenderStep({ handleNextStep }: StepProps) {
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            height: '100%',
-            gap: 2,
-        }}>
+        <StepsCommonGrid>
             <Stack sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -131,7 +113,7 @@ export function GenderStep({ handleNextStep }: StepProps) {
                 <GenderSelector />
                 <SocialStepButton handleNextStep={handleNextStep} />
             </Stack>
-        </Box>
+        </StepsCommonGrid>
     )
 }
 
@@ -146,6 +128,7 @@ export function SocialMediaStep({ handleNextStep }: StepProps) {
     };
 
     return (
+        <StepsCommonGrid>
         <FormControl component="fieldset" sx={{ width: '300px' }}>
             <Typography fontWeight={600} fontSize={18} mb={2}>¿Dónde tienes cuentas?</Typography>
             <FormGroup>
@@ -169,6 +152,7 @@ export function SocialMediaStep({ handleNextStep }: StepProps) {
             </FormGroup>
             <SocialStepButton handleNextStep={handleNextStep} />
         </FormControl>
+        </StepsCommonGrid>
     );
 }
 
@@ -179,15 +163,7 @@ export function ProblemSolveStep({ handleNextStep }: StepProps) {
         setLink(event.target.value);
     };
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            height: '100%',
-            gap: 2,
-        }}>
+        <StepsCommonGrid>
             <Stack sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -209,7 +185,7 @@ export function ProblemSolveStep({ handleNextStep }: StepProps) {
                 />
                 <SocialStepButton handleNextStep={handleNextStep} />
             </Stack>
-        </Box>
+        </StepsCommonGrid>
     )
 }
 
@@ -221,8 +197,15 @@ export default function RatingStep({ handleNextStep }: StepProps) {
     };
 
     return (
-        <Box sx={{ textAlign: 'start', mt: 4 }}>
-            <Typography fontWeight={300} mb={2}>
+        <StepsCommonGrid>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                maxWidth: 400,
+                gap: 1,
+            }}>
+                <Typography fontWeight={300} mb={2}>
                 ¿El mensaje <b>fue amable</b>?
             </Typography>
             <Stack sx={{
@@ -230,6 +213,7 @@ export default function RatingStep({ handleNextStep }: StepProps) {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 width: '100%',
+                maxWidth: 400,
                 gap: 4,
             }}>
                 {[1, 2, 3, 4, 5].map((value, idx) => (
@@ -268,13 +252,14 @@ export default function RatingStep({ handleNextStep }: StepProps) {
                     </Box>
                 ))}
             </Stack>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', maxWidth: '400px', mx: 'auto', mt: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', maxWidth: '400px', width: '100%', mx: 'auto', mt: 2 }}>
                 <Typography variant="caption" color="#A3AED0" fontWeight={400} fontSize={12}>Muy en desacuerdo</Typography>
                 <Typography variant="caption" color="#A3AED0" fontWeight={400} fontSize={12}>Muy de acuerdo</Typography>
             </Box>
 
             <SocialStepButton handleNextStep={handleNextStep} />
-        </Box>
+            </Box>
+        </StepsCommonGrid>
     );
 }
 
@@ -314,16 +299,17 @@ export function TestAppNavigationStep({ handleNextStep }: StepProps) {
     };
 
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '100%',
-            height: '100%',
-            gap: 2,
-        }}>
-            <Stack sx={{
+        <StepsCommonGrid>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+                height: '100%',
+                gap: 2,
+            }}>
+                <Stack sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
@@ -333,7 +319,7 @@ export function TestAppNavigationStep({ handleNextStep }: StepProps) {
                 mt: 5,
             }}>
                 <Typography
-                    width='800px'
+                    width='700px'
                     height='92'
                     textAlign='center'
                     fontWeight={700}
@@ -390,22 +376,25 @@ export function TestAppNavigationStep({ handleNextStep }: StepProps) {
                     />
                 )}
             </Box>
-        </Box>
+            </Box>
+        </StepsCommonGrid>
     );
 }
 
 
 export function TestAppNavigationStepV2({ handleNextStep }: StepProps) {
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '100%',
-            height: '100%',
-            gap: 2,
-        }}>
+        <StepsCommonGrid>
+            <Box sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+                width: '100%',
+                maxWidth: 800,
+                height: '100%',
+                gap: 2,
+            }}>
             <Stack sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -441,22 +430,14 @@ export function TestAppNavigationStepV2({ handleNextStep }: StepProps) {
                     }}></Box>
                 ))}
             </Box>
-
-        </Box>
+            </Box>
+        </StepsCommonGrid>
     )
 }
 
 export function FinishStep() {
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '100%',
-            height: '100%',
-            gap: 2,
-        }}>
+        <StepsCommonGrid>
             <Stack sx={{
                 display: 'flex',
                 flexDirection: 'column',
@@ -476,11 +457,11 @@ export function FinishStep() {
             </Stack>
 
             <img src={firstSetpPublicImage} alt="firstSetpPublicImage" style={{ width: '721px', height: '100%' }} />
-        </Box>
+        </StepsCommonGrid>
     )
 }
 
-function SocialStepButton({ handleNextStep, label }: StepProps) {
+export function SocialStepButton({ handleNextStep, label }: StepProps) {
     return (
         <Button sx={{
             width: '137px',

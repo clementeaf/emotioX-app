@@ -1,21 +1,22 @@
-import { Box, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material'
-import { grey } from '@mui/material/colors'
+import { Box, List, ListItem, ListItemButton, ListItemText, Typography } from '@mui/material';
+import { grey } from '@mui/material/colors';
 import { useNavigate } from 'react-router-dom';
+import publicStudiesRoutes from '../../routes/publicStudyRoutes';
 
 export default function StudysHistory() {
   const navigate = useNavigate();
 
-  const routes = [
-    { path: '/public/publicStudy', label: 'PublicStudy' },
-    { path: '/public/cognitiveStudy', label: 'CognitiveStudy' },
-    { path: '/public/publishedStudies', label: 'Published Studies' },
-  ];
+  // Filtramos y extraemos las rutas que tienen un label
+  const routes = publicStudiesRoutes
+    .find((route) => route.path === '/public')?.children
+    ?.filter((child) => child.path)
+    .map((child) => ({
+      path: `/public/${child.path}`,
+      label: child.path,
+    })) || [];
 
-  type Route = { path: string; label: string; action?: () => void };
-
-  const handleRouteClick = (route: Route) => {
-    if (route.action) route.action();
-    navigate(route.path);
+  const handleRouteClick = (path: string) => {
+    navigate(path);
   };
 
   return (
@@ -29,7 +30,7 @@ export default function StudysHistory() {
       gap: 2,
       mb: 3,
     }}>
-        <Typography>Public Studys availables</Typography>
+        <Typography>Public Studies Available</Typography>
         <Box sx={{
           display: 'flex',
           flexDirection: 'column',
@@ -43,38 +44,35 @@ export default function StudysHistory() {
           mt: 2,
         }}>
           <List sx={{ height: '100ch' }}>
-            {routes.map((route) => {
-              return (
-                <ListItem key={route.path} disablePadding>
-                  <ListItemButton
-                    onClick={() => handleRouteClick(route)}
+            {routes.map((route) => (
+              <ListItem key={route.path} disablePadding>
+                <ListItemButton
+                  onClick={() => handleRouteClick(route.path)}
+                  sx={{
+                    width: 'auto',
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                    },
+                  }}
+                >
+                  <ListItemText
                     sx={{
-                      width: 'auto',
+                      bgcolor: 'transparent',
                       '&:hover': {
-                        backgroundColor: 'transparent',
+                        border: `1px solid #007BFF`,
                       },
-                  
+                      border: `1px solid ${grey[200]}`,
+                      px: 2,
+                      py: 1,
+                      borderRadius: '4px',
                     }}
-                  >
-                    <ListItemText
-                      sx={{
-                        bgcolor: 'transparent',
-                        '&:hover': {
-                          border: `1px solid #007BFF`,
-                        },
-                        border: `1px solid ${grey[200]}`,
-                        px: 2,
-                        py: 1,
-                        borderRadius: '4px',
-                      }}
-                      primary={route.label}
-                    />
-                  </ListItemButton >
-                </ListItem>
-              );
-            })}
+                    primary={route.label}
+                  />
+                </ListItemButton >
+              </ListItem>
+            ))}
           </List>
         </Box>
     </Box>
-  )
+  );
 }

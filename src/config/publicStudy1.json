@@ -1,0 +1,56 @@
+[
+  {
+    "id": "1",
+    "type": "text",
+    "content": "Hello! You have been invited to participate in a survey to improve the future experience of our customers, so we need your help to make this the best experience possible.",
+    "buttonText": "Start"
+  },
+  {
+    "id": "2",
+    "type": "radio",
+    "content": "¿En qué ciudad vives?",
+    "options": ["Tallin", "Santiago", "Ciudad de México", "Otra"],
+    "buttonText": "Continuar"
+  },
+  {
+    "id": "3",
+    "type": "radio",
+    "content": "¿Con qué género te identificas?",
+    "options": ["Masculino", "Femenino", "Prefiero no decirlo"],
+    "buttonText": "Continuar"
+  },
+  {
+    "id": "4",
+    "type": "checkbox",
+    "content": "¿Dónde tienes cuentas?",
+    "options": ["Facebook", "LinkedIn", "X", "Instagram", "TikTok"],
+    "buttonText": "Continuar"
+  },
+  {
+    "id": "5",
+    "type": "imageChoice",
+    "content": "¿Con cuál de las pantallas puedes autorizar una transacción?",
+    "images": ["image1.png", "image2.png"],
+    "buttonText": "Continuar"
+  },
+  {
+    "id": "6",
+    "type": "rating",
+    "content": "¿El mensaje fue amable?",
+    "scale": 5,
+    "buttonText": "Continuar"
+  },
+  {
+    "id": "7",
+    "type": "prioritize",
+    "content": "¿Cómo priorizarías las siguientes opciones?",
+    "options": ["Opción 1", "Opción 2", "Opción 3"],
+    "buttonText": "Continuar"
+  },
+  {
+    "id": "8",
+    "type": "text",
+    "content": "Gracias por completar la encuesta. Sus respuestas han sido registradas.",
+    "buttonText": "Finalizar"
+  }
+]
