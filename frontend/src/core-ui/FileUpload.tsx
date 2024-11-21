@@ -28,7 +28,8 @@ export default function FileUpload({ accept, maxSize, onUpload, uploadedFiles, r
                 {...getRootProps()}
                 sx={{
                     border: `1px solid ${grey[300]}`,
-                    width: '100%',
+                    maxWidth: '395px',
+                    width: '395px',
                     height: '100%',
                     mt: 2,
                     pb: 2,
@@ -40,13 +41,21 @@ export default function FileUpload({ accept, maxSize, onUpload, uploadedFiles, r
             >
                 <input {...getInputProps()} />
                 <img src={inbox} alt="Inbox icon" style={{ marginTop: '15px', marginBottom: '15px' }} />
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    maxWidth: '380px',
+                }}>
                 <Typography fontWeight={400} fontSize='16px' lineHeight='24px' textAlign='center'>
                     {isDragActive ? 'Drop the files here...' : 'Click or drag file to this area to upload'}
                 </Typography>
                 <Typography fontWeight={400} fontSize='14px' lineHeight='22px' textAlign='center' color='#8c8c8c' marginTop={1}>
                     Support for a single or bulk upload.
                 </Typography>
-                <Typography fontWeight={400} fontSize='14px' lineHeight='22px' textAlign='center' color='#8c8c8c' marginTop={1}>
+                <Typography fontWeight={400} fontSize='14px' lineHeight='22px' textAlign='center' color='#8c8c8c' marginTop={1} maxWidth={300}>
                     JPG, JPEG, PNG, GIF or MP4 (30mb max) are supported.
                 </Typography>
                 <Typography fontWeight={400} fontSize='14px' lineHeight='22px' textAlign='center' color='#8c8c8c' marginTop={1.5}>
@@ -55,6 +64,7 @@ export default function FileUpload({ accept, maxSize, onUpload, uploadedFiles, r
                 <Typography fontWeight={400} fontSize='14px' lineHeight='22px' textAlign='center' color='#8c8c8c'>
                     Max file size is 30MB.
                 </Typography>
+                </Box>
             </Box>
 
             {uploadedFiles.length > 0 && (

@@ -10,6 +10,7 @@ function AppRoutes() {
 }
 
 function App() {
+
   return (
     <Router>
       <ErrorBoundary fallbackRender={fallbackRender}>
