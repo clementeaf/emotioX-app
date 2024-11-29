@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ResearchStep1, ResearchStep2, ResearchStep3 } from './Steps';
 import { useResearchStore } from '../../store/useResearchStore';
-import { Button, Typography } from '@mui/material';
+import { Button } from '@mui/material';
 import FormStepper from '../../core-ui/FormStepper';
 
 const steps = ['Name the Research', 'Kind of Research', 'Techniques for Research'];

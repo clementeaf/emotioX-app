@@ -1,0 +1,238 @@
+openapi: 3.0.0
+info:
+  title: User Management API
+  description: API for user management, including registration, authentication, profile updates, and password management.
+  version: 0.1.1
+servers:
+  - url: http://localhost:3000/api
+    description: Local development server
+
+paths:
+  /users/register:
+    post:
+      summary: Register a new user
+      tags:
+        - Users
+      requestBody:
+        description: User registration data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Jane
+                lastname:
+                  type: string
+                  example: Doe
+                email:
+                  type: string
+                  example: jane.doe@example.com
+                username:
+                  type: string
+                  example: janedoe
+                password:
+                  type: string
+                  example: secretpassword
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request (user already exists or validation failed)
+
+  /users/login:
+    post:
+      summary: Authenticate a user
+      tags:
+        - Users
+      requestBody:
+        description: User login credentials
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: janedoe
+                password:
+                  type: string
+                  example: secretpassword
+      responses:
+        '200':
+          description: User authenticated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT token for authenticated user
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '401':
+          description: Unauthorized (invalid credentials)
+
+  /users/update/{id}:
+    put:
+      summary: Update user profile information
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: string
+      requestBody:
+        description: Updated user profile data (excluding password)
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+
+  /users/delete/{id}:
+    delete:
+      summary: Delete a user account
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User deleted successfully
+        '404':
+          description: User not found
+
+  /users/update-password/{id}:
+    put:
+      summary: Update a user's password
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: string
+      requestBody:
+        description: New password and confirmation
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+                  example: newpassword123
+                confirmNewPassword:
+                  type: string
+                  example: newpassword123
+      responses:
+        '200':
+          description: Password updated successfully
+        '400':
+          description: Password confirmation does not match
+        '404':
+          description: User not found
+
+  /users/refresh-token:
+    post:
+      summary: Refresh JWT access token
+      tags:
+        - Users
+      requestBody:
+        description: Provide the refresh token to generate a new access token
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+                  example: your_refresh_token_here
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: new_access_token_here
+        '400':
+          description: Refresh token is required
+        '401':
+          description: Invalid or expired refresh token
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 57e06c76-04f3-49d2-996e-47a35a8a0df0
+        name:
+          type: string
+          example: Jane
+        lastname:
+          type: string
+          example: Doe
+        email:
+          type: string
+          example: jane.doe@example.com
+        username:
+          type: string
+          example: janedoe
+        createdAt:
+          type: string
+          format: date-time
+          example: 2024-09-29T09:12:33.001Z
+        lastUpdate:
+          type: string
+          format: date-time
+          example: 2024-09-29T09:12:33.001Z
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Jane
+        lastname:
+          type: string
+          example: Doe
+        email:
+          type: string
+          example: jane.doe@example.com
+        username:
+          type: string
+          example: janedoe

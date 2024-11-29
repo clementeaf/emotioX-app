@@ -88,7 +88,7 @@ export default function Login() {
 
     const handleLogin = async (loginData: { identifier: string; password: string }) => {
         try {
-            const response = await axios.post('https://dg1geuc9wi.execute-api.us-east-1.amazonaws.com/login', loginData, {
+            const response = await axios.post('https://ysgzqbh7ch.execute-api.us-east-1.amazonaws.com/login', loginData, {
                 headers: { 'Content-Type': 'application/json' }
             });
             return response;

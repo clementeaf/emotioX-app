@@ -1,0 +1,185 @@
+service: emotioX-backend
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  profile: default
+
+  httpApi:
+    cors:
+      allowedOrigins:
+        - "http://localhost:5173"
+      allowedMethods:
+        - GET
+        - POST
+        - DELETE
+        - PUT
+        - OPTIONS
+      allowCredentials: true
+
+  environment:
+    JWT_SECRET: ${env:JWT_SECRET, 'default_secret'}
+    JWT_REFRESH_SECRET: ${env:JWT_REFRESH_SECRET, 'default_refresh_secret'}
+    CONNECTIONS_TABLE: "${self:service}-${self:provider.stage}-WebSocketConnections"
+    WEBSOCKET_ENDPOINT: "https://cqt41bondd.execute-api.us-east-1.amazonaws.com/dev"
+
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "logs:CreateLogGroup"
+            - "logs:CreateLogStream"
+            - "logs:PutLogEvents"
+          Resource: "arn:aws:logs:*:*:*"
+        - Effect: "Allow"
+          Action: 
+            - "execute-api:ManageConnections"
+          Resource: "arn:aws:execute-api:*:*:*/@connections/*"
+        - Effect: "Allow"
+          Action:
+            - "dynamodb:PutItem"
+            - "dynamodb:GetItem"
+            - "dynamodb:DeleteItem"
+          Resource:
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-${self:provider.stage}-WebSocketConnections"
+        - Effect: "Allow"
+          Action:
+            - "ses:SendEmail"
+            - "ses:SendRawEmail"
+          Resource: "*"
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+
+functions:
+  registerUser:
+    handler: dist/controllers/controller.registerUser
+    events:
+      - httpApi:
+          path: /register
+          method: post
+  
+  getAllUsers:
+    handler: dist/controllers/controller.getAllUsers
+    events:
+      - httpApi:
+          path: /get-all-users
+          method: get
+  
+  getUserById:
+    handler: dist/controllers/controller.getUserById
+    events:
+      - httpApi:
+          path: /get-user/{id}
+          method: get
+  
+  deleteUserById:
+    handler: dist/controllers/controller.deleteUserById
+    events:
+      - httpApi:
+          path: /delete-user/{id}
+          method: delete
+  
+  updateUserById:
+    handler: dist/controllers/controller.updateUserById
+    events:
+      - httpApi:
+          path: /update-user/{id}
+          method: put
+  
+  loginUser:
+    handler: dist/controllers/controller.loginUser
+    events:
+      - httpApi:
+          path: /login
+          method: post
+  
+  logoutUser:
+    handler: dist/controllers/controller.logoutUser
+    events:
+      - httpApi:
+          path: /logout
+          method: post
+  
+  refreshToken:
+    handler: dist/controllers/controller.refreshToken
+    events:
+      - httpApi:
+          path: /refresh-token
+          method: post
+
+  connect:
+    handler: dist/websocket/connectHandler.connectHandler
+    events:
+      - websocket:
+          route: $connect
+  
+  disconnect:
+    handler: dist/websocket/disconnectHandler.disconnectHandler
+    events:
+      - websocket:
+          route: $disconnect
+
+  refresh:
+    handler: src/websocket/refreshHandler.refreshHandler
+    events:
+      - websocket:
+          route: refresh
+      - schedule:
+          rate: rate(15 minutes)
+
+  sendTemporaryPassword:
+    handler: dist/controllers/controller.sendTemporaryPassword
+    events:
+      - httpApi:
+          path: /send-temporary-password
+          method: post
+
+resources:
+  Resources:
+    ApiGatewayLoggingRoleAuthBackend:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: api-gateway-emotioX-backend
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: "Allow"
+              Principal:
+                Service: "apigateway.amazonaws.com"
+              Action: "sts:AssumeRole"
+
+    WebSocketConnectionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:service}-${self:provider.stage}-WebSocketConnections
+        AttributeDefinitions:
+          - AttributeName: "connectionId"
+            AttributeType: "S"
+        KeySchema:
+          - AttributeName: "connectionId"
+            KeyType: "HASH"
+        BillingMode: PAY_PER_REQUEST
+
+    WebSocketApi:
+      Type: AWS::ApiGatewayV2::Api
+      Properties:
+        Name: "${self:service}-${self:provider.stage}-WebSocketApi"
+        ProtocolType: WEBSOCKET
+        RouteSelectionExpression: "$request.body.action"
+
+  Outputs:
+    ApiUrl:
+      Description: "URL base de la API desplegada"
+      Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+    WebSocketApiEndpoint:
+      Description: "WebSocket API Endpoint"
+      Value: !Sub "wss://${WebSocketApi}.execute-api.${AWS::Region}.amazonaws.com/${self:provider.stage}"
+      Export:
+        Name: WebSocketApiEndpoint-${self:provider.stage}

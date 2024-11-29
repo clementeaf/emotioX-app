@@ -1,0 +1,2023 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "The AWS CloudFormation template for this Serverless application",
+  "Resources": {
+    "ServerlessDeploymentBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ServerlessDeploymentBucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "ServerlessDeploymentBucket"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": "s3:*",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      },
+                      "/*"
+                    ]
+                  ]
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":s3:::",
+                      {
+                        "Ref": "ServerlessDeploymentBucket"
+                      }
+                    ]
+                  ]
+                }
+              ],
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": false
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "RegisterUserLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/emotioX-backend-dev-registerUser"
+      }
+    },
+    "GetAllUsersLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/emotioX-backend-dev-getAllUsers"
+      }
+    },
+    "GetUserByIdLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/emotioX-backend-dev-getUserById"
+      }
+    },
+    "DeleteUserByIdLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/emotioX-backend-dev-deleteUserById"
+      }
+    },
+    "UpdateUserByIdLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/emotioX-backend-dev-updateUserById"
+      }
+    },
+    "LoginUserLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/emotioX-backend-dev-loginUser"
+      }
+    },
+    "LogoutUserLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/emotioX-backend-dev-logoutUser"
+      }
+    },
+    "RefreshTokenLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/emotioX-backend-dev-refreshToken"
+      }
+    },
+    "ConnectLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/emotioX-backend-dev-connect"
+      }
+    },
+    "DisconnectLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/emotioX-backend-dev-disconnect"
+      }
+    },
+    "RefreshLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/emotioX-backend-dev-refresh"
+      }
+    },
+    "SendTemporaryPasswordLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/emotioX-backend-dev-sendTemporaryPassword"
+      }
+    },
+    "IamRoleLambdaExecution": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": {
+              "Fn::Join": [
+                "-",
+                [
+                  "emotioX-backend",
+                  "dev",
+                  "lambda"
+                ]
+              ]
+            },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogStream",
+                    "logs:CreateLogGroup",
+                    "logs:TagResource"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/emotioX-backend-dev*:*"
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/emotioX-backend-dev*:*:*"
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": "arn:aws:logs:*:*:*"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "execute-api:ManageConnections"
+                  ],
+                  "Resource": "arn:aws:execute-api:*:*:*/@connections/*"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "dynamodb:PutItem",
+                    "dynamodb:GetItem",
+                    "dynamodb:DeleteItem"
+                  ],
+                  "Resource": "arn:aws:dynamodb:us-east-1:*:table/emotioX-backend-dev-WebSocketConnections"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "ses:SendEmail",
+                    "ses:SendRawEmail"
+                  ],
+                  "Resource": "*"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "execute-api:ManageConnections"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Sub": "arn:${AWS::Partition}:execute-api:*:*:*/@connections/*"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "Path": "/",
+        "RoleName": {
+          "Fn::Join": [
+            "-",
+            [
+              "emotioX-backend",
+              "dev",
+              {
+                "Ref": "AWS::Region"
+              },
+              "lambdaRole"
+            ]
+          ]
+        }
+      }
+    },
+    "RegisterUserLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/emotioX-backend/dev/1732823158776-2024-11-28T19:45:58.776Z/emotioX-backend.zip"
+        },
+        "Handler": "dist/controllers/controller.registerUser",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "emotioX-backend-dev-registerUser",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "JWT_SECRET": "default_secret",
+            "JWT_REFRESH_SECRET": "default_refresh_secret",
+            "CONNECTIONS_TABLE": "emotioX-backend-dev-WebSocketConnections",
+            "WEBSOCKET_ENDPOINT": "https://cqt41bondd.execute-api.us-east-1.amazonaws.com/dev"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "RegisterUserLogGroup"
+      ]
+    },
+    "GetAllUsersLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/emotioX-backend/dev/1732823158776-2024-11-28T19:45:58.776Z/emotioX-backend.zip"
+        },
+        "Handler": "dist/controllers/controller.getAllUsers",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "emotioX-backend-dev-getAllUsers",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "JWT_SECRET": "default_secret",
+            "JWT_REFRESH_SECRET": "default_refresh_secret",
+            "CONNECTIONS_TABLE": "emotioX-backend-dev-WebSocketConnections",
+            "WEBSOCKET_ENDPOINT": "https://cqt41bondd.execute-api.us-east-1.amazonaws.com/dev"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "GetAllUsersLogGroup"
+      ]
+    },
+    "GetUserByIdLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/emotioX-backend/dev/1732823158776-2024-11-28T19:45:58.776Z/emotioX-backend.zip"
+        },
+        "Handler": "dist/controllers/controller.getUserById",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "emotioX-backend-dev-getUserById",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "JWT_SECRET": "default_secret",
+            "JWT_REFRESH_SECRET": "default_refresh_secret",
+            "CONNECTIONS_TABLE": "emotioX-backend-dev-WebSocketConnections",
+            "WEBSOCKET_ENDPOINT": "https://cqt41bondd.execute-api.us-east-1.amazonaws.com/dev"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "GetUserByIdLogGroup"
+      ]
+    },
+    "DeleteUserByIdLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/emotioX-backend/dev/1732823158776-2024-11-28T19:45:58.776Z/emotioX-backend.zip"
+        },
+        "Handler": "dist/controllers/controller.deleteUserById",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "emotioX-backend-dev-deleteUserById",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "JWT_SECRET": "default_secret",
+            "JWT_REFRESH_SECRET": "default_refresh_secret",
+            "CONNECTIONS_TABLE": "emotioX-backend-dev-WebSocketConnections",
+            "WEBSOCKET_ENDPOINT": "https://cqt41bondd.execute-api.us-east-1.amazonaws.com/dev"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "DeleteUserByIdLogGroup"
+      ]
+    },
+    "UpdateUserByIdLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/emotioX-backend/dev/1732823158776-2024-11-28T19:45:58.776Z/emotioX-backend.zip"
+        },
+        "Handler": "dist/controllers/controller.updateUserById",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "emotioX-backend-dev-updateUserById",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "JWT_SECRET": "default_secret",
+            "JWT_REFRESH_SECRET": "default_refresh_secret",
+            "CONNECTIONS_TABLE": "emotioX-backend-dev-WebSocketConnections",
+            "WEBSOCKET_ENDPOINT": "https://cqt41bondd.execute-api.us-east-1.amazonaws.com/dev"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "UpdateUserByIdLogGroup"
+      ]
+    },
+    "LoginUserLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/emotioX-backend/dev/1732823158776-2024-11-28T19:45:58.776Z/emotioX-backend.zip"
+        },
+        "Handler": "dist/controllers/controller.loginUser",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "emotioX-backend-dev-loginUser",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "JWT_SECRET": "default_secret",
+            "JWT_REFRESH_SECRET": "default_refresh_secret",
+            "CONNECTIONS_TABLE": "emotioX-backend-dev-WebSocketConnections",
+            "WEBSOCKET_ENDPOINT": "https://cqt41bondd.execute-api.us-east-1.amazonaws.com/dev"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "LoginUserLogGroup"
+      ]
+    },
+    "LogoutUserLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/emotioX-backend/dev/1732823158776-2024-11-28T19:45:58.776Z/emotioX-backend.zip"
+        },
+        "Handler": "dist/controllers/controller.logoutUser",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "emotioX-backend-dev-logoutUser",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "JWT_SECRET": "default_secret",
+            "JWT_REFRESH_SECRET": "default_refresh_secret",
+            "CONNECTIONS_TABLE": "emotioX-backend-dev-WebSocketConnections",
+            "WEBSOCKET_ENDPOINT": "https://cqt41bondd.execute-api.us-east-1.amazonaws.com/dev"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "LogoutUserLogGroup"
+      ]
+    },
+    "RefreshTokenLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/emotioX-backend/dev/1732823158776-2024-11-28T19:45:58.776Z/emotioX-backend.zip"
+        },
+        "Handler": "dist/controllers/controller.refreshToken",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "emotioX-backend-dev-refreshToken",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "JWT_SECRET": "default_secret",
+            "JWT_REFRESH_SECRET": "default_refresh_secret",
+            "CONNECTIONS_TABLE": "emotioX-backend-dev-WebSocketConnections",
+            "WEBSOCKET_ENDPOINT": "https://cqt41bondd.execute-api.us-east-1.amazonaws.com/dev"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "RefreshTokenLogGroup"
+      ]
+    },
+    "ConnectLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/emotioX-backend/dev/1732823158776-2024-11-28T19:45:58.776Z/emotioX-backend.zip"
+        },
+        "Handler": "dist/websocket/connectHandler.connectHandler",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "emotioX-backend-dev-connect",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "JWT_SECRET": "default_secret",
+            "JWT_REFRESH_SECRET": "default_refresh_secret",
+            "CONNECTIONS_TABLE": "emotioX-backend-dev-WebSocketConnections",
+            "WEBSOCKET_ENDPOINT": "https://cqt41bondd.execute-api.us-east-1.amazonaws.com/dev"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "ConnectLogGroup"
+      ]
+    },
+    "DisconnectLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/emotioX-backend/dev/1732823158776-2024-11-28T19:45:58.776Z/emotioX-backend.zip"
+        },
+        "Handler": "dist/websocket/disconnectHandler.disconnectHandler",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "emotioX-backend-dev-disconnect",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "JWT_SECRET": "default_secret",
+            "JWT_REFRESH_SECRET": "default_refresh_secret",
+            "CONNECTIONS_TABLE": "emotioX-backend-dev-WebSocketConnections",
+            "WEBSOCKET_ENDPOINT": "https://cqt41bondd.execute-api.us-east-1.amazonaws.com/dev"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "DisconnectLogGroup"
+      ]
+    },
+    "RefreshLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/emotioX-backend/dev/1732823158776-2024-11-28T19:45:58.776Z/emotioX-backend.zip"
+        },
+        "Handler": "src/websocket/refreshHandler.refreshHandler",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "emotioX-backend-dev-refresh",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "JWT_SECRET": "default_secret",
+            "JWT_REFRESH_SECRET": "default_refresh_secret",
+            "CONNECTIONS_TABLE": "emotioX-backend-dev-WebSocketConnections",
+            "WEBSOCKET_ENDPOINT": "https://cqt41bondd.execute-api.us-east-1.amazonaws.com/dev"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "RefreshLogGroup"
+      ]
+    },
+    "SendTemporaryPasswordLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/emotioX-backend/dev/1732823158776-2024-11-28T19:45:58.776Z/emotioX-backend.zip"
+        },
+        "Handler": "dist/controllers/controller.sendTemporaryPassword",
+        "Runtime": "nodejs18.x",
+        "FunctionName": "emotioX-backend-dev-sendTemporaryPassword",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "JWT_SECRET": "default_secret",
+            "JWT_REFRESH_SECRET": "default_refresh_secret",
+            "CONNECTIONS_TABLE": "emotioX-backend-dev-WebSocketConnections",
+            "WEBSOCKET_ENDPOINT": "https://cqt41bondd.execute-api.us-east-1.amazonaws.com/dev"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "SendTemporaryPasswordLogGroup"
+      ]
+    },
+    "RegisterUserLambdaVersion0k5K653BYCOPsuaObp52kW0CC78QmANB5UhKw1YcgMA": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "RegisterUserLambdaFunction"
+        },
+        "CodeSha256": "c1opsnTahGovg2K0omdAU/8uY+KGVR93exC637qMPBU="
+      }
+    },
+    "GetAllUsersLambdaVersionY9t8uwpFvEI4veoXgfPeUozzcL44d0Q9QgBtuMYMw": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetAllUsersLambdaFunction"
+        },
+        "CodeSha256": "c1opsnTahGovg2K0omdAU/8uY+KGVR93exC637qMPBU="
+      }
+    },
+    "GetUserByIdLambdaVersioneR7H4mb1QSRE0lwMgLGasIZwUnViJujem3ukvMRIRc": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "GetUserByIdLambdaFunction"
+        },
+        "CodeSha256": "c1opsnTahGovg2K0omdAU/8uY+KGVR93exC637qMPBU="
+      }
+    },
+    "DeleteUserByIdLambdaVersion0lVzCUQe2H5xhHdDb87SaA6GWtIdcbwByvvIDWL7Y": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "DeleteUserByIdLambdaFunction"
+        },
+        "CodeSha256": "c1opsnTahGovg2K0omdAU/8uY+KGVR93exC637qMPBU="
+      }
+    },
+    "UpdateUserByIdLambdaVersionoQAF88HgGashk9rnaE6e9vdwIvkA89fPpZRHKaI": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "UpdateUserByIdLambdaFunction"
+        },
+        "CodeSha256": "c1opsnTahGovg2K0omdAU/8uY+KGVR93exC637qMPBU="
+      }
+    },
+    "LoginUserLambdaVersionL1ZjvwpGL50D87n2XnyZM5T1SE7ddT7GY9VH35Y3k": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "LoginUserLambdaFunction"
+        },
+        "CodeSha256": "c1opsnTahGovg2K0omdAU/8uY+KGVR93exC637qMPBU="
+      }
+    },
+    "LogoutUserLambdaVersionunornAC7xgXjoI8QU0VhfO9bRWerST9SMLFdtpDkI": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "LogoutUserLambdaFunction"
+        },
+        "CodeSha256": "c1opsnTahGovg2K0omdAU/8uY+KGVR93exC637qMPBU="
+      }
+    },
+    "RefreshTokenLambdaVersionCAjA9oONhW34Pi6V2VZEOK56sjd8k6YQeo4QvvQDbA": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "RefreshTokenLambdaFunction"
+        },
+        "CodeSha256": "c1opsnTahGovg2K0omdAU/8uY+KGVR93exC637qMPBU="
+      }
+    },
+    "ConnectLambdaVersionNd2ycSl8vcCXYVLsMmqmNlnTFTPI5OzETovKE3wifc": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "ConnectLambdaFunction"
+        },
+        "CodeSha256": "c1opsnTahGovg2K0omdAU/8uY+KGVR93exC637qMPBU="
+      }
+    },
+    "DisconnectLambdaVersionDnN3FKF3rAFkkHV7rufcHTYsQgdfNfuEsGiNuyUbk": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "DisconnectLambdaFunction"
+        },
+        "CodeSha256": "c1opsnTahGovg2K0omdAU/8uY+KGVR93exC637qMPBU="
+      }
+    },
+    "RefreshLambdaVersionKqq7T12TxJdSju9v6qtMviRlXjmu8z2oxrX9fHhiaU": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "RefreshLambdaFunction"
+        },
+        "CodeSha256": "c1opsnTahGovg2K0omdAU/8uY+KGVR93exC637qMPBU="
+      }
+    },
+    "SendTemporaryPasswordLambdaVersiontJYeySAHxZeuxlE12bmsZ8nzhR3DcUDdAssMfEga0M4": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "SendTemporaryPasswordLambdaFunction"
+        },
+        "CodeSha256": "c1opsnTahGovg2K0omdAU/8uY+KGVR93exC637qMPBU="
+      }
+    },
+    "RefreshEventsRuleSchedule1": {
+      "Type": "AWS::Events::Rule",
+      "Properties": {
+        "ScheduleExpression": "rate(15 minutes)",
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "RefreshLambdaFunction",
+                "Arn"
+              ]
+            },
+            "Id": "refreshSchedule"
+          }
+        ]
+      }
+    },
+    "RefreshLambdaPermissionEventsRuleSchedule1": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "RefreshLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "RefreshEventsRuleSchedule1",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "WebsocketsApi": {
+      "Type": "AWS::ApiGatewayV2::Api",
+      "Properties": {
+        "Name": "dev-emotioX-backend-websockets",
+        "RouteSelectionExpression": "$request.body.action",
+        "Description": "Serverless Websockets",
+        "ProtocolType": "WEBSOCKET"
+      }
+    },
+    "ConnectWebsocketsIntegration": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "WebsocketsApi"
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":apigateway:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":lambda:path/2015-03-31/functions/",
+              {
+                "Fn::GetAtt": [
+                  "ConnectLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "/invocations"
+            ]
+          ]
+        }
+      }
+    },
+    "DisconnectWebsocketsIntegration": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "WebsocketsApi"
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":apigateway:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":lambda:path/2015-03-31/functions/",
+              {
+                "Fn::GetAtt": [
+                  "DisconnectLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "/invocations"
+            ]
+          ]
+        }
+      }
+    },
+    "RefreshWebsocketsIntegration": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "WebsocketsApi"
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":apigateway:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":lambda:path/2015-03-31/functions/",
+              {
+                "Fn::GetAtt": [
+                  "RefreshLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "/invocations"
+            ]
+          ]
+        }
+      }
+    },
+    "ConnectLambdaPermissionWebsockets": {
+      "Type": "AWS::Lambda::Permission",
+      "DependsOn": [
+        "WebsocketsApi",
+        "ConnectLambdaFunction"
+      ],
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "ConnectLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com"
+      }
+    },
+    "DisconnectLambdaPermissionWebsockets": {
+      "Type": "AWS::Lambda::Permission",
+      "DependsOn": [
+        "WebsocketsApi",
+        "DisconnectLambdaFunction"
+      ],
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "DisconnectLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com"
+      }
+    },
+    "RefreshLambdaPermissionWebsockets": {
+      "Type": "AWS::Lambda::Permission",
+      "DependsOn": [
+        "WebsocketsApi",
+        "RefreshLambdaFunction"
+      ],
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "RefreshLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com"
+      }
+    },
+    "SconnectWebsocketsRoute": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "WebsocketsApi"
+        },
+        "RouteKey": "$connect",
+        "AuthorizationType": "NONE",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "ConnectWebsocketsIntegration"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "SdisconnectWebsocketsRoute": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "WebsocketsApi"
+        },
+        "RouteKey": "$disconnect",
+        "AuthorizationType": "NONE",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "DisconnectWebsocketsIntegration"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "refreshWebsocketsRoute": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "WebsocketsApi"
+        },
+        "RouteKey": "refresh",
+        "AuthorizationType": "NONE",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "RefreshWebsocketsIntegration"
+              }
+            ]
+          ]
+        }
+      }
+    },
+    "WebsocketsDeploymentStage": {
+      "Type": "AWS::ApiGatewayV2::Stage",
+      "Properties": {
+        "ApiId": {
+          "Ref": "WebsocketsApi"
+        },
+        "StageName": "dev",
+        "Description": "Serverless Websockets",
+        "DeploymentId": {
+          "Ref": "WebsocketsDeploymentFzZUPfGAidyyUc0FS7f0cuNp8Pl5ZFBWl357Hzm2EQ"
+        }
+      }
+    },
+    "WebsocketsDeploymentFzZUPfGAidyyUc0FS7f0cuNp8Pl5ZFBWl357Hzm2EQ": {
+      "Type": "AWS::ApiGatewayV2::Deployment",
+      "DependsOn": [
+        "SconnectWebsocketsRoute",
+        "SdisconnectWebsocketsRoute",
+        "refreshWebsocketsRoute"
+      ],
+      "Properties": {
+        "ApiId": {
+          "Ref": "WebsocketsApi"
+        },
+        "Description": "Serverless Websockets"
+      }
+    },
+    "HttpApi": {
+      "Type": "AWS::ApiGatewayV2::Api",
+      "Properties": {
+        "Name": "dev-emotioX-backend",
+        "ProtocolType": "HTTP",
+        "CorsConfiguration": {
+          "AllowCredentials": true,
+          "AllowHeaders": [
+            "Content-Type",
+            "X-Amz-Date",
+            "Authorization",
+            "X-Api-Key",
+            "X-Amz-Security-Token",
+            "X-Amz-User-Agent",
+            "X-Amzn-Trace-Id"
+          ],
+          "AllowMethods": [
+            "GET",
+            "POST",
+            "DELETE",
+            "PUT",
+            "OPTIONS"
+          ],
+          "AllowOrigins": [
+            "http://localhost:5173"
+          ]
+        }
+      }
+    },
+    "HttpApiStage": {
+      "Type": "AWS::ApiGatewayV2::Stage",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "StageName": "$default",
+        "AutoDeploy": true,
+        "DefaultRouteSettings": {
+          "DetailedMetricsEnabled": false
+        }
+      }
+    },
+    "RegisterUserLambdaPermissionHttpApi": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "RegisterUserLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "HttpApi"
+              },
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+    "HttpApiIntegrationRegisterUser": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": {
+          "Fn::GetAtt": [
+            "RegisterUserLambdaFunction",
+            "Arn"
+          ]
+        },
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      }
+    },
+    "HttpApiRoutePostRegister": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "POST /register",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationRegisterUser"
+              }
+            ]
+          ]
+        }
+      },
+      "DependsOn": "HttpApiIntegrationRegisterUser"
+    },
+    "GetAllUsersLambdaPermissionHttpApi": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetAllUsersLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "HttpApi"
+              },
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+    "HttpApiIntegrationGetAllUsers": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": {
+          "Fn::GetAtt": [
+            "GetAllUsersLambdaFunction",
+            "Arn"
+          ]
+        },
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      }
+    },
+    "HttpApiRouteGetGetDashallDashusers": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "GET /get-all-users",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationGetAllUsers"
+              }
+            ]
+          ]
+        }
+      },
+      "DependsOn": "HttpApiIntegrationGetAllUsers"
+    },
+    "GetUserByIdLambdaPermissionHttpApi": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "GetUserByIdLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "HttpApi"
+              },
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+    "HttpApiIntegrationGetUserById": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": {
+          "Fn::GetAtt": [
+            "GetUserByIdLambdaFunction",
+            "Arn"
+          ]
+        },
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      }
+    },
+    "HttpApiRouteGetGetDashuserIdVar": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "GET /get-user/{id}",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationGetUserById"
+              }
+            ]
+          ]
+        }
+      },
+      "DependsOn": "HttpApiIntegrationGetUserById"
+    },
+    "DeleteUserByIdLambdaPermissionHttpApi": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "DeleteUserByIdLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "HttpApi"
+              },
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+    "HttpApiIntegrationDeleteUserById": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": {
+          "Fn::GetAtt": [
+            "DeleteUserByIdLambdaFunction",
+            "Arn"
+          ]
+        },
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      }
+    },
+    "HttpApiRouteDeleteDeleteDashuserIdVar": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "DELETE /delete-user/{id}",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationDeleteUserById"
+              }
+            ]
+          ]
+        }
+      },
+      "DependsOn": "HttpApiIntegrationDeleteUserById"
+    },
+    "UpdateUserByIdLambdaPermissionHttpApi": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "UpdateUserByIdLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "HttpApi"
+              },
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+    "HttpApiIntegrationUpdateUserById": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": {
+          "Fn::GetAtt": [
+            "UpdateUserByIdLambdaFunction",
+            "Arn"
+          ]
+        },
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      }
+    },
+    "HttpApiRoutePutUpdateDashuserIdVar": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "PUT /update-user/{id}",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationUpdateUserById"
+              }
+            ]
+          ]
+        }
+      },
+      "DependsOn": "HttpApiIntegrationUpdateUserById"
+    },
+    "LoginUserLambdaPermissionHttpApi": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "LoginUserLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "HttpApi"
+              },
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+    "HttpApiIntegrationLoginUser": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": {
+          "Fn::GetAtt": [
+            "LoginUserLambdaFunction",
+            "Arn"
+          ]
+        },
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      }
+    },
+    "HttpApiRoutePostLogin": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "POST /login",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationLoginUser"
+              }
+            ]
+          ]
+        }
+      },
+      "DependsOn": "HttpApiIntegrationLoginUser"
+    },
+    "LogoutUserLambdaPermissionHttpApi": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "LogoutUserLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "HttpApi"
+              },
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+    "HttpApiIntegrationLogoutUser": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": {
+          "Fn::GetAtt": [
+            "LogoutUserLambdaFunction",
+            "Arn"
+          ]
+        },
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      }
+    },
+    "HttpApiRoutePostLogout": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "POST /logout",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationLogoutUser"
+              }
+            ]
+          ]
+        }
+      },
+      "DependsOn": "HttpApiIntegrationLogoutUser"
+    },
+    "RefreshTokenLambdaPermissionHttpApi": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "RefreshTokenLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "HttpApi"
+              },
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+    "HttpApiIntegrationRefreshToken": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": {
+          "Fn::GetAtt": [
+            "RefreshTokenLambdaFunction",
+            "Arn"
+          ]
+        },
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      }
+    },
+    "HttpApiRoutePostRefreshDashtoken": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "POST /refresh-token",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationRefreshToken"
+              }
+            ]
+          ]
+        }
+      },
+      "DependsOn": "HttpApiIntegrationRefreshToken"
+    },
+    "SendTemporaryPasswordLambdaPermissionHttpApi": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "SendTemporaryPasswordLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "HttpApi"
+              },
+              "/*"
+            ]
+          ]
+        }
+      }
+    },
+    "HttpApiIntegrationSendTemporaryPassword": {
+      "Type": "AWS::ApiGatewayV2::Integration",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "IntegrationType": "AWS_PROXY",
+        "IntegrationUri": {
+          "Fn::GetAtt": [
+            "SendTemporaryPasswordLambdaFunction",
+            "Arn"
+          ]
+        },
+        "PayloadFormatVersion": "2.0",
+        "TimeoutInMillis": 30000
+      }
+    },
+    "HttpApiRoutePostSendDashtemporaryDashpassword": {
+      "Type": "AWS::ApiGatewayV2::Route",
+      "Properties": {
+        "ApiId": {
+          "Ref": "HttpApi"
+        },
+        "RouteKey": "POST /send-temporary-password",
+        "Target": {
+          "Fn::Join": [
+            "/",
+            [
+              "integrations",
+              {
+                "Ref": "HttpApiIntegrationSendTemporaryPassword"
+              }
+            ]
+          ]
+        }
+      },
+      "DependsOn": "HttpApiIntegrationSendTemporaryPassword"
+    },
+    "ApiGatewayLoggingRoleAuthBackend": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "RoleName": "api-gateway-emotioX-backend",
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "apigateway.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        }
+      }
+    },
+    "WebSocketConnectionsTable": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "emotioX-backend-dev-WebSocketConnections",
+        "AttributeDefinitions": [
+          {
+            "AttributeName": "connectionId",
+            "AttributeType": "S"
+          }
+        ],
+        "KeySchema": [
+          {
+            "AttributeName": "connectionId",
+            "KeyType": "HASH"
+          }
+        ],
+        "BillingMode": "PAY_PER_REQUEST"
+      }
+    },
+    "WebSocketApi": {
+      "Type": "AWS::ApiGatewayV2::Api",
+      "Properties": {
+        "Name": "emotioX-backend-dev-WebSocketApi",
+        "ProtocolType": "WEBSOCKET",
+        "RouteSelectionExpression": "$request.body.action"
+      }
+    }
+  },
+  "Outputs": {
+    "ServerlessDeploymentBucketName": {
+      "Value": {
+        "Ref": "ServerlessDeploymentBucket"
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-ServerlessDeploymentBucketName"
+      }
+    },
+    "RegisterUserLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "RegisterUserLambdaVersion0k5K653BYCOPsuaObp52kW0CC78QmANB5UhKw1YcgMA"
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-RegisterUserLambdaFunctionQualifiedArn"
+      }
+    },
+    "GetAllUsersLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetAllUsersLambdaVersionY9t8uwpFvEI4veoXgfPeUozzcL44d0Q9QgBtuMYMw"
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-GetAllUsersLambdaFunctionQualifiedArn"
+      }
+    },
+    "GetUserByIdLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "GetUserByIdLambdaVersioneR7H4mb1QSRE0lwMgLGasIZwUnViJujem3ukvMRIRc"
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-GetUserByIdLambdaFunctionQualifiedArn"
+      }
+    },
+    "DeleteUserByIdLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "DeleteUserByIdLambdaVersion0lVzCUQe2H5xhHdDb87SaA6GWtIdcbwByvvIDWL7Y"
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-DeleteUserByIdLambdaFunctionQualifiedArn"
+      }
+    },
+    "UpdateUserByIdLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "UpdateUserByIdLambdaVersionoQAF88HgGashk9rnaE6e9vdwIvkA89fPpZRHKaI"
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-UpdateUserByIdLambdaFunctionQualifiedArn"
+      }
+    },
+    "LoginUserLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "LoginUserLambdaVersionL1ZjvwpGL50D87n2XnyZM5T1SE7ddT7GY9VH35Y3k"
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-LoginUserLambdaFunctionQualifiedArn"
+      }
+    },
+    "LogoutUserLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "LogoutUserLambdaVersionunornAC7xgXjoI8QU0VhfO9bRWerST9SMLFdtpDkI"
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-LogoutUserLambdaFunctionQualifiedArn"
+      }
+    },
+    "RefreshTokenLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "RefreshTokenLambdaVersionCAjA9oONhW34Pi6V2VZEOK56sjd8k6YQeo4QvvQDbA"
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-RefreshTokenLambdaFunctionQualifiedArn"
+      }
+    },
+    "ConnectLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "ConnectLambdaVersionNd2ycSl8vcCXYVLsMmqmNlnTFTPI5OzETovKE3wifc"
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-ConnectLambdaFunctionQualifiedArn"
+      }
+    },
+    "DisconnectLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "DisconnectLambdaVersionDnN3FKF3rAFkkHV7rufcHTYsQgdfNfuEsGiNuyUbk"
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-DisconnectLambdaFunctionQualifiedArn"
+      }
+    },
+    "RefreshLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "RefreshLambdaVersionKqq7T12TxJdSju9v6qtMviRlXjmu8z2oxrX9fHhiaU"
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-RefreshLambdaFunctionQualifiedArn"
+      }
+    },
+    "SendTemporaryPasswordLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "SendTemporaryPasswordLambdaVersiontJYeySAHxZeuxlE12bmsZ8nzhR3DcUDdAssMfEga0M4"
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-SendTemporaryPasswordLambdaFunctionQualifiedArn"
+      }
+    },
+    "ServiceEndpointWebsocket": {
+      "Description": "URL of the service endpoint",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "wss://",
+            {
+              "Ref": "WebsocketsApi"
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix"
+            },
+            "/dev"
+          ]
+        ]
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-ServiceEndpointWebsocket"
+      }
+    },
+    "HttpApiId": {
+      "Description": "Id of the HTTP API",
+      "Value": {
+        "Ref": "HttpApi"
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-HttpApiId"
+      }
+    },
+    "HttpApiUrl": {
+      "Description": "URL of the HTTP API",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "HttpApi"
+            },
+            ".execute-api.",
+            {
+              "Ref": "AWS::Region"
+            },
+            ".",
+            {
+              "Ref": "AWS::URLSuffix"
+            }
+          ]
+        ]
+      },
+      "Export": {
+        "Name": "sls-emotioX-backend-dev-HttpApiUrl"
+      }
+    },
+    "ApiUrl": {
+      "Description": "URL base de la API desplegada",
+      "Value": {
+        "Fn::Sub": "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+      }
+    },
+    "WebSocketApiEndpoint": {
+      "Description": "WebSocket API Endpoint",
+      "Value": {
+        "Fn::Sub": "wss://${WebSocketApi}.execute-api.${AWS::Region}.amazonaws.com/dev"
+      },
+      "Export": {
+        "Name": "WebSocketApiEndpoint-dev"
+      }
+    }
+  }
+}

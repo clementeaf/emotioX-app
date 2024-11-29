@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { ResearchState } from '../types/types';
+import { ResearchState, Question } from '../types/types';
 
 export const useResearchStore = create<ResearchState>((set) => ({
   // Estado inicial
@@ -11,6 +11,13 @@ export const useResearchStore = create<ResearchState>((set) => ({
   uploadedFiles: [],
   selectedProjects: [],
   ResearchModule: ['attention-prediction', 'aim-framework', 'behavioural-research'],
+  questions: [
+    {
+      questionText: "",
+      questionType: "Single choice",
+      required: false,
+    },
+  ], // Almacena preguntas configuradas
   formData: {
     researchName: '',
     enterpriseName: '',
@@ -21,25 +28,20 @@ export const useResearchStore = create<ResearchState>((set) => ({
   },
 
   // Métodos para actualizar el estado
-
-  // Actualizar el paso actual
   setStep: (step: number) => set(() => ({ step })),
 
-  // Actualizar el nombre de la investigación
   setResearchName: (name: string) =>
     set((state) => ({
       researchName: name,
       formData: { ...state.formData, researchName: name },
     })),
 
-  // Actualizar el nombre de la empresa
   setEnterpriseName: (name: string) =>
     set((state) => ({
       enterpriseName: name,
       formData: { ...state.formData, enterpriseName: name },
     })),
 
-  // Actualizar el tipo de investigación
   setSelectedResearchType: (type: string) =>
     set((state) => {
       const moduleMap: Record<string, string> = {
@@ -60,7 +62,6 @@ export const useResearchStore = create<ResearchState>((set) => ({
       };
     }),
 
-  // Actualizar el módulo seleccionado
   setResearchModule: (moduleId: string) => {
     const researchTypes = [
       {
@@ -93,30 +94,21 @@ export const useResearchStore = create<ResearchState>((set) => ({
     }
   },
 
-  // Actualizar los proyectos seleccionados
   setSelectedProjects: (projects: string[]) =>
     set((state) => ({
       selectedProjects: projects,
       formData: { ...state.formData, selectedProjects: projects },
     })),
 
-  // Manejar los archivos subidos
   addUploadedFiles: (files: File[]) =>
     set((state) => {
       const updatedFiles = [...state.uploadedFiles, ...files];
-  
-      // Aseguramos sincronización con formData
       return {
         uploadedFiles: updatedFiles,
-        formData: {
-          ...state.formData,
-          uploadedFiles: updatedFiles, // Aquí se sincroniza correctamente
-        },
+        formData: { ...state.formData, uploadedFiles: updatedFiles },
       };
     }),
-  
 
-  // Eliminar archivos subidos
   removeUploadedFile: (fileName: string) =>
     set((state) => {
       const updatedFiles = state.uploadedFiles.filter((file) => file.name !== fileName);
@@ -126,7 +118,6 @@ export const useResearchStore = create<ResearchState>((set) => ({
       };
     }),
 
-  // Resetear el formulario
   resetForm: () =>
     set(() => ({
       step: 0,
@@ -136,6 +127,7 @@ export const useResearchStore = create<ResearchState>((set) => ({
       selectedResearchModule: '',
       uploadedFiles: [],
       selectedProjects: [],
+      questions: [],
       formData: {
         researchName: '',
         enterpriseName: '',
@@ -144,5 +136,28 @@ export const useResearchStore = create<ResearchState>((set) => ({
         uploadedFiles: [],
         selectedProjects: [],
       },
+    })),
+
+  // Métodos para preguntas
+  setQuestions: (questions: Question[]) => set(() => ({ questions })),
+
+  addQuestion: (question: Question) =>
+    set((state) => ({
+      questions: [...state.questions, question],
+    })),
+
+    updateQuestion: (index, updatedData) =>
+      set((state) => {
+        const updatedQuestions = [...state.questions];
+        updatedQuestions[index] = {
+          ...updatedQuestions[index],
+          ...updatedData,
+        };
+        return { questions: updatedQuestions };
+      }),
+
+  removeQuestion: (index: number) =>
+    set((state) => ({
+      questions: state.questions.filter((_, i) => i !== index),
     })),
 }));

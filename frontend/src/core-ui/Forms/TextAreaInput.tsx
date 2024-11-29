@@ -1,21 +1,15 @@
 import { Box, TextField, Typography } from "@mui/material";
-import { useState } from "react";
 
 interface TextAreaInputProps {
     label: string;
     placeholder: string;
     maxChars?: number; // Nuevo: Limite de caracteres opcional
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    value: string;
+    disabled?: boolean;
   }
 
-  export function TextAreaInput({ label, placeholder, maxChars = 100 }: TextAreaInputProps) {
-    const [text, setText] = useState<string>('');
-  
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      if (event.target.value.length <= maxChars) {
-        setText(event.target.value);
-      }
-    };
-  
+  export function TextAreaInput({ label, placeholder, maxChars = 100, onChange, value, disabled }: TextAreaInputProps) {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: '100%', mt: 3 }}>
         <Typography fontSize={14} fontWeight={500} color="#8C8C8C" textTransform="initial">
@@ -28,8 +22,9 @@ interface TextAreaInputProps {
           size="small"
           multiline
           minRows={4}
-          value={text}
-          onChange={handleChange}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
           sx={{
             '& .MuiInputBase-input::placeholder': {
               color: '#8C8C8C',
@@ -40,7 +35,7 @@ interface TextAreaInputProps {
         />
         {/* Contador de caracteres */}
         <Typography fontSize={12} color="#8C8C8C" align="right" mr={2}>
-          {`${text.length} / ${maxChars}`}
+          {`${value.length} / ${maxChars}`}
         </Typography>
       </Box>
     );

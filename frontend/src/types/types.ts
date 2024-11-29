@@ -9,6 +9,12 @@ export interface ResearchState {
   selectedProjects: string[]; // Proyectos seleccionados en ClientsBenchmark
   ResearchModule: string[]; // Lista de módulos de investigación disponibles
 
+  // Preguntas configuradas
+  questions: Question[]; // Lista de preguntas en el formulario
+
+  // Consolidado de datos del formulario
+  formData: FormDataState; // Estado detallado del formulario
+
   // Métodos para actualizar el estado
   setStep: (step: number) => void; // Establece el paso actual
   setResearchName: (name: string) => void; // Establece el nombre de la investigación
@@ -20,9 +26,13 @@ export interface ResearchState {
   removeUploadedFile: (fileName: string) => void; // Elimina un archivo cargado
   resetForm: () => void; // Resetea el formulario a su estado inicial
 
-  // Consolidado de datos del formulario
-  formData: FormDataState; // Estado detallado del formulario
+  // Métodos para preguntas
+  setQuestions: (questions: Question[]) => void; // Establece la lista de preguntas
+  addQuestion: (question: Question) => void; // Agrega una nueva pregunta
+  updateQuestion: (index: number, updatedQuestion: Partial<Question>) => void; // Actualiza una pregunta
+  removeQuestion: (index: number) => void; // Elimina una pregunta por índice
 }
+
 
 // Subtipo para los datos consolidados del formulario
 export interface FormDataState {
@@ -36,6 +46,12 @@ export interface FormDataState {
   };
   uploadedFiles?: File[]; // Lista de archivos cargados
   selectedProjects?: string[]; // Proyectos seleccionados
+}
+
+export interface Question {
+  questionText: string; // Texto de la pregunta
+  questionType: string; // Tipo de la pregunta (e.g., "Single choice", "Multiple choice")
+  required: boolean; // Indica si la pregunta es obligatoria
 }
 
 export interface PublicStudyStepperStore {

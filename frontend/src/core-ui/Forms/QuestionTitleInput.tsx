@@ -6,65 +6,76 @@ import {
   Select,
   TextField,
   Typography,
-} from '@mui/material';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { AntSwitch } from '../Switch';
+} from "@mui/material";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import { AntSwitch } from "../Switch";
+import { useScreenerStore } from "../../store/useScreenerStore";
 
 interface QuestionInputProps {
   questionText: string;
   questionType: string;
   required: boolean;
-  onQuestionTextChange: (text: string) => void;
-  onQuestionTypeChange: (type: string) => void;
-  onRequiredToggle: () => void;
+  onTextChange: (text: string) => void;
+  onTypeChange: (type: string) => void;
+  onToggleRequired: () => void;
 }
 
 export function QuestionTitleInput({
   questionText,
   questionType,
-  onQuestionTextChange,
-  onQuestionTypeChange,
-  onRequiredToggle,
+  required,
+  onTextChange,
+  onTypeChange,
+  onToggleRequired,
 }: QuestionInputProps) {
+  const resetToDefaultSorteableQuestions = useScreenerStore(
+    (state) => state.resetToDefaultSorteableQuestions
+  );
+
   return (
     <Box
       sx={{
-        display: 'flex',
-        alignItems: 'center',
+        display: "flex",
+        alignItems: "center",
         gap: 2,
-        width: '100%',
+        width: "100%",
       }}
     >
-      {/* Icono de arrastre */}
-      <DragIndicatorIcon sx={{ color: '#C4C4C4', cursor: 'grab' }} />
+      <DragIndicatorIcon sx={{ color: "#C4C4C4", cursor: "grab" }} />
 
-      {/* Campo de entrada de texto de pregunta */}
       <TextField
         variant="outlined"
         placeholder="Ask something"
         value={questionText}
-        onChange={(e) => onQuestionTextChange(e.target.value)}
+        onChange={(e) => onTextChange(e.target.value)}
         fullWidth
+        disabled={!required}
         sx={{
-          '& .MuiOutlinedInput-root': {
+          "& .MuiOutlinedInput-root": {
             borderRadius: 1,
-            borderColor: '#E0E0E0',
+            borderColor: "#E0E0E0",
             fontSize: 14,
           },
         }}
       />
 
-      {/* Selector de tipo de pregunta */}
       <FormControl size="small" sx={{ minWidth: 160 }}>
         <Select
           value={questionType}
-          onChange={(e) => onQuestionTypeChange(e.target.value)}
+          onChange={(e) => {
+            const newType = e.target.value;
+            onTypeChange(newType);
+
+            if (newType === "Multiple choice") {
+              resetToDefaultSorteableQuestions();
+            }
+          }}
           displayEmpty
           sx={{
-            bgcolor: 'white',
+            bgcolor: "white",
             borderRadius: 1,
-            '& .MuiOutlinedInput-notchedOutline': {
-              borderColor: '#E0E0E0',
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: "#E0E0E0",
             },
           }}
         >
@@ -77,11 +88,14 @@ export function QuestionTitleInput({
         </Select>
       </FormControl>
 
-      {/* Switch de "Requerido" */}
       <FormControlLabel
         sx={{ mr: 2 }}
-        control={<AntSwitch onChange={onRequiredToggle} />}
-        label={<Typography fontSize='14px' fontWeight={400} color='#8C8C8C'>Required</Typography>}
+        control={<AntSwitch checked={required} onChange={onToggleRequired} />}
+        label={
+          <Typography fontSize="14px" fontWeight={400} color="#8C8C8C">
+            Required
+          </Typography>
+        }
         labelPlacement="start"
       />
     </Box>

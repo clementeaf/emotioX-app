@@ -1,0 +1,31 @@
+{
+    "title:es": "1.0.- Screener",
+    "required": false,
+    "askSomething": {
+        "questionText": "1.1.- Question _italic_ **bold** - bullet list 1. ordered list",
+        "questionType": ["Single choice", "Multiple choice", "Short text", "Long text", "Linear scale", "Ranking"],
+        "required": false
+    },
+    "sorteableQuestions": [
+        {
+            "id": "1",
+            "option1": "Option 1",
+            "selection": ["Qualify", "Disqualify"],
+            "required": false
+        },
+        {
+            "id": "1",
+            "option1": "Option 1",
+            "selection": ["Qualify", "Disqualify"],
+            "required": false
+        },
+        {
+            "id": "1",
+            "option1": "Option 1",
+            "selection": ["Qualify", "Disqualify"],
+            "required": false
+        }
+    ],    
+    "showOtherOption": false,
+    "randomizeTheOrderOfQuestions": false
+}
