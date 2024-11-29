@@ -31,5 +31,27 @@ export const login = async (loginData: { identifier: string; password: string })
     return response.data;
 };
 
+export const createResearch = async (formData: unknown): Promise<unknown> => {
+    try {
+      const response = await axios.post(
+        'https://ps8qdjrczb.execute-api.us-east-1.amazonaws.com/dev/research/create-research',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      return response.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error:', error.response?.data || error.message);
+      }
+      throw error;
+    }
+  };
+  
+  
+
 
 export default api;

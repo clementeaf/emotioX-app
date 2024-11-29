@@ -114,6 +114,14 @@ functions:
           path: /refresh-token
           method: post
 
+  createResearch:
+    handler: dist/controllers/createResearchController.createResearch
+    events:
+      - http:
+          path: research/create-research
+          method: post
+          cors: true
+
   connect:
     handler: dist/websocket/connectHandler.connectHandler
     events:
