@@ -1,75 +1,12 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import { Box, Button, Link, Stack, TextField, Typography, Container, Paper, CssBaseline, FormControlLabel, Checkbox, IconButton, InputAdornment, LinearProgress, CircularProgress } from '@mui/material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import bg from '../assets/bg.jpg';
 import { useNavigate } from 'react-router-dom';
-
-// const loginEndpoint = 'https://dg1geuc9wi.execute-api.us-east-1.amazonaws.com/login';
-
-// TODO:
-// 1.- Agregar el footer
-// 2.- Detalles estéticos contenedor - Listo
-// 3.- Input label y placeholder - Listo
-// 4.- Emoticon de EmotioX
-// 5.- Revisar bien reseteo de password y provocar que la barra que mide la fortaleza del password, se rellene en propocion de la cantidad de caracteres que se ingresaron 
-
-const MAX_PASSWORD_LENGTH = 20;
-
-const theme = createTheme({
-    components: {
-        MuiCssBaseline: {
-            styleOverrides: {
-                body: {
-                    margin: 0,
-                    padding: 0,
-                    overflow: 'hidden',
-                },
-                html: {
-                    margin: 0,
-                    padding: 0,
-                    height: '100%',
-                },
-            },
-        },
-    },
-});
-
-
-// Función para calcular la fortaleza de la contraseña
-function calculatePasswordStrength(password: string) {
-    let strength = 0;
-
-    // Evaluar si tiene letras (mayúsculas y minúsculas mezcladas)
-    if (/[A-Z]/.test(password) && /[a-z]/.test(password)) strength += 1;
-    // Evaluar si contiene números
-    if (/[0-9]/.test(password)) strength += 1;
-    // Evaluar si contiene caracteres especiales
-    if (/[^A-Za-z0-9]/.test(password)) strength += 1;
-
-    // Bonus por longitud: 3 puntos por longitud de 20 caracteres o más
-    const lengthBonus = Math.min((password.length / MAX_PASSWORD_LENGTH) * 3, 3); // Máximo de 3 puntos por longitud
-    strength += lengthBonus;
-
-    return strength;
-}
-
-// Función para obtener el label y color de la fortaleza
-function getStrengthLabel(strength: number) {
-    if (strength <= 1) {
-        return { label: 'Poor', color: 'red' };
-    } else if (strength <= 3) {
-        return { label: 'Medium', color: 'orange' };
-    } else if (strength > 3 && strength < 5) {
-        return { label: 'Strong', color: 'green' };
-    } else if (strength >= 5) {
-        return { label: 'Very Strong', color: 'darkgreen' }; // Añadimos un nivel "Very Strong"
-    } else {
-        return { label: '', color: '' };
-    }
-}
+import { login } from '../services/api';
+import { calculatePasswordStrength, getStrengthLabel, theme } from '../utils';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -78,7 +15,6 @@ export default function Login() {
         password: '',
     });
     const [showPassword, setShowPassword] = useState(false);
-    const [isLoginSuccessful, setIsLoginSuccessful] = useState(false);
     const [isForgotPassword, setIsForgotPassword] = useState(false);
     const [isEmailSent, setIsEmailSent] = useState(false);
     const [isResetPassword, setIsResetPassword] = useState(false);
@@ -86,38 +22,23 @@ export default function Login() {
     const { label, color } = getStrengthLabel(strength);
     const progressValue = formData.password.length === 0 ? 10 : Math.min((strength / 5) * 100, 100);
 
-    const handleLogin = async (loginData: { identifier: string; password: string }) => {
-        try {
-            const response = await axios.post('https://ysgzqbh7ch.execute-api.us-east-1.amazonaws.com/login', loginData, {
-                headers: { 'Content-Type': 'application/json' }
-            });
-            return response;
-        } catch (error) {
-            console.error('Error during login:', error);
-            throw error;
-        }
-    };
-
     const mutation = useMutation({
-        mutationFn: handleLogin,
+        mutationFn: async (loginForm: { identifier: string; password: string }) => {
+            return await login(loginForm);
+        },
         onSuccess: (data) => {
-            const status = data.status;
-            const token = data.data?.accessToken;
-            if (status === 200 && token) {
-                localStorage.setItem('accessToken', token);
-                setIsLoginSuccessful(true); // Mostrar mensaje de éxito
-
-                setTimeout(() => {
-                    navigate('/dashboard');
-                }, 1500); // Esperar 1.5 segundos antes de redirigir
-            } else {
-                console.error('Access token not found');
-            }
+            localStorage.setItem('accessToken', data.accessToken);
+            navigate('/dashboard');
         },
         onError: (error) => {
             console.error('Login failed:', error);
         },
     });
+
+    const { status } = mutation;
+    const isLoading = status === 'pending';
+    const isSuccess = status === 'success';
+    const isError = status === 'error';
 
     const handleSubmit = () => {
         const { email, password } = formData;
@@ -127,7 +48,6 @@ export default function Login() {
         };
         mutation.mutate(loginForm);
     };
-
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -149,12 +69,6 @@ export default function Login() {
         setIsForgotPassword(false);
     };
 
-    // Función para manejar el clic en "Sign In" y mostrar el formulario de Reset Password
-    // const handleGoToResetPassword = () => {
-    //     setIsResetPassword(true); // Mostramos el formulario de Reset Password
-    // };
-
-    // Mostrar/Ocultar contraseña
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
     };
@@ -390,15 +304,20 @@ export default function Login() {
                                     </Stack>
                                 </Box>
 
-                                {mutation.status === 'pending' ? (
+                                {isLoading &&
                                     <Box display="flex" justifyContent="center" mb={2}>
                                         <CircularProgress /> {/* Spinner mientras carga */}
-                                    </Box>
-                                ) : isLoginSuccessful ? (
+                                    </Box>}
+                                {isSuccess &&
                                     <Typography variant="body1" color="green" align="center" mb={2}>
                                         Login successful! Redirecting to dashboard...
                                     </Typography>
-                                ) : null}
+                                }
+                                {isError &&
+                                    <Typography variant="body1" color="red" align="center" mb={2}>
+                                        Login failed! Please try again.
+                                    </Typography>
+                                }
 
                                 <Stack spacing={4}>
                                     <TextField

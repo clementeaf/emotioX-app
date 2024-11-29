@@ -6,14 +6,16 @@ import Vector from "../../assets/Vector.png";
 import avatar from '../../assets/avatar.png';
 import { useState, MouseEvent } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { logout } from '../../services/api';
+import axios from 'axios';
 
 export default function Header() {
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
+    // Manejo de apertura/cierre del menú
     const handleMenuOpen = (event: MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -22,43 +24,33 @@ export default function Header() {
         setAnchorEl(null);
     };
 
-    // Función de logout
-    const handleLogout = async () => {
-        const token = localStorage.getItem('accessToken');
-
-        if (!token) {
-            console.error('No access token found');
-            throw new Error('No access token found'); // Lanzar error si no hay token
-        }
-
-        return axios.post(
-            'https://dg1geuc9wi.execute-api.us-east-1.amazonaws.com/logout',
-            {}, // Se envía un cuerpo vacío, según el backend no se necesita contenido en el body
-            {
-                headers: { 
-                    'Authorization': token, 
-                    'Content-Type': 'application/json' 
-                },
-            }
-        );
-    };
-
+    // Mutación para realizar el logout
     const logoutMutation = useMutation({
-        mutationFn: handleLogout,
+        mutationFn: async () => {
+            const token = localStorage.getItem('accessToken');
+            if (!token) {
+                throw new Error('No access token found');
+            }
+            await logout(token);
+        },
         onSuccess: () => {
-            localStorage.removeItem('accessToken'); // Eliminar el token del almacenamiento local
-            navigate('/login'); // Redirigir a la página de inicio de sesión
+            localStorage.removeItem('accessToken');
+            navigate('/login');
         },
         onError: (error) => {
-            console.error('Logout failed:', error);
+            if (axios.isAxiosError(error) && error.response) {
+                console.error('Logout failed:', error.response.data);
+            } else {
+                console.error('Logout failed:', error);
+            }
         },
     });
 
+    // Manejo de click en logout
     const handleLogoutClick = () => {
         handleMenuClose();
         logoutMutation.mutate();
     };
-
     return (
         <Stack sx={{ backgroundColor: '#FFFFFF', color: '#000', borderBottom: `1px solid ${grey[200]}`, width: '1180px', height: '60px' }}>
             <Toolbar sx={{ justifyContent: 'space-between', width: '100%' }}>
@@ -89,6 +81,7 @@ export default function Header() {
                         anchorEl={anchorEl}
                         open={open}
                         onClose={handleMenuClose}
+                        disableAutoFocusItem
                         anchorOrigin={{
                             vertical: 'bottom',
                             horizontal: 'right',

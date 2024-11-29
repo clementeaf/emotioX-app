@@ -64,3 +64,12 @@ export interface StepProps {
   handleNextStep: () => void;
   label?: string;
 }
+
+export interface LoginForm {
+  identifier: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  accessToken: string;
+}
