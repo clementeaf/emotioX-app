@@ -1,49 +1,42 @@
-import mongoose, { Schema, Model, Document, Types } from 'mongoose';
+import mongoose, { Schema, Document, Types } from 'mongoose';
 
 /**
- * IResearchCreationDocument
- * Interfaz que extiende el documento de Mongoose y define los campos del esquema.
+ * Interface para ResearchCreation
  */
-export interface IResearchCreationDocument extends Document {
+export interface IResearchCreation extends Document {
   researchName: string;
   enterpriseName: string;
   selectedResearchType: string;
   selectedResearchModule: string;
-  uploadedFiles?: Types.Array<string>; // Rutas o nombres de archivos (opcional)
-  selectedProjects: Types.Array<Types.ObjectId>; // Referencias a proyectos (otras colecciones)
-  researchTypeSpecificData?: Record<string, any>; // Datos específicos según el tipo de investigación
+  uploadedFiles?: string[];
+  selectedProjects: Types.ObjectId[]; // Referencias a Project
+  researchTypeSpecificData?: Record<string, any>;
   createdAt: Date;
   updatedAt: Date;
 }
 
 /**
- * ResearchCreation Schema
- * Define el esquema de la colección researchCreation.
+ * Esquema para ResearchCreation
  */
-const ResearchCreationSchema: Schema<IResearchCreationDocument> = new Schema<IResearchCreationDocument>({
+const ResearchCreationSchema: Schema<IResearchCreation> = new Schema<IResearchCreation>({
   researchName: { type: String, required: true, trim: true },
   enterpriseName: { type: String, required: true, trim: true },
   selectedResearchType: { type: String, required: true, trim: true },
   selectedResearchModule: { type: String, required: true, trim: true },
-  uploadedFiles: [{ type: String }], // Campo opcional para almacenar rutas de archivos
-  selectedProjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }], // Referencias a otra colección
-  researchTypeSpecificData: { type: Map, of: Schema.Types.Mixed }, // Datos adicionales según el tipo de investigación
-  createdAt: { type: Date, default: Date.now }, // Fecha de creación
-  updatedAt: { type: Date, default: Date.now }, // Última fecha de actualización
+  uploadedFiles: [{ type: String }], // URLs de las imágenes
+  selectedProjects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }], // Referencias a Project
+  researchTypeSpecificData: { type: Map, of: Schema.Types.Mixed },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
-// Middleware para actualizar `updatedAt` automáticamente
+// Middleware para actualizar `updatedAt`
 ResearchCreationSchema.pre('save', function (next) {
   this.updatedAt = new Date();
   next();
 });
 
-/**
- * Modelo de Mongoose para la colección `researchCreation`
- */
-const ResearchCreation: Model<IResearchCreationDocument> = mongoose.model<IResearchCreationDocument>(
-  'ResearchCreation',
-  ResearchCreationSchema
-);
+// Registrar modelo
+const ResearchCreation = mongoose.model<IResearchCreation>('ResearchCreation', ResearchCreationSchema);
 
 export default ResearchCreation;

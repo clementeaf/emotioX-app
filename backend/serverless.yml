@@ -26,6 +26,7 @@ provider:
     JWT_REFRESH_SECRET: ${env:JWT_REFRESH_SECRET, 'default_refresh_secret'}
     CONNECTIONS_TABLE: "${self:service}-${self:provider.stage}-WebSocketConnections"
     WEBSOCKET_ENDPOINT: "https://cqt41bondd.execute-api.us-east-1.amazonaws.com/dev"
+    S3_BUCKET_NAME: "emotiox-backend-dev-bucket"
 
   iam:
     role:
@@ -52,10 +53,20 @@ provider:
             - "ses:SendEmail"
             - "ses:SendRawEmail"
           Resource: "*"
+        - Effect: "Allow"
+          Action:
+            - "s3:PutObject"
+            - "s3:GetObject"
+            - "s3:DeleteObject"
+            - "s3:ListBucket"
+          Resource:
+            - "arn:aws:s3:::emotiox-backend-dev-bucket"
+            - "arn:aws:s3:::emotiox-backend-dev-bucket/*"
 
 plugins:
   - serverless-plugin-typescript
   - serverless-offline
+  - serverless-dotenv-plugin
 
 functions:
   registerUser:
@@ -115,10 +126,18 @@ functions:
           method: post
 
   createResearch:
-    handler: dist/controllers/createResearchController.createResearch
+    handler: dist/controllers/createResearchController.createResearchWithImages
     events:
       - http:
           path: research/create-research
+          method: post
+          cors: true
+  
+  generatePresignedUrls:
+    handler: dist/controllers/imageController.uploadFilesToS3
+    events:
+      - http:
+          path: research/generate-presigned-urls
           method: post
           cors: true
 
@@ -149,6 +168,23 @@ functions:
           path: /send-temporary-password
           method: post
 
+  uploadFilesToS3:
+    handler: dist/controllers/imageController.uploadFilesToS3
+    events:
+      - httpApi:
+          path: /upload-image
+          method: post
+          cors:
+            origin: "http://localhost:5173"
+            headers:
+              - Content-Type
+              - Authorization
+            methods:
+              - OPTIONS
+              - POST
+            allowCredentials: true
+
+
 resources:
   Resources:
     ApiGatewayLoggingRoleAuthBackend:
@@ -162,6 +198,25 @@ resources:
               Principal:
                 Service: "apigateway.amazonaws.com"
               Action: "sts:AssumeRole"
+    
+    ResearchImagesBucket:
+      Type: AWS::S3::Bucket
+      DeletionPolicy: Retain
+      Properties:
+        BucketName: "emotiox-backend-dev-bucket"
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - "*"
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              AllowedHeaders:
+                - "*"
+              MaxAge: 3000
 
     WebSocketConnectionsTable:
       Type: AWS::DynamoDB::Table

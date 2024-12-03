@@ -13,17 +13,15 @@ const steps = ['Name the Research', 'Kind of Research', 'Techniques for Research
 interface ActionButtonProps {
   step: number;
   handleNext: () => void;
-  isButtonDisabled: boolean;
   stepsLength: number;
 }
 
-const ActionButton: React.FC<ActionButtonProps> = ({ step, handleNext, isButtonDisabled, stepsLength }) => {
+const ActionButton: React.FC<ActionButtonProps> = ({ step, handleNext, stepsLength }) => {
   return (
     <Button
       variant="contained"
       onClick={handleNext}
       sx={{ width: '395px', height: '40px', mt: 3, mb: 4, bgcolor: 'blue', textTransform: 'initial' }}
-      disabled={isButtonDisabled}
     >
       {step === stepsLength - 1 ? 'Create Research' : 'Next'}
     </Button>
@@ -66,11 +64,13 @@ export default function ResearchForm() {
     return (
       !!selectedResearchModule &&
       !!formData.researchName &&
-      !!formData.enterpriseName
+      !!formData.enterpriseName &&
+      formData.uploadedFiles &&
+      formData.uploadedFiles.length > 0
     );
   };
 
-  const isButtonDisabled = step === 2 && !isStepThreeValid();
+  const isButtonDisabled = step === 2 && isStepThreeValid();
 
   return (
     <>
@@ -79,7 +79,12 @@ export default function ResearchForm() {
         {step === 0 && <ResearchStep1 />}
         {step === 1 && <ResearchStep2 />}
         {step === 2 && <ResearchStep3 />}
-        <ActionButton step={step} handleNext={handleNext} isButtonDisabled={isButtonDisabled} stepsLength={0} />
+        <ActionButton
+          step={step}
+          handleNext={handleNext}
+          // isButtonDisabled={Boolean(!isButtonDisabled)}
+          stepsLength={0}
+        />
       </FormStepper>
     </>
   );
