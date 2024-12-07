@@ -18,8 +18,17 @@ export default function ResearchStep2() {
 
   const handleSelection = (researchTitle: string) => {
     setSelectedResearchType(researchTitle);
-    setResearchModule(researchTitle);
+
+    const moduleMap: Record<string, string> = {
+      'Behavioural Research': 'behavioural-research',
+      "Attention's Prediction": 'attention-prediction',
+      'Insights Finding': 'insights-finding',
+      "Client's Benchmark": 'clients-benchmark',
+    };
+
+    setResearchModule(moduleMap[researchTitle] || '');
   };
+
 
   return (
     <>

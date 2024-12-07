@@ -14,10 +14,8 @@ const researchTypesRequiringImages = ['TypeWithImages1', 'TypeWithImages2'];
  */
 export const createResearchWithImages = async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
   try {
-    // Conectar a la base de datos
     await connectDB();
 
-    // Validar el cuerpo de la solicitud
     if (!event.body) {
       return {
         statusCode: 400,
@@ -26,15 +24,14 @@ export const createResearchWithImages = async (event: APIGatewayEvent): Promise<
     }
 
     const data = JSON.parse(event.body);
-
     const {
       researchName,
       enterpriseName,
       selectedResearchType,
       selectedResearchModule,
-      uploadedFiles, // Lista de URLs de archivos ya almacenados en S3
-      selectedProjects,
-      moduleDetails,
+      uploadedFiles = [], // Manejar como un arreglo vacío si no se envía
+      selectedProjects = [],
+      moduleDetails = {},
     } = data;
 
     // Validar campos requeridos
@@ -46,8 +43,9 @@ export const createResearchWithImages = async (event: APIGatewayEvent): Promise<
     }
 
     // Validar imágenes si el tipo de investigación las requiere
+    const researchTypesRequiringImages = ['TypeWithImages1', 'TypeWithImages2'];
     if (researchTypesRequiringImages.includes(selectedResearchType)) {
-      if (!uploadedFiles || !Array.isArray(uploadedFiles) || uploadedFiles.length === 0) {
+      if (uploadedFiles.length === 0) {
         return {
           statusCode: 400,
           body: JSON.stringify({ message: 'Uploaded files are required for this type of research' }),
@@ -63,8 +61,8 @@ export const createResearchWithImages = async (event: APIGatewayEvent): Promise<
       }
     }
 
-    // Validar que los proyectos referenciados existen en la base de datos
-    if (selectedProjects && selectedProjects.length > 0) {
+    // Validar proyectos si se incluyen
+    if (selectedProjects.length > 0) {
       const projectIds = selectedProjects.map((id: string) => new mongoose.Types.ObjectId(id));
       const existingProjects = await Project.find({ _id: { $in: projectIds } });
       if (existingProjects.length !== projectIds.length) {
@@ -81,14 +79,13 @@ export const createResearchWithImages = async (event: APIGatewayEvent): Promise<
       enterpriseName,
       selectedResearchType,
       selectedResearchModule,
-      uploadedFiles: uploadedFiles || [],
-      selectedProjects: selectedProjects || [],
-      researchTypeSpecificData: moduleDetails || {},
+      uploadedFiles,
+      selectedProjects,
+      researchTypeSpecificData: moduleDetails,
     });
 
-    // Realizar un "populate" para expandir referencias
     const populatedResearch = await ResearchCreation.findById(newResearch._id)
-      .populate('selectedProjects') // Expande las referencias de Project
+      .populate('selectedProjects') // Expande referencias
       .exec();
 
     return {

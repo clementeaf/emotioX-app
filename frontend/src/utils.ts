@@ -1,5 +1,7 @@
 import { createTheme } from "@mui/material";
 
+export const steps = ['Name the Research', 'Kind of Research', 'Techniques for Research'];
+
 // ***** Login ***** //
 export const MAX_PASSWORD_LENGTH = 20;
 

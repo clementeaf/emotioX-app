@@ -32,6 +32,15 @@ export const login = async (loginData: { identifier: string; password: string })
     return response.data;
 };
 
+// Sign Up
+export const signUp = async (loginData: { identifier: string; password: string }): Promise<{ accessToken: string }> => {
+  const response = await api.post('/register', loginData);
+  if (response.status !== 200) {
+      throw new Error('Login failed');
+  }
+  return response.data;
+};
+
 /**
  * Función para subir archivos directamente al backend, que a su vez los sube a S3
  */
@@ -90,23 +99,23 @@ const readFileAsBase64 = (file: File): Promise<string> => {
  */
 export const createResearch = async (formData: FormDataState): Promise<unknown> => {
   try {
-    // Verificar si hay archivos cargados
     let uploadedFileUrls: string[] = [];
+
+    // Subir archivos solo si hay imágenes cargadas
     if (formData.uploadedFiles && formData.uploadedFiles.length > 0) {
-      // Subir archivos directamente al backend
       const uploadedFiles = await uploadFilesToBackend(formData.uploadedFiles);
 
-      // Mapear las URLs retornadas al formData
+      // Mapear las URLs retornadas
       uploadedFileUrls = uploadedFiles.map((file: { fileUrl: string }) => file.fileUrl);
     }
 
-    // Actualizar el formData para incluir las URLs de los archivos subidos
+    // Actualizar el formData para incluir las URLs de los archivos subidos si existen
     const updatedFormData = {
       ...formData,
-      uploadedFiles: uploadedFileUrls, // Usar las URLs en lugar de los archivos
+      ...(uploadedFileUrls.length > 0 && { uploadedFiles: uploadedFileUrls }), // Incluir solo si hay URLs
     };
 
-    // Enviar los datos al backend para crear la investigación
+    // Enviar los datos al backend
     const response = await axios.post(
       'https://ps8qdjrczb.execute-api.us-east-1.amazonaws.com/dev/research/create-research',
       updatedFormData,
@@ -126,6 +135,7 @@ export const createResearch = async (formData: FormDataState): Promise<unknown> 
     throw error;
   }
 };
+
 
 
 export default api;

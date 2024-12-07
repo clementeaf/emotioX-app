@@ -45,6 +45,7 @@ export interface FormDataState {
     description: string; // Descripción del módulo seleccionado
   };
   uploadedFiles?: File[]; // Lista de archivos cargados
+  researchType?: string;
   selectedProjects?: string[]; // Proyectos seleccionados
 }
 
@@ -72,4 +73,24 @@ export interface LoginForm {
 
 export interface LoginResponse {
   accessToken: string;
+}
+
+export interface FormStepperProps {
+  steps: string[];
+  activeStep: number;
+  handleStepClick: (index: number) => void;
+  children: React.ReactNode;
+  canProceed: boolean;
+  formData: {
+    researchName?: string;
+    enterpriseName?: string;
+    researchType?: string;
+    uploadedFiles?: File[];
+  };
+}
+
+export interface ActionButtonProps {
+  step: number;
+  handleNext: () => void;
+  stepsLength: number;
 }

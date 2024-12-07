@@ -1,17 +1,24 @@
-// src/components/common/FormStepper.tsx
 import { Stack, Stepper, Step, StepLabel, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import back from '../../src/assets/back.png';
+import { FormStepperProps } from '../types/types';
 
-interface FormStepperProps {
-  steps: string[];
-  activeStep: number;
-  handleStepClick: (index: number) => void;
-  children: React.ReactNode;
-  canProceed: boolean;
-}
-
-export default function FormStepper({ steps, activeStep, handleStepClick, children, canProceed }: FormStepperProps) {
+export default function FormStepper({ steps, activeStep, handleStepClick, children, canProceed, formData }: FormStepperProps) {
+  const isStepValid = (currentStep: number): boolean => {
+    switch (currentStep) {
+      case 0:
+        return !!formData.researchName && !!formData.enterpriseName;
+      case 1:
+        return !!formData.researchType;
+      case 2:
+        return (formData.uploadedFiles?.length ?? 0) > 0;
+      default:
+        return false;
+    }
+  };
+  
+  
+  
   return (
     <Stack
       sx={{
@@ -62,10 +69,10 @@ export default function FormStepper({ steps, activeStep, handleStepClick, childr
           {steps.map((label, index) => (
             <Step key={index} sx={{ p: 3 }}>
               <StepLabel
-                onClick={() => canProceed || index <= activeStep ? handleStepClick(index) : null}
+                onClick={() => (isStepValid(activeStep) && (index <= activeStep || canProceed)) ? handleStepClick(index) : null}
                 sx={{
-                  cursor: canProceed || index <= activeStep ? 'pointer' : 'not-allowed',
-                  color: canProceed || index <= activeStep ? 'inherit' : grey[400],
+                  cursor: isStepValid(activeStep) && (index <= activeStep || canProceed) ? 'pointer' : 'not-allowed',
+                  color: isStepValid(activeStep) && (index <= activeStep || canProceed) ? 'inherit' : grey[400],
                 }}
               >
                 {label}
@@ -81,3 +88,4 @@ export default function FormStepper({ steps, activeStep, handleStepClick, childr
     </Stack>
   );
 }
+

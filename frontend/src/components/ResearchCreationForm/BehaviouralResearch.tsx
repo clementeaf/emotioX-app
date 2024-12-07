@@ -14,6 +14,11 @@ const researchTypes: ResearchOption[] = [
     description: 'Evaluating one or more sections with biometrics, implicit association, and cognitive tasks. You can also have image and video predictions.',
   },
   {
+    id: 'neuro-interactive',
+    title: 'Neuro-Interactive Insight Analysis',
+    description: 'Measuring real-time brain responses with EEG, combined with sensory and virtual interaction modules. Ideal for product prototypes, sensory studies, and immersive simulations.',
+  },
+  {
     id: 'aim-framework',
     title: 'AIM Framework Stage 3',
     description: 'Start with VOC Smart or build an upgrade by your own.',

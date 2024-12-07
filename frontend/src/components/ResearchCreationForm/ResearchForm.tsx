@@ -4,17 +4,10 @@ import { useResearchStore } from '../../store/useResearchStore';
 import { Button, Alert } from '@mui/material';
 import FormStepper from '../../core-ui/FormStepper';
 import { useMutation } from '@tanstack/react-query';
-
 import { useState } from 'react';
 import { createResearch } from '../../services/api';
-
-const steps = ['Name the Research', 'Kind of Research', 'Techniques for Research'];
-
-interface ActionButtonProps {
-  step: number;
-  handleNext: () => void;
-  stepsLength: number;
-}
+import { ActionButtonProps, FormDataState } from '../../types/types';
+import { steps } from '../../utils';
 
 const ActionButton: React.FC<ActionButtonProps> = ({ step, handleNext, stepsLength }) => {
   return (
@@ -27,7 +20,6 @@ const ActionButton: React.FC<ActionButtonProps> = ({ step, handleNext, stepsLeng
     </Button>
   );
 };
-
 
 export default function ResearchForm() {
   const { step, setStep, selectedResearchModule, formData } = useResearchStore();
@@ -46,44 +38,72 @@ export default function ResearchForm() {
     },
   });
 
-  const handleNext = () => {
-    if (step < steps.length - 1) {
-      setStep(step + 1);
-    } else {
-      if (selectedResearchModule) {
-        mutation.mutate(formData);
-      }
+  const isStepValid = (currentStep: number, formData: FormDataState): { isValid: boolean; error?: string } => {
+    switch (currentStep) {
+      case 0:
+        if (!formData.researchName || !formData.enterpriseName) {
+          return { isValid: false, error: 'Research Name and Enterprise Name are required.' };
+        }
+        return { isValid: true };
+      case 1:
+        if (!formData.selectedResearchType) {
+          return { isValid: false, error: 'Research Type is required.' };
+        }
+        return { isValid: true };
+      case 2:
+        if ((formData.uploadedFiles?.length ?? 0) === 0) {
+          return { isValid: false, error: 'At least one file must be uploaded.' };
+        }
+        return { isValid: true };
+      default:
+        return { isValid: false, error: 'Unknown validation step.' };
     }
   };
+  
+
+  const handleNext = () => {
+    if (isStepValid(step, { ...formData, selectedResearchModule })) {
+      if (step < steps.length - 1) {
+        setStep(step + 1);
+      } else {
+        if (!formData.researchName || !formData.enterpriseName || !formData.selectedResearchType || !selectedResearchModule) {
+          setErrorMessage('Please ensure all fields are complete.');
+          return;
+        }
+        mutation.mutate({ ...formData, selectedResearchModule });
+      }
+    } else {
+      setErrorMessage('Please complete the required fields before proceeding.');
+    }
+  };
+  
+  
 
   const handleStepClick = (index: number) => {
-    setStep(index);
+    if (index <= step && isStepValid(index, formData)) {
+      setStep(index);
+    } else {
+      setErrorMessage('Please complete the current step before proceeding.');
+    }
   };
-
-  const isStepThreeValid = () => {
-    return (
-      !!selectedResearchModule &&
-      !!formData.researchName &&
-      !!formData.enterpriseName &&
-      formData.uploadedFiles &&
-      formData.uploadedFiles.length > 0
-    );
-  };
-
-  const isButtonDisabled = step === 2 && isStepThreeValid();
 
   return (
     <>
       {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-      <FormStepper steps={steps} activeStep={step} handleStepClick={handleStepClick} canProceed={!isButtonDisabled}>
+      <FormStepper
+        steps={steps}
+        activeStep={step}
+        handleStepClick={handleStepClick}
+        canProceed={isStepValid(step, formData)?.isValid}
+        formData={formData}
+      >
         {step === 0 && <ResearchStep1 />}
         {step === 1 && <ResearchStep2 />}
         {step === 2 && <ResearchStep3 />}
         <ActionButton
           step={step}
           handleNext={handleNext}
-          // isButtonDisabled={Boolean(!isButtonDisabled)}
-          stepsLength={0}
+          stepsLength={steps.length}
         />
       </FormStepper>
     </>
