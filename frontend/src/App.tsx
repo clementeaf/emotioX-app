@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, useRoutes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Suspense } from 'react';
 import routes from './routes/routes';
@@ -16,6 +18,7 @@ function App() {
       <ErrorBoundary fallbackRender={fallbackRender}>
         <Suspense fallback={<div>Loading...</div>}>
           <AppRoutes />
+          <ToastContainer />
         </Suspense>
       </ErrorBoundary>
     </Router>

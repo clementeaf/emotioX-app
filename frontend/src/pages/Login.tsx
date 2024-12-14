@@ -19,15 +19,15 @@ import bg from '../assets/bg.jpg';
 import { useNavigate } from 'react-router-dom';
 import { login, register } from '../services/api'; // Register API
 import { theme } from '../utils';
+import { toast } from 'react-toastify';
 
 type CustomError = {
     response?: {
-      data?: {
-        message?: string;
-      };
+        data?: {
+            message?: string;
+        };
     };
-  };
-  
+};
 
 export default function Login() {
     const navigate = useNavigate();
@@ -47,11 +47,15 @@ export default function Login() {
             return await login(loginForm);
         },
         onSuccess: (data) => {
+            // Notificación de éxito con Toastify
+            toast.success('Login successful!');
             localStorage.setItem('accessToken', data.accessToken);
             navigate('/dashboard');
         },
-        onError: (error) => {
-            console.error('Login failed:', error);
+        onError: (error: CustomError) => {
+            const errorMessage = error.response?.data?.message || 'Login failed. Please try again.';
+            toast.error(errorMessage); // Notificación de error
+            console.error('Login failed:', errorMessage);
         },
     });
 
@@ -66,12 +70,14 @@ export default function Login() {
             return await register(registerForm);
         },
         onSuccess: () => {
-            alert('Registration successful! You can now log in.');
-            setIsSignUp(false); // Vuelve a la vista de inicio de sesión
+            // Notificación de éxito con Toastify
+            toast.success('Registration successful! You can now log in.');
+            setIsSignUp(false);
         },
         onError: (error: CustomError) => {
-            const errorMessage = error.response?.data?.message || 'Something went wrong';
-            setError(errorMessage);
+            const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
+            setError(errorMessage); // Muestra el mensaje en el formulario
+            toast.error(errorMessage); // Notificación de error
             console.error('Registration failed:', errorMessage);
         },
     });
@@ -140,7 +146,9 @@ export default function Login() {
                                         😃 Emotio X
                                     </Typography>
                                 </Box>
-                                {error && error}
+                                <Typography mb={3} color="red">
+                                    {error && error}
+                                </Typography>
                                 <Stack spacing={3}>
                                     <TextField
                                         variant="outlined"
