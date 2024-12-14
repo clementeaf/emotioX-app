@@ -3,43 +3,52 @@ import { FormDataState } from '../types/types';
 
 // Configuración base para Axios
 const api = axios.create({
-    baseURL: 'https://ysgzqbh7ch.execute-api.us-east-1.amazonaws.com',
-    headers: {
-        'Content-Type': 'application/json',
-    },
+  baseURL: 'https://ysgzqbh7ch.execute-api.us-east-1.amazonaws.com',
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 // Función para logout
 export const logout = async (token: string): Promise<void> => {
-    if (!token) {
-        throw new Error('No access token found');
-    }
+  if (!token) {
+    throw new Error('No access token found');
+  }
 
-    await api.post('/logout', {}, {
-        headers: {
-            Authorization: token,
-            'Content-Type': 'application/json',
-        },
-    });
+  await api.post('/logout', {}, {
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+  });
 };
 
 // Función para login
 export const login = async (loginData: { identifier: string; password: string }): Promise<{ accessToken: string }> => {
-    const response = await api.post('/login', loginData);
-    if (response.status !== 200) {
-        throw new Error('Login failed');
-    }
-    return response.data;
-};
-
-// Sign Up
-export const signUp = async (loginData: { identifier: string; password: string }): Promise<{ accessToken: string }> => {
-  const response = await api.post('/register', loginData);
+  const response = await api.post('/login', loginData);
   if (response.status !== 200) {
-      throw new Error('Login failed');
+    throw new Error('Login failed');
   }
   return response.data;
 };
+
+// Sign Up
+export async function register(registerForm: {
+  name: string;
+  lastname: string;
+  email: string;
+  username: string;
+  password: string;
+}): Promise<any> {
+  const response = await api.post('/register', registerForm);
+  console.log('Response: ', response);
+  if (response.status !== 200) {
+    throw new Error('Login failed');
+  }
+  console.log('Register success: ', response.data);
+  return response.data;
+}
+
 
 /**
  * Función para subir archivos directamente al backend, que a su vez los sube a S3

@@ -21,21 +21,35 @@ const sesClient = new SESClient({ region: "us-east-1" });
 export const registerUser = async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
   try {
     if (!event.body) {
-      throw new Error('Missing user data in request body');
-    }
-
-    const { name, lastname, email, username, password } = JSON.parse(event.body);
-
-    await connectDB(); // Asegúrate de que la conexión esté abierta
-
-    // Verificar si ya existe un usuario con el mismo email o username
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-
-    if (existingUser) {
       return {
         statusCode: 400,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Email or username already exists' }),
+        body: JSON.stringify({ message: 'Missing user data in request body' }),
+      };
+    }
+
+    const { name, lastname, email, username, password } = JSON.parse(event.body);
+    console.log('Event Body:', event.body);
+
+    await connectDB(); // Asegúrate de que la conexión a la DB esté activa
+
+    // Verificar si ya existe un usuario con el mismo email
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
+      return {
+        statusCode: 400,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'Email already registered' }),
+      };
+    }
+
+    // Verificar si ya existe un usuario con el mismo username
+    const usernameExists = await User.findOne({ username });
+    if (usernameExists) {
+      return {
+        statusCode: 400,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'Username already taken' }),
       };
     }
 
@@ -54,7 +68,10 @@ export const registerUser = async (event: APIGatewayEvent): Promise<APIGatewayPr
     return {
       statusCode: 201,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newUser),
+      body: JSON.stringify({
+        message: 'User registered successfully',
+        userId: newUser._id, // Solo devolvemos datos mínimos necesarios
+      }),
     };
   } catch (error) {
     console.error('Error registering user:', error);
@@ -65,6 +82,7 @@ export const registerUser = async (event: APIGatewayEvent): Promise<APIGatewayPr
     };
   }
 };
+
 
 /**
  * Retrieves all users from the database
