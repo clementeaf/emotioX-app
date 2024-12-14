@@ -66,11 +66,11 @@ export const registerUser = async (event: APIGatewayEvent): Promise<APIGatewayPr
     });
 
     return {
-      statusCode: 201,
+      statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         message: 'User registered successfully',
-        userId: newUser._id, // Solo devolvemos datos mínimos necesarios
+        userId: newUser._id,
       }),
     };
   } catch (error) {

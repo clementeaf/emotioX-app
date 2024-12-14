@@ -20,8 +20,18 @@ import { useNavigate } from 'react-router-dom';
 import { login, register } from '../services/api'; // Register API
 import { theme } from '../utils';
 
+type CustomError = {
+    response?: {
+      data?: {
+        message?: string;
+      };
+    };
+  };
+  
+
 export default function Login() {
     const navigate = useNavigate();
+    const [error, setError] = useState('');
     const [formData, setFormData] = useState({
         name: '',
         lastname: '',
@@ -59,8 +69,10 @@ export default function Login() {
             alert('Registration successful! You can now log in.');
             setIsSignUp(false); // Vuelve a la vista de inicio de sesión
         },
-        onError: (error) => {
-            console.error('Registration failed:', error);
+        onError: (error: CustomError) => {
+            const errorMessage = error.response?.data?.message || 'Something went wrong';
+            setError(errorMessage);
+            console.error('Registration failed:', errorMessage);
         },
     });
 
@@ -128,7 +140,7 @@ export default function Login() {
                                         😃 Emotio X
                                     </Typography>
                                 </Box>
-
+                                {error && error}
                                 <Stack spacing={3}>
                                     <TextField
                                         variant="outlined"
