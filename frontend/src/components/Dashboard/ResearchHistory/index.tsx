@@ -11,7 +11,6 @@ export default function index() {
       width: '100%',
       height: '100%',
       gap: 2,
-      mb: 3,
     }}>
       <TopRow />
       <ChartAndDescription />

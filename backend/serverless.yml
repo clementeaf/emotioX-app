@@ -128,18 +128,16 @@ functions:
   createResearch:
     handler: dist/controllers/createResearchController.createResearchWithImages
     events:
-      - http:
-          path: research/create-research
+      - httpApi:
+          path: /research/create-research
           method: post
-          cors: true
   
   generatePresignedUrls:
     handler: dist/controllers/imageController.uploadFilesToS3
     events:
-      - http:
-          path: research/generate-presigned-urls
+      - httpApi:
+          path: /research/generate-presigned-urls
           method: post
-          cors: true
 
   connect:
     handler: dist/websocket/connectHandler.connectHandler
@@ -174,16 +172,6 @@ functions:
       - httpApi:
           path: /upload-image
           method: post
-          cors:
-            origin: "http://localhost:5173"
-            headers:
-              - Content-Type
-              - Authorization
-            methods:
-              - OPTIONS
-              - POST
-            allowCredentials: true
-
 
 resources:
   Resources:

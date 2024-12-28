@@ -126,13 +126,8 @@ export const createResearch = async (formData: FormDataState): Promise<unknown> 
 
     // Enviar los datos al backend
     const response = await axios.post(
-      'https://ps8qdjrczb.execute-api.us-east-1.amazonaws.com/dev/research/create-research',
+      'https://ysgzqbh7ch.execute-api.us-east-1.amazonaws.com/research/create-research',
       updatedFormData,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
     );
 
     console.log('Research created successfully:', response.data);

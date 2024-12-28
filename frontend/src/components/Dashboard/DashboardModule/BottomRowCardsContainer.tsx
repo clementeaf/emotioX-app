@@ -1,5 +1,6 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { grey } from '@mui/material/colors';
+import { useState } from 'react';
 
 const researchTypes = ['All', 'Implicit', 'Biometrics', 'Predictions', 'Emotions', 'Cognitive'];
 
@@ -43,8 +44,9 @@ export default function BottomRowCardsContainer() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 px: 2,
+                mb: 3,
             }}>
-                <Typography mt={3} fontWeight={500} fontSize={16} ml={1} lineHeight='24px' color='#262626'>Research’s types</Typography>
+                <Typography fontWeight={500} fontSize={16} ml={1} lineHeight='24px' color='#262626'>Research’s types</Typography>
                 <ResearchTypesButtons />       
             </Stack>
 
@@ -116,23 +118,45 @@ function ProfilesResearchCard({ title, author, lastUpdate }: { title: string, au
     )
 }
 
-function ResearchTypesButtons() {
+export function ResearchTypesButtons() {
+    const [selectedType, setSelectedType] = useState('All');
+
     return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            mt: 2,
-            width: '574px',
-            height: '40px',
-        }}>
-            {
-                researchTypes.map((type, idx) => (
-                    <Button key={idx} variant='text' sx={{ p: 0, px: 2, height: '40px', border: `1px solid ${grey[200]}`, borderRadius: '4px' }}>
-                        <Typography textTransform='initial' color='gray'>{type}</Typography>
-                    </Button>
-                ))
-            }
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                mt: 2,
+                width: '574px',
+                height: '40px',
+            }}
+        >
+            {researchTypes.map((type, idx) => (
+                <Button
+                    key={idx}
+                    variant="text"
+                    onClick={() => setSelectedType(type)}
+                    sx={{
+                        p: 0,
+                        px: 2,
+                        height: '40px',
+                        border: `1px solid ${type === selectedType ? 'blue' : grey[200]}`,
+                        borderRadius: '4px',
+                        backgroundColor: type === selectedType ? 'blue' : 'transparent',
+                        '&:hover': {
+                            backgroundColor: type === selectedType ? 'blue' : grey[100],
+                        },
+                    }}
+                >
+                    <Typography
+                        textTransform="initial"
+                        color={type === selectedType ? 'white' : 'gray'}
+                    >
+                        {type}
+                    </Typography>
+                </Button>
+            ))}
         </Box>
-    )
+    );
 }

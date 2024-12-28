@@ -359,7 +359,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z/emotioX-backend.zip"
+                "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
               },
               "Handler": "dist/controllers/controller.registerUser",
               "Runtime": "nodejs18.x",
@@ -393,7 +393,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z/emotioX-backend.zip"
+                "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
               },
               "Handler": "dist/controllers/controller.getAllUsers",
               "Runtime": "nodejs18.x",
@@ -427,7 +427,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z/emotioX-backend.zip"
+                "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
               },
               "Handler": "dist/controllers/controller.getUserById",
               "Runtime": "nodejs18.x",
@@ -461,7 +461,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z/emotioX-backend.zip"
+                "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
               },
               "Handler": "dist/controllers/controller.deleteUserById",
               "Runtime": "nodejs18.x",
@@ -495,7 +495,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z/emotioX-backend.zip"
+                "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
               },
               "Handler": "dist/controllers/controller.updateUserById",
               "Runtime": "nodejs18.x",
@@ -529,7 +529,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z/emotioX-backend.zip"
+                "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
               },
               "Handler": "dist/controllers/controller.loginUser",
               "Runtime": "nodejs18.x",
@@ -563,7 +563,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z/emotioX-backend.zip"
+                "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
               },
               "Handler": "dist/controllers/controller.logoutUser",
               "Runtime": "nodejs18.x",
@@ -597,7 +597,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z/emotioX-backend.zip"
+                "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
               },
               "Handler": "dist/controllers/controller.refreshToken",
               "Runtime": "nodejs18.x",
@@ -631,7 +631,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z/emotioX-backend.zip"
+                "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
               },
               "Handler": "dist/controllers/createResearchController.createResearchWithImages",
               "Runtime": "nodejs18.x",
@@ -665,7 +665,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z/emotioX-backend.zip"
+                "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
               },
               "Handler": "dist/controllers/imageController.uploadFilesToS3",
               "Runtime": "nodejs18.x",
@@ -699,7 +699,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z/emotioX-backend.zip"
+                "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
               },
               "Handler": "dist/websocket/connectHandler.connectHandler",
               "Runtime": "nodejs18.x",
@@ -733,7 +733,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z/emotioX-backend.zip"
+                "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
               },
               "Handler": "dist/websocket/disconnectHandler.disconnectHandler",
               "Runtime": "nodejs18.x",
@@ -767,7 +767,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z/emotioX-backend.zip"
+                "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
               },
               "Handler": "src/websocket/refreshHandler.refreshHandler",
               "Runtime": "nodejs18.x",
@@ -801,7 +801,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z/emotioX-backend.zip"
+                "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
               },
               "Handler": "dist/controllers/controller.sendTemporaryPassword",
               "Runtime": "nodejs18.x",
@@ -835,7 +835,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z/emotioX-backend.zip"
+                "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
               },
               "Handler": "dist/controllers/imageController.uploadFilesToS3",
               "Runtime": "nodejs18.x",
@@ -1045,328 +1045,6 @@
                 "Fn::GetAtt": [
                   "RefreshEventsRuleSchedule1",
                   "Arn"
-                ]
-              }
-            }
-          },
-          "ApiGatewayRestApi": {
-            "Type": "AWS::ApiGateway::RestApi",
-            "Properties": {
-              "Name": "dev-emotioX-backend",
-              "EndpointConfiguration": {
-                "Types": [
-                  "EDGE"
-                ]
-              },
-              "Policy": ""
-            }
-          },
-          "ApiGatewayResourceResearch": {
-            "Type": "AWS::ApiGateway::Resource",
-            "Properties": {
-              "ParentId": {
-                "Fn::GetAtt": [
-                  "ApiGatewayRestApi",
-                  "RootResourceId"
-                ]
-              },
-              "PathPart": "research",
-              "RestApiId": {
-                "Ref": "ApiGatewayRestApi"
-              }
-            }
-          },
-          "ApiGatewayResourceResearchCreateDashresearch": {
-            "Type": "AWS::ApiGateway::Resource",
-            "Properties": {
-              "ParentId": {
-                "Ref": "ApiGatewayResourceResearch"
-              },
-              "PathPart": "create-research",
-              "RestApiId": {
-                "Ref": "ApiGatewayRestApi"
-              }
-            }
-          },
-          "ApiGatewayResourceResearchGenerateDashpresignedDashurls": {
-            "Type": "AWS::ApiGateway::Resource",
-            "Properties": {
-              "ParentId": {
-                "Ref": "ApiGatewayResourceResearch"
-              },
-              "PathPart": "generate-presigned-urls",
-              "RestApiId": {
-                "Ref": "ApiGatewayRestApi"
-              }
-            }
-          },
-          "ApiGatewayMethodResearchCreateDashresearchOptions": {
-            "Type": "AWS::ApiGateway::Method",
-            "Properties": {
-              "AuthorizationType": "NONE",
-              "HttpMethod": "OPTIONS",
-              "MethodResponses": [
-                {
-                  "StatusCode": "200",
-                  "ResponseParameters": {
-                    "method.response.header.Access-Control-Allow-Origin": true,
-                    "method.response.header.Access-Control-Allow-Headers": true,
-                    "method.response.header.Access-Control-Allow-Methods": true
-                  },
-                  "ResponseModels": {}
-                }
-              ],
-              "RequestParameters": {},
-              "Integration": {
-                "Type": "MOCK",
-                "RequestTemplates": {
-                  "application/json": "{statusCode:200}"
-                },
-                "ContentHandling": "CONVERT_TO_TEXT",
-                "IntegrationResponses": [
-                  {
-                    "StatusCode": "200",
-                    "ResponseParameters": {
-                      "method.response.header.Access-Control-Allow-Origin": "'*'",
-                      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
-                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
-                    },
-                    "ResponseTemplates": {
-                      "application/json": ""
-                    }
-                  }
-                ]
-              },
-              "ResourceId": {
-                "Ref": "ApiGatewayResourceResearchCreateDashresearch"
-              },
-              "RestApiId": {
-                "Ref": "ApiGatewayRestApi"
-              }
-            }
-          },
-          "ApiGatewayMethodResearchGenerateDashpresignedDashurlsOptions": {
-            "Type": "AWS::ApiGateway::Method",
-            "Properties": {
-              "AuthorizationType": "NONE",
-              "HttpMethod": "OPTIONS",
-              "MethodResponses": [
-                {
-                  "StatusCode": "200",
-                  "ResponseParameters": {
-                    "method.response.header.Access-Control-Allow-Origin": true,
-                    "method.response.header.Access-Control-Allow-Headers": true,
-                    "method.response.header.Access-Control-Allow-Methods": true
-                  },
-                  "ResponseModels": {}
-                }
-              ],
-              "RequestParameters": {},
-              "Integration": {
-                "Type": "MOCK",
-                "RequestTemplates": {
-                  "application/json": "{statusCode:200}"
-                },
-                "ContentHandling": "CONVERT_TO_TEXT",
-                "IntegrationResponses": [
-                  {
-                    "StatusCode": "200",
-                    "ResponseParameters": {
-                      "method.response.header.Access-Control-Allow-Origin": "'*'",
-                      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent,X-Amzn-Trace-Id'",
-                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,POST'"
-                    },
-                    "ResponseTemplates": {
-                      "application/json": ""
-                    }
-                  }
-                ]
-              },
-              "ResourceId": {
-                "Ref": "ApiGatewayResourceResearchGenerateDashpresignedDashurls"
-              },
-              "RestApiId": {
-                "Ref": "ApiGatewayRestApi"
-              }
-            }
-          },
-          "ApiGatewayMethodResearchCreateDashresearchPost": {
-            "Type": "AWS::ApiGateway::Method",
-            "Properties": {
-              "HttpMethod": "POST",
-              "RequestParameters": {},
-              "ResourceId": {
-                "Ref": "ApiGatewayResourceResearchCreateDashresearch"
-              },
-              "RestApiId": {
-                "Ref": "ApiGatewayRestApi"
-              },
-              "ApiKeyRequired": false,
-              "AuthorizationType": "NONE",
-              "Integration": {
-                "IntegrationHttpMethod": "POST",
-                "Type": "AWS_PROXY",
-                "Uri": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition"
-                      },
-                      ":apigateway:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":lambda:path/2015-03-31/functions/",
-                      {
-                        "Fn::GetAtt": [
-                          "CreateResearchLambdaFunction",
-                          "Arn"
-                        ]
-                      },
-                      "/invocations"
-                    ]
-                  ]
-                }
-              },
-              "MethodResponses": []
-            },
-            "DependsOn": [
-              "CreateResearchLambdaPermissionApiGateway"
-            ]
-          },
-          "ApiGatewayMethodResearchGenerateDashpresignedDashurlsPost": {
-            "Type": "AWS::ApiGateway::Method",
-            "Properties": {
-              "HttpMethod": "POST",
-              "RequestParameters": {},
-              "ResourceId": {
-                "Ref": "ApiGatewayResourceResearchGenerateDashpresignedDashurls"
-              },
-              "RestApiId": {
-                "Ref": "ApiGatewayRestApi"
-              },
-              "ApiKeyRequired": false,
-              "AuthorizationType": "NONE",
-              "Integration": {
-                "IntegrationHttpMethod": "POST",
-                "Type": "AWS_PROXY",
-                "Uri": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:",
-                      {
-                        "Ref": "AWS::Partition"
-                      },
-                      ":apigateway:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":lambda:path/2015-03-31/functions/",
-                      {
-                        "Fn::GetAtt": [
-                          "GeneratePresignedUrlsLambdaFunction",
-                          "Arn"
-                        ]
-                      },
-                      "/invocations"
-                    ]
-                  ]
-                }
-              },
-              "MethodResponses": []
-            },
-            "DependsOn": [
-              "GeneratePresignedUrlsLambdaPermissionApiGateway"
-            ]
-          },
-          "ApiGatewayDeployment1734216099850": {
-            "Type": "AWS::ApiGateway::Deployment",
-            "Properties": {
-              "RestApiId": {
-                "Ref": "ApiGatewayRestApi"
-              },
-              "StageName": "dev"
-            },
-            "DependsOn": [
-              "ApiGatewayMethodResearchCreateDashresearchOptions",
-              "ApiGatewayMethodResearchGenerateDashpresignedDashurlsOptions",
-              "ApiGatewayMethodResearchCreateDashresearchPost",
-              "ApiGatewayMethodResearchGenerateDashpresignedDashurlsPost"
-            ]
-          },
-          "CreateResearchLambdaPermissionApiGateway": {
-            "Type": "AWS::Lambda::Permission",
-            "Properties": {
-              "FunctionName": {
-                "Fn::GetAtt": [
-                  "CreateResearchLambdaFunction",
-                  "Arn"
-                ]
-              },
-              "Action": "lambda:InvokeFunction",
-              "Principal": "apigateway.amazonaws.com",
-              "SourceArn": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":execute-api:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "ApiGatewayRestApi"
-                    },
-                    "/*/*"
-                  ]
-                ]
-              }
-            }
-          },
-          "GeneratePresignedUrlsLambdaPermissionApiGateway": {
-            "Type": "AWS::Lambda::Permission",
-            "Properties": {
-              "FunctionName": {
-                "Fn::GetAtt": [
-                  "GeneratePresignedUrlsLambdaFunction",
-                  "Arn"
-                ]
-              },
-              "Action": "lambda:InvokeFunction",
-              "Principal": "apigateway.amazonaws.com",
-              "SourceArn": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:",
-                    {
-                      "Ref": "AWS::Partition"
-                    },
-                    ":execute-api:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":",
-                    {
-                      "Ref": "ApiGatewayRestApi"
-                    },
-                    "/*/*"
-                  ]
                 ]
               }
             }
@@ -2235,6 +1913,150 @@
             },
             "DependsOn": "HttpApiIntegrationRefreshToken"
           },
+          "CreateResearchLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "CreateResearchLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationCreateResearch": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"CreateResearchLambdaPermissionHttpApi\"][\"Properties\"][\"FunctionName\"]"
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 30000
+            }
+          },
+          "HttpApiRoutePostResearchCreateDashresearch": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "POST /research/create-research",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationCreateResearch"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationCreateResearch"
+          },
+          "GeneratePresignedUrlsLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GeneratePresignedUrlsLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationGeneratePresignedUrls": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"GeneratePresignedUrlsLambdaPermissionHttpApi\"][\"Properties\"][\"FunctionName\"]"
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 30000
+            }
+          },
+          "HttpApiRoutePostResearchGenerateDashpresignedDashurls": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "POST /research/generate-presigned-urls",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationGeneratePresignedUrls"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationGeneratePresignedUrls"
+          },
           "SendTemporaryPasswordLambdaPermissionHttpApi": {
             "Type": "AWS::Lambda::Permission",
             "Properties": {
@@ -2594,32 +2416,6 @@
             },
             "Export": {
               "Name": "sls-emotioX-backend-dev-UploadFilesToS3LambdaFunctionQualifiedArn"
-            }
-          },
-          "ServiceEndpoint": {
-            "Description": "URL of the service endpoint",
-            "Value": {
-              "Fn::Join": [
-                "",
-                [
-                  "https://",
-                  {
-                    "Ref": "ApiGatewayRestApi"
-                  },
-                  ".execute-api.",
-                  {
-                    "Ref": "AWS::Region"
-                  },
-                  ".",
-                  {
-                    "Ref": "AWS::URLSuffix"
-                  },
-                  "/dev"
-                ]
-              ]
-            },
-            "Export": {
-              "Name": "sls-emotioX-backend-dev-ServiceEndpoint"
             }
           },
           "ServiceEndpointWebsocket": {
@@ -3002,28 +2798,12 @@
         "handler": "dist/controllers/createResearchController.createResearchWithImages",
         "events": [
           {
-            "http": {
-              "path": "research/create-research",
-              "method": "post",
-              "cors": {
-                "origin": "*",
-                "methods": [
-                  "OPTIONS",
-                  "POST"
-                ],
-                "headers": [
-                  "Content-Type",
-                  "X-Amz-Date",
-                  "Authorization",
-                  "X-Api-Key",
-                  "X-Amz-Security-Token",
-                  "X-Amz-User-Agent",
-                  "X-Amzn-Trace-Id"
-                ],
-                "allowCredentials": false
-              },
-              "integration": "AWS_PROXY"
-            }
+            "httpApi": {
+              "path": "/research/create-research",
+              "method": "post"
+            },
+            "resolvedMethod": "POST",
+            "resolvedPath": "/research/create-research"
           }
         ],
         "name": "emotioX-backend-dev-createResearch",
@@ -3044,28 +2824,12 @@
         "handler": "dist/controllers/imageController.uploadFilesToS3",
         "events": [
           {
-            "http": {
-              "path": "research/generate-presigned-urls",
-              "method": "post",
-              "cors": {
-                "origin": "*",
-                "methods": [
-                  "OPTIONS",
-                  "POST"
-                ],
-                "headers": [
-                  "Content-Type",
-                  "X-Amz-Date",
-                  "Authorization",
-                  "X-Api-Key",
-                  "X-Amz-Security-Token",
-                  "X-Amz-User-Agent",
-                  "X-Amzn-Trace-Id"
-                ],
-                "allowCredentials": false
-              },
-              "integration": "AWS_PROXY"
-            }
+            "httpApi": {
+              "path": "/research/generate-presigned-urls",
+              "method": "post"
+            },
+            "resolvedMethod": "POST",
+            "resolvedPath": "/research/generate-presigned-urls"
           }
         ],
         "name": "emotioX-backend-dev-generatePresignedUrls",
@@ -3190,19 +2954,7 @@
           {
             "httpApi": {
               "path": "/upload-image",
-              "method": "post",
-              "cors": {
-                "origin": "http://localhost:5173",
-                "headers": [
-                  "Content-Type",
-                  "Authorization"
-                ],
-                "methods": [
-                  "OPTIONS",
-                  "POST"
-                ],
-                "allowCredentials": true
-              }
+              "method": "post"
             },
             "resolvedMethod": "POST",
             "resolvedPath": "/upload-image"
@@ -3339,7 +3091,7 @@
     "artifact": "C:\\Users\\cleme\\OneDrive\\Escritorio\\emotioX-app\\backend\\.build\\.serverless\\emotioX-backend.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/emotioX-backend/dev/1734216268957-2024-12-14T22:44:28.957Z",
+    "artifactDirectoryName": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z",
     "artifact": "emotioX-backend.zip"
   }
 }

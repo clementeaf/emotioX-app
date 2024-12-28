@@ -39,7 +39,7 @@ export default function Login() {
         username: '',
         password: '',
     });
-    const [isSignUp, setIsSignUp] = useState(false); // Nuevo estado para controlar la vista
+    const [isSignUp, setIsSignUp] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
     const mutation = useMutation({
@@ -47,14 +47,13 @@ export default function Login() {
             return await login(loginForm);
         },
         onSuccess: (data) => {
-            // Notificación de éxito con Toastify
             toast.success('Login successful!');
             localStorage.setItem('accessToken', data.accessToken);
             navigate('/dashboard');
         },
         onError: (error: CustomError) => {
             const errorMessage = error.response?.data?.message || 'Login failed. Please try again.';
-            toast.error(errorMessage); // Notificación de error
+            toast.error(errorMessage);
             console.error('Login failed:', errorMessage);
         },
     });
@@ -70,14 +69,13 @@ export default function Login() {
             return await register(registerForm);
         },
         onSuccess: () => {
-            // Notificación de éxito con Toastify
             toast.success('Registration successful! You can now log in.');
             setIsSignUp(false);
         },
         onError: (error: CustomError) => {
             const errorMessage = error.response?.data?.message || 'Registration failed. Please try again.';
-            setError(errorMessage); // Muestra el mensaje en el formulario
-            toast.error(errorMessage); // Notificación de error
+            setError(errorMessage);
+            toast.error(errorMessage);
             console.error('Registration failed:', errorMessage);
         },
     });
@@ -136,7 +134,6 @@ export default function Login() {
                         }}
                     >
                         {isSignUp ? (
-                            // Formulario de Registro
                             <>
                                 <Box display="flex" justifyContent="space-between" alignItems="center" my={4}>
                                     <Typography component="h1" variant="h5" fontWeight="bold">

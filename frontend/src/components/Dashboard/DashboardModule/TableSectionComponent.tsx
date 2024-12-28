@@ -41,7 +41,7 @@ export function TableSectionComponent() {
                   key={index}
                   sx={{
                     height: '50px',
-                    '&:last-child td, &:last-child th': { border: 0 },  // Quita el borde de la última fila
+                    '&:last-child td, &:last-child th': { border: 0 },
                   }}
                 >
                   <TableCell sx={{ fontSize: '12px', width: '180px' }}>

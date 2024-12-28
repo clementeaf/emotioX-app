@@ -11,7 +11,6 @@ export default function index() {
       width: '1135px',
       height: '100%',
       gap: 2,
-      mb: 3,
     }}>
       <Stack sx={{
         display: 'flex',
