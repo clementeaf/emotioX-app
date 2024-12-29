@@ -303,7 +303,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
+          "S3Key": "serverless/emotioX-backend/dev/1735405615491-2024-12-28T17:06:55.491Z/emotioX-backend.zip"
         },
         "Handler": "dist/controllers/controller.registerUser",
         "Runtime": "nodejs18.x",
@@ -337,7 +337,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
+          "S3Key": "serverless/emotioX-backend/dev/1735405615491-2024-12-28T17:06:55.491Z/emotioX-backend.zip"
         },
         "Handler": "dist/controllers/controller.getAllUsers",
         "Runtime": "nodejs18.x",
@@ -371,7 +371,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
+          "S3Key": "serverless/emotioX-backend/dev/1735405615491-2024-12-28T17:06:55.491Z/emotioX-backend.zip"
         },
         "Handler": "dist/controllers/controller.getUserById",
         "Runtime": "nodejs18.x",
@@ -405,7 +405,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
+          "S3Key": "serverless/emotioX-backend/dev/1735405615491-2024-12-28T17:06:55.491Z/emotioX-backend.zip"
         },
         "Handler": "dist/controllers/controller.deleteUserById",
         "Runtime": "nodejs18.x",
@@ -439,7 +439,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
+          "S3Key": "serverless/emotioX-backend/dev/1735405615491-2024-12-28T17:06:55.491Z/emotioX-backend.zip"
         },
         "Handler": "dist/controllers/controller.updateUserById",
         "Runtime": "nodejs18.x",
@@ -473,7 +473,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
+          "S3Key": "serverless/emotioX-backend/dev/1735405615491-2024-12-28T17:06:55.491Z/emotioX-backend.zip"
         },
         "Handler": "dist/controllers/controller.loginUser",
         "Runtime": "nodejs18.x",
@@ -507,7 +507,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
+          "S3Key": "serverless/emotioX-backend/dev/1735405615491-2024-12-28T17:06:55.491Z/emotioX-backend.zip"
         },
         "Handler": "dist/controllers/controller.logoutUser",
         "Runtime": "nodejs18.x",
@@ -541,7 +541,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
+          "S3Key": "serverless/emotioX-backend/dev/1735405615491-2024-12-28T17:06:55.491Z/emotioX-backend.zip"
         },
         "Handler": "dist/controllers/controller.refreshToken",
         "Runtime": "nodejs18.x",
@@ -575,7 +575,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
+          "S3Key": "serverless/emotioX-backend/dev/1735405615491-2024-12-28T17:06:55.491Z/emotioX-backend.zip"
         },
         "Handler": "dist/controllers/createResearchController.createResearchWithImages",
         "Runtime": "nodejs18.x",
@@ -609,7 +609,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
+          "S3Key": "serverless/emotioX-backend/dev/1735405615491-2024-12-28T17:06:55.491Z/emotioX-backend.zip"
         },
         "Handler": "dist/controllers/imageController.uploadFilesToS3",
         "Runtime": "nodejs18.x",
@@ -643,7 +643,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
+          "S3Key": "serverless/emotioX-backend/dev/1735405615491-2024-12-28T17:06:55.491Z/emotioX-backend.zip"
         },
         "Handler": "dist/websocket/connectHandler.connectHandler",
         "Runtime": "nodejs18.x",
@@ -677,7 +677,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
+          "S3Key": "serverless/emotioX-backend/dev/1735405615491-2024-12-28T17:06:55.491Z/emotioX-backend.zip"
         },
         "Handler": "dist/websocket/disconnectHandler.disconnectHandler",
         "Runtime": "nodejs18.x",
@@ -711,7 +711,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
+          "S3Key": "serverless/emotioX-backend/dev/1735405615491-2024-12-28T17:06:55.491Z/emotioX-backend.zip"
         },
         "Handler": "src/websocket/refreshHandler.refreshHandler",
         "Runtime": "nodejs18.x",
@@ -745,7 +745,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
+          "S3Key": "serverless/emotioX-backend/dev/1735405615491-2024-12-28T17:06:55.491Z/emotioX-backend.zip"
         },
         "Handler": "dist/controllers/controller.sendTemporaryPassword",
         "Runtime": "nodejs18.x",
@@ -779,7 +779,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/emotioX-backend/dev/1734299602936-2024-12-15T21:53:22.936Z/emotioX-backend.zip"
+          "S3Key": "serverless/emotioX-backend/dev/1735405615491-2024-12-28T17:06:55.491Z/emotioX-backend.zip"
         },
         "Handler": "dist/controllers/imageController.uploadFilesToS3",
         "Runtime": "nodejs18.x",
@@ -1263,7 +1263,7 @@
             "OPTIONS"
           ],
           "AllowOrigins": [
-            "http://localhost:5173"
+            "http://localhost:3000"
           ]
         }
       }
