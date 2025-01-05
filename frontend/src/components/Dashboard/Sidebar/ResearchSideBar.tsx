@@ -1,4 +1,4 @@
-import { Box, Typography, List, ListItem, FormControlLabel, Checkbox, Button } from '@mui/material';
+import { Box, Typography, List, ListItem, Checkbox, Button } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import add from '../../../assets/add.png';
 import { useSelectedResearchStore } from '../../../store/useSelectedResearchStore';
@@ -52,19 +52,16 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
               cursor: 'pointer',
             }}
           >
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={selectedSection === label}
-                    onChange={() => setSelectedSection(label)}
-                  />
-                }
-                label={<Typography sx={{ color: 'black' }}>{label}</Typography>}
-                sx={{
-                  alignItems: 'center',
-                  gap: 1,
-                }}
-              />
+                <Checkbox
+                  onChange={() => {}}
+                  sx={{ mr: 1 }}
+                />
+                <Typography
+                  onClick={() => setSelectedSection(label)}
+                  sx={{ color: 'black', cursor: 'pointer' }}
+                >
+                  {label}
+                </Typography>
           </ListItem>
         ))}
       </List>

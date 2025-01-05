@@ -1,128 +1,109 @@
-import { useState } from 'react';
 import {
-    Box,
-    Button,
-    Checkbox,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Typography,
+  Box,
+  Typography,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  TextField,
+  Checkbox,
+  Link,
 } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import { grey, red } from '@mui/material/colors';
+import { CriteriaTableProps } from '../../types/types';
 
-// Datos de ejemplo
-const initialRows = [
-    { id: 1, order: '01', attribute: 'Attribute' },
-    { id: 2, order: '02', attribute: 'Attribute' },
-    { id: 3, order: '03', attribute: 'Attribute' },
-    { id: 4, order: '04', attribute: 'Attribute' },
-];
+const TIMES: (300 | 400 | 500)[] = [300, 400, 500];
 
-// Componente principal
-export const CriteriaTable = () => {
-    const [selectedTime, setSelectedTime] = useState(400);
-    const [showResults, setShowResults] = useState(false);
-
-    // Manejar la selección de la opción de tiempo
-    const handleTimeSelect = (time: number) => {
-        setSelectedTime(time);
-    };
-
-    return (
-        <Box sx={{ p: 3, width: 800, borderRadius: 2, bgcolor: 'white' }}>
-            {/* Opciones de tiempo */}
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', width: 800, height: 446, border: '1px solid #e0e0e0', borderRadius: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
-                    <Typography >
-                        Criteria
-                    </Typography>
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Typography sx={{ color: '#6c757d' }}>
-                            Priming display time:
-                        </Typography>
-                        {[300, 400, 500].map((time) => (
-                            <Button
-                                key={time}
-                                variant={selectedTime === time ? 'contained' : 'outlined'}
-                                size="small"
-                                color={selectedTime === time ? 'primary' : 'inherit'}
-                                onClick={() => handleTimeSelect(time)}
-                                sx={{
-                                    minWidth: 50,
-                                    height: 30,
-                                    mr: 1,
-                                    bgcolor: selectedTime === time ? '#4A3AFF' : 'inherit',
-                                    color: selectedTime === time ? '#fff' : '#6c757d',
-                                    borderColor: selectedTime === time ? '#4A3AFF' : '#e0e0e0',
-                                    textTransform: 'none',
-                                }}
-                            >
-                                {time} ms
-                            </Button>
-                        ))}
-                    </Box>
-                </Box>
-
-                {/* Tabla */}
-                <TableContainer >
-                    <Table aria-label="criteria table">
-                        <TableHead>
-                            <TableRow sx={{ bgcolor: '#f9f9f9', borderTop: '1px solid #e0e0e0' }}>
-                                <TableCell sx={{ fontWeight: 600 }}>Order</TableCell>
-                                <TableCell sx={{ fontWeight: 600,  }}>Attribute name</TableCell>
-                                <TableCell sx={{ fontWeight: 600 }}>Actions</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {initialRows.map((row) => (
-                                <TableRow key={row.id} hover>
-                                    <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <DragIndicatorIcon sx={{ color: '#b0b0b0', mr: 1 }} />
-                                        {row.order}
-                                    </TableCell>
-                                    <TableCell>{row.attribute}</TableCell>
-                                    <TableCell>
-                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                        <Typography
-                                            variant="body2"
-                                            color="primary"
-                                            sx={{ cursor: 'pointer', display: 'inline-block' }}
-                                        >
-                                            Image
-                                        </Typography>
-                                        <div style={{ width: 1, height: 20, backgroundColor: 'black', marginRight: 15, marginLeft: 15 }} />
-                                        <Typography
-                                            variant="body2"
-                                            color="error"
-                                            sx={{ cursor: 'pointer', display: 'inline-block' }}
-                                        >
-                                            Delete
-                                        </Typography>
-                                        </Box>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-
-                {/* Checkbox de mostrar resultados */}
-                <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                    <Checkbox
-                        checked={showResults}
-                        onChange={() => setShowResults(!showResults)}
-                        size="small"
-                    />
-                    <Typography variant="body2" sx={{ color: '#6c757d' }}>
-                        Show results to respondents
-                    </Typography>
-                </Box>
-            </Box>
+export function CriteriaTable({
+  timeSelection,
+  table,
+  showResults,
+  onTimeSelectionChange,
+  onEditCell,
+  onToggleShowResults,
+}: CriteriaTableProps) {
+  return (
+    <Box sx={{ width: '800px', p: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h6" fontWeight={600}>
+          Criteria
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Typography fontWeight={400} fontSize={14}>
+            Priming display time:
+          </Typography>
+          {TIMES.map((time) => (
+            <TextField
+              key={time}
+              variant="outlined"
+              size="small"
+              value={`${timeSelection === time ? `${time} ms` : ''}`}
+              onClick={() => onTimeSelectionChange(time)}
+              sx={{
+                width: 70,
+                '& .MuiOutlinedInput-input': {
+                  p: '5px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                },
+              }}
+            />
+          ))}
         </Box>
-    );
-};
+      </Box>
 
-export default CriteriaTable;
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {table.map((col) => (
+                <TableCell key={col.columnName}>{col.columnName}</TableCell>
+              ))}
+              <TableCell sx={{ width: '20%' }}>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {table[0].columnData.map((_, index) => (
+              <TableRow key={index}>
+                {table.map((col) => (
+                  <TableCell key={col.columnName}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <DragIndicatorIcon sx={{ color: grey[500], cursor: 'pointer' }} />
+                      <TextField
+                        size="small"
+                        value={col.columnData[index]}
+                        onChange={(e) =>
+                          onEditCell(col.columnName, index, e.target.value)
+                        }
+                        sx={{ width: '100%' }}
+                      />
+                    </Box>
+                  </TableCell>
+                ))}
+                <TableCell>
+                  <Link href="#" sx={{ color: grey[700], mr: 2 }}>
+                    Image
+                  </Link>
+                  <Link href="#" sx={{ color: red[500] }}>
+                    Delete
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+        <Checkbox
+          checked={showResults.checkboxSelection}
+          onChange={(e) => onToggleShowResults(e.target.checked)}
+        />
+        <Typography>{showResults.checkboxTitle}</Typography>
+      </Box>
+    </Box>
+  );
+}

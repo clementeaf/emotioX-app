@@ -94,3 +94,89 @@ export interface ActionButtonProps {
   handleNext: () => void;
   stepsLength: number;
 }
+
+// Implicit Association View
+export interface InstructionFieldProps {
+  label: string;
+  placeholder: string;
+  maxChars: number;
+  value: string;
+  onChange: (value: string) => void;
+};
+
+export interface ImageUploadProps {
+  id: number;
+  handleImageUpload: (id: number, file: File, format: string) => void;
+};
+
+export interface TargetCardProps {
+  id: number;
+  title: string;
+  text: string;
+  nameOfObject: string;
+  titleAssigned: string;
+  imageUploaded: File | null;
+  updateTargetTitleAssigned: (id: number, value: string) => void;
+  handleImageUpload: (id: number, file: File, format: string) => void;
+};
+
+export interface InputAttribute {
+  id: number;
+  title: string;
+  inputData: string;
+};
+
+export interface DimensionsInputProps {
+  sectionTitle: string;
+  inputsAttributes: InputAttribute[];
+  onInputChange: (id: number, value: string) => void;
+};
+
+// Criteria Table
+export interface TableData {
+  columnName: string;
+  columnData: (string | number)[];
+};
+
+export interface ShowResults {
+  checkboxTitle: string;
+  checkboxSelection: boolean;
+};
+
+export interface CriteriaTableProps {
+  timeSelection: 300 | 400 | 500;
+  table: TableData[];
+  showResults: ShowResults;
+  onTimeSelectionChange: (time: 300 | 400 | 500) => void;
+  onEditCell: (columnName: string, index: number, value: string | number) => void;
+  onToggleShowResults: (checked: boolean) => void;
+};
+
+
+// InstructionFieldsContainer
+export interface Instruction {
+  title: string;
+  textAreaData: string;
+  placeHolder: string;
+};
+
+export interface InstructionFieldsProps {
+  exerciseInstruction: Instruction;
+  testInstruction: Instruction;
+  onExerciseChange: (text: string) => void;
+  onTestChange: (text: string) => void;
+};
+
+// TestConfiguration
+export interface CheckboxOption {
+  id: number;
+  title: string;
+  selection: boolean;
+};
+
+export interface TestConfigurationProps {
+  title: string;
+  note: string;
+  checkboxsSelection: CheckboxOption[];
+  onSelectionChange: (id: number, selection: boolean) => void;
+};
