@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { ResearchStep1, ResearchStep2, ResearchStep3 } from './Steps';
 import { useResearchStore } from '../../store/useResearchStore';
-import { Button, Alert } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import FormStepper from '../../core-ui/FormStepper';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { createResearch } from '../../services/api';
-import { ActionButtonProps, FormDataState } from '../../types/types';
+import { ActionButtonProps, FormDataState, ResearchResponse } from '../../types/types';
 import { steps } from '../../utils';
 
 const ActionButton: React.FC<ActionButtonProps> = ({ step, handleNext, stepsLength }) => {
@@ -25,18 +25,33 @@ export default function ResearchForm() {
   const { step, setStep, selectedResearchModule, formData } = useResearchStore();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  const mutation = useMutation({
+  const mutation = useMutation<ResearchResponse, Error, FormDataState>({
     mutationFn: createResearch,
     onSuccess: (data) => {
-      console.log('Research created successfully:', data);
-      navigate(`/newResearch/${selectedResearchModule}`);
+      const { message, research } = data;
+
+      if (message.length > 0) {
+        setSuccessMessage('Research created successfully! Redirecting...');
+      }
+
+      setTimeout(() => {
+        navigate(`/newResearch/${research.selectedResearchModule}`);
+      }, 2000);
     },
     onError: (error) => {
       console.error('Failed to create research:', error);
-      setErrorMessage('Failed to create research. Please try again.');
+
+      const serverErrorMessage =
+        error instanceof Error
+          ? error.message || 'An unexpected error occurred. Please try again later.'
+          : 'Failed to create research. Please try again.';
+
+      setErrorMessage(serverErrorMessage);
     },
   });
+
 
   const isStepValid = (currentStep: number, formData: FormDataState): { isValid: boolean; error?: string } => {
     switch (currentStep) {
@@ -59,7 +74,7 @@ export default function ResearchForm() {
         return { isValid: false, error: 'Unknown validation step.' };
     }
   };
-  
+
 
   const handleNext = () => {
     if (isStepValid(step, { ...formData, selectedResearchModule })) {
@@ -76,8 +91,8 @@ export default function ResearchForm() {
       setErrorMessage('Please complete the required fields before proceeding.');
     }
   };
-  
-  
+
+
 
   const handleStepClick = (index: number) => {
     if (index <= step && isStepValid(index, formData)) {
@@ -89,7 +104,6 @@ export default function ResearchForm() {
 
   return (
     <>
-      {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       <FormStepper
         steps={steps}
         activeStep={step}
@@ -97,6 +111,8 @@ export default function ResearchForm() {
         canProceed={isStepValid(step, formData)?.isValid}
         formData={formData}
       >
+        {errorMessage && <Typography color='red'>{errorMessage}</Typography>}
+        {successMessage && <Typography color='green'>{successMessage}</Typography>}
         {step === 0 && <ResearchStep1 />}
         {step === 1 && <ResearchStep2 />}
         {step === 2 && <ResearchStep3 />}
@@ -107,5 +123,6 @@ export default function ResearchForm() {
         />
       </FormStepper>
     </>
+
   );
 }

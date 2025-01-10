@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { FormDataState } from '../types/types';
+import { FormDataState, ResearchResponse } from '../types/types';
 
 // Configuración base para Axios
 const api = axios.create({
@@ -106,7 +106,7 @@ const readFileAsBase64 = (file: File): Promise<string> => {
 /**
  * Función para crear una investigación, procesando imágenes si es necesario
  */
-export const createResearch = async (formData: FormDataState): Promise<unknown> => {
+export const createResearch = async (formData: FormDataState): Promise<ResearchResponse> => {
   try {
     let uploadedFileUrls: string[] = [];
 
@@ -130,7 +130,6 @@ export const createResearch = async (formData: FormDataState): Promise<unknown> 
       updatedFormData,
     );
 
-    console.log('Research created successfully:', response.data);
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {

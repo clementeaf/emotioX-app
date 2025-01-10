@@ -180,3 +180,22 @@ export interface TestConfigurationProps {
   checkboxsSelection: CheckboxOption[];
   onSelectionChange: (id: number, selection: boolean) => void;
 };
+
+// Research Creation
+export interface ResearchResponse {
+  message: string;
+  research: {
+    createdAt: string;
+    enterpriseName: string;
+    researchName: string;
+    researchTypeSpecificData: {
+      title: string;
+    };
+    selectedProjects: any[]; // Cambia `any` por el tipo adecuado si tienes más detalles
+    selectedResearchModule: string;
+    selectedResearchType: string;
+    updatedAt: string;
+    uploadedFiles: any[]; // Cambia `any` por el tipo adecuado
+    _id: string;
+  };
+};
