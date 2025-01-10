@@ -41,7 +41,8 @@ export default function Login() {
     });
     const [isSignUp, setIsSignUp] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false); 
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [loginError, setLoginError] = useState(''); 
 
     const mutation = useMutation({
         mutationFn: async (loginForm: { identifier: string; password: string }) => {
@@ -57,6 +58,7 @@ export default function Login() {
         },
         onError: (error: CustomError) => {
             const errorMessage = error.response?.data?.message || 'Login failed. Please try again.';
+            setLoginError(errorMessage);
             toast.error(errorMessage);
             console.error('Login failed:', errorMessage);
         },
@@ -253,6 +255,7 @@ export default function Login() {
                                         😃 Emotio X
                                     </Typography>
                                 </Box>
+                                {loginError && !isLoggedIn && formData.password.length > 0 && <Typography my={2} color='red'>{loginError}</Typography>}
                                 {isLoggedIn && <Typography my={2} color='green'>Login Successful! we are redirecting you to the dashbord</Typography>}
                                 <Stack spacing={3}>
                                     <TextField
