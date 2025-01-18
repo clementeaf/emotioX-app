@@ -8,7 +8,6 @@ interface InvestigationTitleRequirementProps {
 }
 
 export default function InvestigationTitleRequirement({ title }: InvestigationTitleRequirementProps) {
-  // Obtener el valor y el setter desde el store
   const required = useImplicitAssociationStore((state) => state.required);
   const setRequired = useImplicitAssociationStore((state) => state.setRequired);
 

@@ -109,6 +109,10 @@ export interface ImageUploadProps {
   handleImageUpload: (id: number, file: File, format: string) => void;
 };
 
+export interface ImageUploadV2Props {
+  handleImageUpload: (file: File) => void;
+};
+
 export interface TargetCardProps {
   id: number;
   title: string;

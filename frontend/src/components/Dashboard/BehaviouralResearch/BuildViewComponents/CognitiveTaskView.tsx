@@ -48,6 +48,7 @@ export default function CognitiveTaskView() {
           deviceFrameOptions={['No Frame', 'Device Frame']}
         />
         <FormSorteableWithSwitchNoImg question='6.6.- Question _italic_ **bold** - bullet list 1. ordered list' />
+        <FormSorteableWithMultipleImg question='6.7.- Question _italic_ **bold** - bullet list 1. ordered list' />
         <FormSorteableWithMultipleImg question='6.8.- Question _italic_ **bold** - bullet list 1. ordered list' />
       </Box>
     </Box>

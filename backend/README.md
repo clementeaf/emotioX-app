@@ -14,22 +14,6 @@ Para configurar y ejecutar este proyecto, necesitas tener instaladas las siguien
   ```bash
   npm install -g serverless
 
-## Configuración Inicial del Proyecto
-Clonar el Repositorio: Clona este repositorio en tu máquina local.
-
-git clone https://github.com/tu-usuario/auth-backend.git
-
-cd auth-backend/backend
-
-Instalar Dependencias: Instala las dependencias necesarias del proyecto.
-
-npm install
-
-Configurar Variables de Entorno: Crea un archivo .env en la raíz del proyecto y añade las siguientes variables:
-
-MONGODB_URI=your_mongodb_uri
-JWT_SECRET=your_jwt_secret
-
 ## Estructura del Proyecto 
 La arquitectura del proyecto está organizada de manera modular para mantener la separación de responsabilidades y la escalabilidad:
 
@@ -82,3 +66,19 @@ Próximos Pasos
 Implementar Pruebas: Añadir pruebas unitarias y de integración.
 Añadir Documentación de API: Utilizar herramientas como Swagger para documentar los endpoints de la API.
 Optimizar Seguridad: Añadir medidas adicionales de seguridad para la protección de datos y tokens.
+
+# Instrucciones para Desplegar EmotioX Backend
+
+## Requisitos previos
+1. Instala [Node.js](https://nodejs.org/).
+2. Instala [AWS CLI](https://aws.amazon.com/cli/) y asegúrate de que esté en el PATH.
+3. Solicita tus credenciales de AWS IAM con los permisos adecuados.
+
+## Configuración inicial
+1. Copia tus credenciales de AWS en un archivo llamado `aws-credentials.json` con el siguiente formato:
+   ```json
+   {
+     "aws_access_key_id": "USER_AWS_ACCESS_KEY_ID",
+     "aws_secret_access_key": "USER_AWS_SECRET_ACCESS_KEY",
+     "region": "us-east-1"
+   }

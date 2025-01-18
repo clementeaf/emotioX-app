@@ -1,11 +1,15 @@
 import { Active, closestCenter, DndContext, Over } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { CSS } from '@dnd-kit/utilities';
-import { Box, Button, Checkbox, FormControl, FormControlLabel, IconButton, MenuItem, Select, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Checkbox, FormControl, FormControlLabel, IconButton, MenuItem, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { AntSwitch } from '../Switch';
+import { ImageUploadV2 } from '../FIleUpload/ImageUpload';
+import trash from "../../assets/trash.png";
 
 interface Item {
     id: string;
@@ -678,12 +682,66 @@ export function FormSorteableWithSwitchNoImg({
 
 }
 
+interface ImageTableProps {
+    uploadedImages: { file: File; error: boolean; time: number }[];
+    onDelete: (index: number) => void;
+    onIncreaseTime: (index: number) => void;
+    onDecreaseTime: (index: number) => void;
+}
+
 export function FormSorteableWithMultipleImg({
     question,
     isRequired = false,
     deviceFrameOptions = ['No Frame', 'Device Frame'],
 }: FormSorteableWithSwitchProps) {
     const [selectedFrame, setSelectedFrame] = useState(deviceFrameOptions[0]);
+    const [uploadedImages, setUploadedImages] = useState<
+        { file: File; error: boolean; time: number }[]
+    >([]);
+
+    const handleImageUpload = (file: File) => {
+        if (!file) return;
+    
+        const newImage = {
+            file,
+            error: file.size > 5 * 1024 * 1024, // Archivo mayor a 5 MB
+            time: 0, // Agregar la propiedad 'time' con un valor inicial
+        };
+    
+        setUploadedImages((prevImages) => {
+            // Limitar a un máximo de 3 imágenes
+            const updatedImages = [...prevImages, newImage];
+            return updatedImages.slice(0, 3);
+        });
+    };
+
+    const removeImage = (index: number) => {
+        setUploadedImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    };
+
+    // Incrementar el tiempo
+    const handleIncreaseTime = (index: number) => {
+        setUploadedImages((prev) =>
+            prev.map((img, i) =>
+                i === index ? { ...img, time: img.time + 1 } : img
+            )
+        );
+    };
+
+    // Disminuir el tiempo
+    const handleDecreaseTime = (index: number) => {
+        setUploadedImages((prev) =>
+            prev.map((img, i) =>
+                i === index && img.time > 0 ? { ...img, time: img.time - 1 } : img
+            )
+        );
+    };
+
+    // Eliminar una imagen
+    const handleDeleteImage = (index: number) => {
+        setUploadedImages((prev) => prev.filter((_, i) => i !== index));
+    };
+
     return (
         <Box sx={{
             width: '100%',
@@ -794,8 +852,59 @@ export function FormSorteableWithMultipleImg({
                         </FormControl>
                     </Box>
                 </Stack>
-                {/* Images Upload */}
-                <Stack>
+
+                <Stack sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    width: '100%',
+                    gap: 3,
+                }}>
+
+                    <Stack sx={{
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }}>
+                        <Stack>
+                            <ImageUploadV2 handleImageUpload={handleImageUpload} />
+                        </Stack>
+                        <Stack mt={2} spacing={1} sx={{
+                            width: '100%',
+                            maxWidth: 255,
+                            display: 'flex',
+                            flexDirection: 'column',
+                        }}>
+                            {uploadedImages.map((image, index) => (
+                                <Stack
+                                    key={index}
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                    }}
+                                >
+                                    <Typography
+                                        sx={{ color: image.error ? 'red' : 'inherit' }}
+                                    >
+                                        {image.file.name} ({(image.file.size / 1024 / 1024).toFixed(2)} MB)
+                                    </Typography>
+                                    <Button sx={{ p: 0 }} onClick={() => removeImage(index)}><img src={trash} alt="trash" style={{ width: 35, marginLeft: 30, marginBottom: 3 }} /></Button>
+                                </Stack>
+                            ))}
+                        </Stack>
+                    </Stack>
+
+                    <Stack sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}>
+                        <ImageTable
+                            uploadedImages={uploadedImages}
+                            onDelete={handleDeleteImage}
+                            onIncreaseTime={handleIncreaseTime}
+                            onDecreaseTime={handleDecreaseTime}
+                        />
+                    </Stack>
 
                 </Stack>
             </Stack>
@@ -1103,3 +1212,105 @@ function SortableItem({ item, onDelete }: { item: Item, onDelete: (id: string) =
         </Box>
     );
 }
+
+const ImageTable: React.FC<ImageTableProps> = ({
+    uploadedImages,
+    onDelete,
+    onIncreaseTime,
+    onDecreaseTime,
+}) => {
+    return (
+        <TableContainer>
+            <Table>
+                <TableHead>
+                    <TableRow sx={{
+                        width: 400
+                    }}>
+                        <TableCell width={150}>
+                            <Typography fontWeight={600}>Name</Typography>
+                        </TableCell>
+                        <TableCell width={100} align="center">
+                            <Typography fontWeight={600}>Time</Typography>
+                        </TableCell>
+                        <TableCell width={150} align="center">
+                            <Typography fontWeight={600}>Actions</Typography>
+                        </TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {uploadedImages.map((image, index) => (
+                        <TableRow key={index}>
+                            {/* Columna Name */}
+                            <TableCell>
+                                <Stack direction="row" alignItems="center" spacing={2}>
+                                    <Box
+                                        sx={{
+                                            width: 40,
+                                            height: 40,
+                                            borderRadius: "50%",
+                                            backgroundColor: "#e0f7fa",
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <img
+                                            src={URL.createObjectURL(image.file)}
+                                            alt={image.file.name}
+                                            style={{ width: 30, height: 30 }}
+                                        />
+                                    </Box>
+                                    <Stack>
+                                        <Typography>{image.file.name}</Typography>
+                                        <Typography
+                                            color={image.error ? "red" : "gray"}
+                                            fontSize={12}
+                                        >
+                                            {image.error ? "File too large" : "Edit hitzones"}
+                                        </Typography>
+                                    </Stack>
+                                </Stack>
+                            </TableCell>
+
+                            {/* Columna Time */}
+                            <TableCell align="center">
+                                <Stack direction="row" alignItems="center" spacing={1}>
+                                    <IconButton
+                                        onClick={() => onDecreaseTime(index)}
+                                        size="small"
+                                    >
+                                        <RemoveIcon />
+                                    </IconButton>
+                                    <Typography>{image.time} Segs</Typography>
+                                    <IconButton
+                                        onClick={() => onIncreaseTime(index)}
+                                        size="small"
+                                    >
+                                        <AddIcon />
+                                    </IconButton>
+                                </Stack>
+                            </TableCell>
+
+                            {/* Columna Actions */}
+                            <TableCell align="center">
+                                <Stack direction="row" spacing={2} justifyContent="center">
+                                    <Typography
+                                        sx={{ color: "blue", cursor: "pointer", fontSize: 14 }}
+                                    >
+                                        Preview
+                                    </Typography>
+                                    <Typography
+                                        sx={{ color: "red", cursor: "pointer", fontSize: 14 }}
+                                        onClick={() => onDelete(index)}
+                                    >
+                                        Delete
+                                    </Typography>
+                                </Stack>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
+    );
+};
