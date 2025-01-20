@@ -22,6 +22,7 @@
     "@types/leaflet": "^1.9.14",
     "@types/leaflet.heat": "^0.2.4",
     "@vitejs/plugin-react-swc": "^3.7.1",
+    "argon2": "^0.41.1",
     "axios": "^1.7.7",
     "heatmap.js": "^2.0.5",
     "konva": "^9.3.16",

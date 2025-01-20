@@ -4,6 +4,17 @@ const { execSync } = require('child_process');
 const credentialsPath = './aws-credentials.json';
 
 try {
+  execSync('aws --version');
+} catch (error) {
+  throw new Error('AWS CLI no está instalado o no está en el PATH.');
+}
+
+
+try {
+  if (!fs.existsSync(credentialsPath)) {
+    throw new Error(`Archivo ${credentialsPath} no encontrado.`);
+  }
+  
   // Leer el archivo de credenciales
   const credentials = JSON.parse(fs.readFileSync(credentialsPath, 'utf8'));
 

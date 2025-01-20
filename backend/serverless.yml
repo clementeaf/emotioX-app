@@ -1,4 +1,4 @@
-service: emotioX-backend
+service: emotio-x-backend
 
 frameworkVersion: '3'
 
@@ -8,6 +8,12 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: us-east-1
   profile: default
+  websocketsApiName: dev-emotio-x-backend-websockets
+  websocketsApiRouteSelectionExpression: $request.body.action
+  logs:
+    httpApi:
+      format: '$context.identity.sourceIp - $context.httpMethod $context.routeKey $context.status - $context.requestId'
+    websocket: true
 
   httpApi:
     cors:
@@ -22,11 +28,9 @@ provider:
       allowCredentials: true
 
   environment:
-    JWT_SECRET: ${env:JWT_SECRET, 'default_secret'}
-    JWT_REFRESH_SECRET: ${env:JWT_REFRESH_SECRET, 'default_refresh_secret'}
     CONNECTIONS_TABLE: "${self:service}-${self:provider.stage}-WebSocketConnections"
-    WEBSOCKET_ENDPOINT: "https://cqt41bondd.execute-api.us-east-1.amazonaws.com/dev"
-    S3_BUCKET_NAME: "emotiox-backend-dev-bucket"
+    WEBSOCKET_ENDPOINT: !Sub "wss://${WebSocketApi}.execute-api.${AWS::Region}.amazonaws.com/${self:provider.stage}"
+    S3_BUCKET_NAME: "${self:custom.s3BucketName}"
 
   iam:
     role:
@@ -40,7 +44,8 @@ provider:
         - Effect: "Allow"
           Action: 
             - "execute-api:ManageConnections"
-          Resource: "arn:aws:execute-api:*:*:*/@connections/*"
+          Resource: 
+            - !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${WebSocketApi}/@connections/*"
         - Effect: "Allow"
           Action:
             - "dynamodb:PutItem"
@@ -60,13 +65,25 @@ provider:
             - "s3:DeleteObject"
             - "s3:ListBucket"
           Resource:
-            - "arn:aws:s3:::emotiox-backend-dev-bucket"
-            - "arn:aws:s3:::emotiox-backend-dev-bucket/*"
+            - "arn:aws:s3:::${self:custom.s3BucketName}"
+            - "arn:aws:s3:::${self:custom.s3BucketName}/*"
+
+
+custom:
+  s3BucketName: "${self:service}-${self:provider.stage}-deployment-bucket"
+  webpack:
+    includeModules:
+      forceExclude:
+        - aws-sdk
+  esbuild:
+    bundle: true
+    nativeModules:
+      - argon2
+
 
 plugins:
-  - serverless-plugin-typescript
+  - serverless-esbuild
   - serverless-offline
-  - serverless-dotenv-plugin
 
 functions:
   registerUser:
@@ -151,6 +168,17 @@ functions:
       - websocket:
           route: $disconnect
 
+  defaultHandler:
+    handler: dist/websocket/defaultHandler.defaultHandler
+    events:
+      - websocket: $default
+
+  sendMessage:
+    handler: dist/websocket/sendMessageHandler.sendMessageHandler
+    events:
+      - websocket:
+          route: sendMessage
+
   refresh:
     handler: src/websocket/refreshHandler.refreshHandler
     events:
@@ -175,6 +203,40 @@ functions:
 
 resources:
   Resources:
+    WebSocketLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        LogGroupName: "/aws/websocket/${self:service}-${self:provider.stage}-${opt:timestamp, 'unique'}"
+        RetentionInDays: 14
+    DeploymentBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: "${self:custom.s3BucketName}"
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          IgnorePublicAcls: true
+          RestrictPublicBuckets: true
+        VersioningConfiguration:
+          Status: Enabled
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - "*"
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              AllowedHeaders:
+                - "*"
+              MaxAge: 3000
+
     ApiGatewayLoggingRoleAuthBackend:
       Type: AWS::IAM::Role
       Properties:
@@ -189,7 +251,6 @@ resources:
     
     ResearchImagesBucket:
       Type: AWS::S3::Bucket
-      DeletionPolicy: Retain
       Properties:
         BucketName: "emotiox-backend-dev-bucket"
         CorsConfiguration:
@@ -209,7 +270,7 @@ resources:
     WebSocketConnectionsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${self:service}-${self:provider.stage}-WebSocketConnections
+        TableName: "${self:service}-${self:provider.stage}-WebSocketConnections"
         AttributeDefinitions:
           - AttributeName: "connectionId"
             AttributeType: "S"
@@ -232,5 +293,6 @@ resources:
     WebSocketApiEndpoint:
       Description: "WebSocket API Endpoint"
       Value: !Sub "wss://${WebSocketApi}.execute-api.${AWS::Region}.amazonaws.com/${self:provider.stage}"
-      Export:
-        Name: WebSocketApiEndpoint-${self:provider.stage}
+    S3BucketName:
+      Description: "Nombre del bucket de S3 para este entorno"
+      Value: !Ref DeploymentBucket

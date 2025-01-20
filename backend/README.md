@@ -82,3 +82,6 @@ Optimizar Seguridad: Añadir medidas adicionales de seguridad para la protecció
      "aws_secret_access_key": "USER_AWS_SECRET_ACCESS_KEY",
      "region": "us-east-1"
    }
+
+
+node setup-aws.js --credentials=custom-aws-credentials.json

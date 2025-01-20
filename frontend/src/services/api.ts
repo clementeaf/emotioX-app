@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { FormDataState, ResearchResponse } from '../types/types';
+import { apiConfig } from '../config/apiConfig';
 
-// Configuración base para Axios
+// Configuración base para Axios, usando el `ApiUrl` del archivo de configuración
 const api = axios.create({
-  baseURL: 'https://ysgzqbh7ch.execute-api.us-east-1.amazonaws.com',
+  baseURL: apiConfig.ApiUrl, // Carga dinámica de la URL base
   headers: {
     'Content-Type': 'application/json',
   },
@@ -14,11 +15,11 @@ export const logout = async (token: string): Promise<void> => {
   if (!token) {
     throw new Error('No access token found');
   }
+  console.log('API: ', api);
 
   await api.post('/logout', {}, {
     headers: {
       Authorization: token,
-      'Content-Type': 'application/json',
     },
   });
 };
@@ -41,21 +42,17 @@ export async function register(registerForm: {
   password: string;
 }): Promise<any> {
   const response = await api.post('/register', registerForm);
-  console.log('Response: ', response);
   if (response.status !== 200) {
-    throw new Error('Login failed');
+    throw new Error('Register failed');
   }
-  console.log('Register success: ', response.data);
   return response.data;
 }
-
 
 /**
  * Función para subir archivos directamente al backend, que a su vez los sube a S3
  */
 export const uploadFilesToBackend = async (files: File[]) => {
   try {
-    // Preparar los datos de los archivos (convertirlos a Base64)
     const filesData = await Promise.all(
       files.map(async (file) => {
         const fileContent = await readFileAsBase64(file);
@@ -67,22 +64,11 @@ export const uploadFilesToBackend = async (files: File[]) => {
       })
     );
 
-    // Subir archivos al backend
-    const response = await axios.post(
-      'https://ysgzqbh7ch.execute-api.us-east-1.amazonaws.com/upload-image', // Endpoint del backend
-      { files: filesData },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    console.log('Files uploaded successfully:', response.data);
+    const response = await api.post('/upload-image', { files: filesData });
     return response.data.files; // Retorna las URLs de los archivos subidos
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
-      console.error('Error uploading files to backend:', error.response?.data || error.message);
+      console.error('Error uploading files:', error.response?.data || error.message);
     }
     throw error;
   }
@@ -94,42 +80,30 @@ export const uploadFilesToBackend = async (files: File[]) => {
 const readFileAsBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = () => {
-      const base64String = reader.result?.toString().split(',')[1];
-      resolve(base64String || '');
-    };
+    reader.onload = () => resolve(reader.result?.toString().split(',')[1] || '');
     reader.onerror = (error) => reject(error);
     reader.readAsDataURL(file);
   });
 };
 
 /**
- * Función para crear una investigación, procesando imágenes si es necesario
+ * Función para crear una investigación
  */
 export const createResearch = async (formData: FormDataState): Promise<ResearchResponse> => {
   try {
     let uploadedFileUrls: string[] = [];
 
-    // Subir archivos solo si hay imágenes cargadas
     if (formData.uploadedFiles && formData.uploadedFiles.length > 0) {
       const uploadedFiles = await uploadFilesToBackend(formData.uploadedFiles);
-
-      // Mapear las URLs retornadas
       uploadedFileUrls = uploadedFiles.map((file: { fileUrl: string }) => file.fileUrl);
     }
 
-    // Actualizar el formData para incluir las URLs de los archivos subidos si existen
     const updatedFormData = {
       ...formData,
-      ...(uploadedFileUrls.length > 0 && { uploadedFiles: uploadedFileUrls }), // Incluir solo si hay URLs
+      uploadedFiles: uploadedFileUrls,
     };
 
-    // Enviar los datos al backend
-    const response = await axios.post(
-      'https://ysgzqbh7ch.execute-api.us-east-1.amazonaws.com/research/create-research',
-      updatedFormData,
-    );
-
+    const response = await api.post('/research/create-research', updatedFormData);
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
@@ -138,7 +112,5 @@ export const createResearch = async (formData: FormDataState): Promise<ResearchR
     throw error;
   }
 };
-
-
 
 export default api;

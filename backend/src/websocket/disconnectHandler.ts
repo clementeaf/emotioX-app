@@ -1,21 +1,26 @@
-import { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda';
-import mongoose from 'mongoose';
-import connectDB from '../config/database';
-
-// Modelo de MongoDB para almacenar los connectionIds
-const ConnectionSchema = new mongoose.Schema({
-  connectionId: { type: String, required: true, unique: true },
-  connectedAt: { type: Date, default: Date.now },
-});
-
-const Connection = mongoose.model('Connection', ConnectionSchema);
+import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
+import connectDB from "../config/database";
+import Connection from "../config/connectionSchema";
 
 /**
  * Handler para gestionar la desconexión de WebSocket.
  * Elimina el `connectionId` de MongoDB cuando el cliente se desconecta.
  */
-export const disconnectHandler = async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {
+export const disconnectHandler = async (
+  event: APIGatewayEvent
+): Promise<APIGatewayProxyResult> => {
   const { connectionId } = event.requestContext;
+
+  // Verificar que el connectionId exista
+  if (!connectionId) {
+    console.error("No connectionId found in requestContext");
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: "Connection ID is missing from request context",
+      }),
+    };
+  }
 
   try {
     // Conectar a MongoDB
@@ -25,27 +30,28 @@ export const disconnectHandler = async (event: APIGatewayEvent): Promise<APIGate
     const result = await Connection.findOneAndDelete({ connectionId });
 
     if (result) {
-      console.log('Connection deleted:', connectionId);
+      console.log(`Connection deleted successfully: ${connectionId}`);
     } else {
-      console.log('Connection not found for deletion:', connectionId);
+      console.log(`Connection not found for deletion: ${connectionId}`);
     }
 
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: 'Disconnected.',
+        message: "Disconnected.",
         connectionId,
         deleted: !!result,
       }),
     };
   } catch (error) {
-    console.error('Error deleting connection ID:', error);
+    // Manejo del error con validación del tipo
+    console.error("Error deleting connection ID:", error);
 
     return {
       statusCode: 500,
       body: JSON.stringify({
-        message: 'Failed to disconnect.',
-        error: (error instanceof Error) ? error.message : 'Unknown error',
+        message: "Failed to disconnect.",
+        error: error instanceof Error ? error.message : "Unknown error",
       }),
     };
   }
