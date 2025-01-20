@@ -77,7 +77,7 @@ custom:
         - aws-sdk
   esbuild:
     bundle: true
-    nativeModules:
+    external:
       - argon2
 
 

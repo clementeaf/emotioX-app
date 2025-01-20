@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "clean": "rimraf dist",
+    "clean": "npx rimraf dist",
     "build": "npm run clean && tsc",
     "deploy": "npm run build && sls deploy",
     "start:offline": "ts-node -r tsconfig-paths/register src/server.ts & sls offline"
@@ -39,6 +39,7 @@
     "@types/mongoose": "^5.11.97",
     "apollo-server-lambda": "^3.13.0",
     "argon2": "^0.41.1",
+    "argon2-browser": "^1.18.0",
     "aws-lambda": "^1.0.7",
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
