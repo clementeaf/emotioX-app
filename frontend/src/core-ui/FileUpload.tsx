@@ -29,7 +29,7 @@ export default function FileUpload({ accept, maxSize, onUpload, uploadedFiles, r
                 sx={{
                     border: `1px solid ${grey[300]}`,
                     maxWidth: '395px',
-                    width: '395px',
+                    width: '100%',
                     height: '100%',
                     mt: 2,
                     pb: 2,

@@ -1,10 +1,16 @@
-import { Box, Checkbox, FormControl, FormControlLabel, MenuItem, ToggleButton, Select, ToggleButtonGroup, Typography } from '@mui/material'
+import { Box, Checkbox, FormControl, FormControlLabel, MenuItem, ToggleButton, Select, ToggleButtonGroup, Typography, TextField } from '@mui/material'
 import FileUpload from '../../../../core-ui/FileUpload'
 import { grey } from '@mui/material/colors'
 import { useState } from 'react'
 import { TechniqueDescription } from '../../../../core-ui/Forms/TechniqueDescription'
+import InvestigationTitleRequirement from '../../../../core-ui/Forms/InvestigationTitleRequirement'
 
 export default function EyeTrackingView() {
+  const [randomize, setRandomize] = useState<boolean>(true);
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRandomize(event.target.checked);
+  };
   return (
     <Box sx={{
       display: 'flex',
@@ -14,36 +20,120 @@ export default function EyeTrackingView() {
       height: 'auto',
       gap: 3,
     }}>
-      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, backgroundColor: 'white', borderRadius: 2, pb: 2 }}>
+        <InvestigationTitleRequirement
+          title='6.0.- Cognitive task'
+        />
         <Box sx={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          gap: 2,
-          width: '390px',
-          bgcolor: 'white',
-          border: `1px solid ${grey[300]}`,
-          borderRadius: 1,
+          width: '100%',
+          pl: 3
         }}>
-          <Box p={2}>
-            <Typography fontSize={14} fontWeight={700} color='#262626'>Eye Tracking Stimulation</Typography>
-            <Typography fontSize={14} fontWeight={400} color='#8C8C8C'>Please, upload the image or video to be tested with eye tracking. The duration</Typography>
-            <FileUpload title={''} accept={{}} maxSize={0} onUpload={function (): void {
-              throw new Error('Function not implemented.')
-            }} uploadedFiles={[]} removeFile={function (): void {
-              throw new Error('Function not implemented.')
-            }} />
+          <Typography fontSize={14} fontWeight={400}>Eye Tracking is a biometric method to map humans interactions and map the movement of eyes.</Typography>
+          <Typography color='gray' fontSize={14} fontWeight={400}>A response will be qualified as “skipped by logic” if the respondent can’t answer/proceed.</Typography>
+
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            maxWidth: '800px',
+            marginTop: 3
+          }}>
+            <Typography mb={1}>Instruction for the task <span>_italic_ **bold** - bullet list 1. ordered list</span></Typography>
+            <TextField
+              placeholder="Where would you click to..."
+              variant="outlined"
+              InputProps={{
+                style: {
+                  borderRadius: '8px',
+                  borderColor: grey[300],
+                  fontSize: 14,
+                  color: grey[600],
+                },
+              }}
+              sx={{
+                maxWidth: '100%',
+                bgcolor: 'white',
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: grey[300],
+                  },
+                  '&:hover fieldset': {
+                    borderColor: grey[400],
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#6200EE',
+                  },
+                },
+              }}
+            />
           </Box>
         </Box>
-        <TaskConfiguration />
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: 2 }}>
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: 2,
+            width: '390px',
+            bgcolor: 'white',
+            border: `1px solid ${grey[300]}`,
+          }}>
+            <Box p={2}>
+              <Typography fontSize={14} fontWeight={700} color='#262626'>Eye Tracking Stimulation</Typography>
+              <Typography fontSize={14} fontWeight={400} color='#8C8C8C'>Please, upload the image or video to be tested with eye tracking. The duration</Typography>
+              <FileUpload title={''} accept={{}} maxSize={0} onUpload={function (): void {
+                throw new Error('Function not implemented.')
+              }} uploadedFiles={[]} removeFile={function (): void {
+                throw new Error('Function not implemented.')
+              }} />
+            </Box>
+            <Box sx={{
+              ml: 2,
+            }}>
+              <Typography>For Shelf only:</Typography>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={randomize}
+                    onChange={handleCheckboxChange}
+                    sx={{
+                      color: '#252BE6',
+                      '&.Mui-checked': {
+                        color: '#252BE6',
+                      },
+                    }}
+                  />
+                }
+                label={
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 400,
+                      color: '#262626',
+                    }}
+                  >
+                    Randomize options (images)
+                  </Typography>
+                }
+              />
+            </Box>
+          </Box>
+          <TaskConfiguration showShelfConfiguration={randomize} />
+        </Box>
       </Box>
       <TechniqueDescription />
     </Box>
   )
 }
 
-const TaskConfiguration: React.FC = () => {
+interface TaskConfigurationProps {
+  showShelfConfiguration: boolean;
+}
+
+export const TaskConfiguration: React.FC<TaskConfigurationProps> = ({ showShelfConfiguration }) => {
   const [shelfCount, setShelfCount] = useState(2);
   const [itemsPerShelf, setItemsPerShelf] = useState(5);
   const [displayTime, setDisplayTime] = useState<string>('10 secs');
@@ -103,6 +193,7 @@ const TaskConfiguration: React.FC = () => {
       </Box>
 
       {/* Shelf configuration section */}
+      {showShelfConfiguration && (
       <Box sx={{ p: 2, bgcolor: '#e9f0fc' }}>
         <Typography fontWeight={700} sx={{ mb: 1, color: '#262626' }}>
           Shelf configuration
@@ -112,7 +203,7 @@ const TaskConfiguration: React.FC = () => {
         </Box>
 
         {/* Select controls */}
-        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', mt: 2, gap: 1}}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', mt: 2, gap: 1 }}>
           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', gap: 1, width: '100%' }}>
             <Typography color='#262626' fontWeight={400} fontSize={14} width='100%' lineHeight='22px'>Number of Shelfs</Typography>
             <FormControl variant="outlined" sx={{ width: '100%' }}>
@@ -136,6 +227,7 @@ const TaskConfiguration: React.FC = () => {
           </Box>
         </Box>
       </Box>
+      )}
     </Box>
   );
 };

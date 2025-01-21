@@ -24,7 +24,7 @@ export const ConditionModal: React.FC<ConditionModalProps> = ({ open, onClose })
       open={open}
       onClose={onClose}
       PaperProps={{
-        sx: { width: '403px', height: '449px', borderRadius: '8px', p: 2 },
+        sx: { width: '403px', height: '500px', borderRadius: '8px', p: 2 },
       }}
     >
       <DialogTitle>
@@ -43,7 +43,7 @@ export const ConditionModal: React.FC<ConditionModalProps> = ({ open, onClose })
         </IconButton>
       </DialogTitle>
 
-      <DialogContent dividers sx={{ pt: 1 }}>
+      <DialogContent sx={{ pt: 1 }}>
         {/* Descripción principal */}
         <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
           3.4.- Question
