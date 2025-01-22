@@ -1,59 +1,66 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Typography, Button, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { EligibilityInput } from "./ElegibilityInput";
-import { SorteableQuestion } from "../store/useScreenerStore";
+import { useScreenerStore } from "../store/useScreenerStore";
 
-interface SorteableOptionsProps {
-  options: SorteableQuestion[];
-  questionType: string;
-  onAddOption: () => void;
-  onUpdateOption: (id: string, updatedData: Partial<SorteableQuestion>) => void;
-  onDeleteOption: (id: string) => void;
-}
+export const SorteableOptions: React.FC = () => {
+  const options = useScreenerStore((state) => state.options);
+  const questionType = useScreenerStore((state) => state.questionType);
+  const isRequired = useScreenerStore((state) => state.isRequired);
+  const addOption = useScreenerStore((state) => state.addOption);
+  const updateOption = useScreenerStore((state) => state.updateOption);
+  const deleteOption = useScreenerStore((state) => state.deleteOption);
 
-export const SorteableOptions: React.FC<SorteableOptionsProps> = React.memo(
-  function SorteableOptions({ options, questionType, onAddOption, onUpdateOption, onDeleteOption }) {
+  useEffect(() => {
+    if (options.length === 0) {
+      addOption();
+    } else if (questionType === "Single choice" && options.length > 1) {
+      const [firstOption] = options;
+      updateOption(firstOption.id, { ...firstOption });
+    }
+  }, [options, questionType, addOption, updateOption]);
 
-    const filteredOptions =
-      questionType === "Single choice" ? options.slice(0, 1) : options;
+  const filteredOptions =
+    questionType === "Single choice" ? options.slice(0, 1) : options;
 
-    return (
-      <Box sx={{ width: "100%" }}>
-        <Typography color="#8C8C8C" fontSize={14} fontWeight={400} lineHeight="22px">
-          Choices (Press ENTER for new line or paste a list)
-        </Typography>
-        <Box sx={{ display: "flex", flexDirection: "column", mt: 2 }}>
-          {filteredOptions.map((item) => (
-            <SortableItem
-              key={item.id}
-              question={item}
-              onUpdate={(updatedData) => onUpdateOption(item.id, updatedData)}
-              onDelete={() => onDeleteOption(item.id)}
-              disableDelete={filteredOptions.length === 1}
-            />
-          ))}
-        </Box>
-        <AddChoiceButton
-          handleAddChoice={onAddOption}
-          disabled={questionType === "Single choice" && options.length >= 1}
-        />
+  return (
+    <Box sx={{ width: "100%" }}>
+      <Typography color="#8C8C8C" fontSize={14} fontWeight={400} lineHeight="22px" my={2}>
+        Choices (Press ENTER for new line or paste a list)
+      </Typography>
+      <Box sx={{ display: "flex", flexDirection: "column", mt: 2 }}>
+        {filteredOptions.map((item) => (
+          <SortableItem
+            key={item.id}
+            question={item}
+            onUpdate={(updatedData) => updateOption(item.id, updatedData)}
+            onDelete={() => deleteOption(item.id)}
+            disableDelete={filteredOptions.length === 1}
+            isDisabled={!isRequired}
+          />
+        ))}
       </Box>
-    );
-  }
-);
+      <AddChoiceButton
+        handleAddChoice={addOption}
+        disabled={!isRequired || (questionType === "Single choice" && options.length >= 1)}
+      />
+    </Box>
+  );
+};
 
-// Componente para representar cada opción
 const SortableItem = React.memo(function SortableItem({
   question,
   onUpdate,
   onDelete,
   disableDelete,
+  isDisabled,
 }: {
-  question: SorteableQuestion; // Cambiado de Option a SorteableQuestion
-  onUpdate: (updatedData: Partial<SorteableQuestion>) => void;
+  question: { id: string; option1: string; selection: string };
+  onUpdate: (updatedData: Partial<typeof question>) => void;
   onDelete: () => void;
   disableDelete: boolean;
+  isDisabled: boolean;
 }) {
   return (
     <Box
@@ -69,36 +76,31 @@ const SortableItem = React.memo(function SortableItem({
         width: "804px",
       }}
     >
-      {/* Campo de texto para la opción */}
       <Box sx={{ flexGrow: 1 }}>
         <TextField
           variant="outlined"
           value={question.option1}
-          placeholder={question.placeholder || `Option`}
+          placeholder={`Option`}
           onChange={(e) => onUpdate({ option1: e.target.value })}
           fullWidth
+          disabled={isDisabled}
           sx={{
             "& .MuiOutlinedInput-root": {
               fontSize: 14,
-              "& fieldset": { borderColor: "#E0E0E0" },
+              "& fieldset": { borderColor: isDisabled ? "#d3d3d3" : "#E0E0E0" },
             },
           }}
         />
       </Box>
-
-      {/* Componente de selección */}
       <EligibilityInput
-        value={question.selection[0]}
-        onChange={(newEligibility) =>
-          onUpdate({ selection: [newEligibility, ...question.selection.slice(1)] })
-        }
+        value={question.selection}
+        onChange={(newEligibility) => onUpdate({ selection: newEligibility })}
+        disabled={isDisabled}
       />
-
-      {/* Botón de eliminación */}
       <Button
         sx={{ color: disableDelete ? "gray" : "red", ml: 2 }}
-        onClick={disableDelete ? undefined : onDelete}
-        disabled={disableDelete}
+        onClick={disableDelete || isDisabled ? undefined : onDelete}
+        disabled={disableDelete || isDisabled}
       >
         <DeleteIcon />
       </Button>
@@ -106,7 +108,6 @@ const SortableItem = React.memo(function SortableItem({
   );
 });
 
-// Botón para agregar nuevas opciones
 function AddChoiceButton({
   handleAddChoice,
   disabled,

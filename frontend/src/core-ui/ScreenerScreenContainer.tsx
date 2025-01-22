@@ -1,80 +1,29 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { TechniqueDescription } from "./Forms/TechniqueDescription";
 import { TitleRow } from "./Forms/TitleRow";
-import { QuestionTitleInput } from "./Forms/QuestionTitleInput";
-import { SorteableQuestion, useScreenerStore } from "../store/useScreenerStore";
 import { SorteableOptions } from "./SorteableOptions";
-import { useEffect, useState } from "react";
+import { QuestionTitleInput } from "./Forms/QuestionTitleInput";
+import { useScreenerStore } from "../store/useScreenerStore";
 
 export function ScreenerScreenContainer() {
-  const {
-    questions,
-    screenerRequired,
-    setScreenerRequired,
-    questionRequired,
-    setQuestionRequired,
-    updateQuestion,
-    sorteableQuestions,
-    addSorteableQuestion,
-    updateSorteableQuestion,
-    setSorteableQuestionsOrder,
-  } = useScreenerStore();
+  const titleRequired = useScreenerStore((state) => state.titleRequired);
+  const isRequired = useScreenerStore((state) => state.isRequired);
+  const questionText = useScreenerStore((state) => state.questionText);
+  const questionType = useScreenerStore((state) => state.questionType);
 
-  const [currentResearchId, setCurrentResearchId] = useState<string | null>(null);
+  const setTitleRequired = useScreenerStore((state) => state.setTitleRequired);
+  const setIsRequired = useScreenerStore((state) => state.setIsRequired);
+  const setQuestionText = useScreenerStore((state) => state.setQuestionText);
+  const setQuestionType = useScreenerStore((state) => state.setQuestionType);
 
-  useEffect(() => {
-    const storedResearchId = localStorage.getItem("currentResearchId");
-    setCurrentResearchId(storedResearchId);
-  }, []);
-
-  // Actualiza el texto de una pregunta
-  const handleTextChange = (index: number, text: string) => {
-    updateQuestion(index, { questionText: text });
+  const handleSubmit = () => {
+    const preparedData = useScreenerStore.getState().getPreparedData();
+    if (preparedData) {
+      console.log("Datos enviados al backend:", preparedData);
+    } else {
+      console.log("Condiciones no cumplidas. No se envían datos.");
+    }
   };
-
-  // Cambia el tipo de pregunta
-  const handleTypeChange = (index: number, type: string) => {
-    updateQuestion(index, { questionType: type });
-  };
-
-  // Alterna el estado de "required" en una pregunta
-  const handleRequiredToggle = (index: number) => {
-    setQuestionRequired(!questionRequired);
-    updateQuestion(index, { required: !questionRequired });
-  };
-
-  // Agrega una nueva opción ordenable
-  const handleAddOption = () => {
-    const newOption: SorteableQuestion = {
-      id: (sorteableQuestions.length + 1).toString(),
-      option1: `Option ${sorteableQuestions.length + 1}`,
-      selection: ["Qualify", "Disqualify"],
-      required: false,
-    };
-    addSorteableQuestion(newOption);
-  };
-
-  // Actualiza una opción ordenable
-  const handleUpdateOption = (id: string, updatedData: Partial<SorteableQuestion>) => {
-    updateSorteableQuestion(id, updatedData);
-  };
-
-  // Elimina una opción ordenable
-  const handleDeleteOption = (id: string) => {
-    setSorteableQuestionsOrder((prev: SorteableQuestion[]) =>
-      prev.filter((option) => option.id !== id)
-    );
-  };
-
-  const question = questions[0];
-
-  if (!question) {
-    return (
-      <Box sx={{ p: 3 }}>
-        <Typography>No question available</Typography>
-      </Box>
-    );
-  }
 
   return (
     <Box sx={{ display: "flex", maxWidth: 1134, height: "100%", gap: 3 }}>
@@ -85,16 +34,16 @@ export function ScreenerScreenContainer() {
           alignItems: "flex-start",
           justifyContent: "flex-start",
           width: "100%",
-          maxWidth: "844px",
+          maxWidth: "845px",
           bgcolor: "white",
-          height: "auto",
-          maxHeight: "580px",
+          height: "100%",
+          maxHeight: "590px",
         }}
       >
         <TitleRow
           title="1.0.- Screener"
-          isRequired={screenerRequired}
-          onToggleRequired={() => setScreenerRequired(!screenerRequired)}
+          isRequired={titleRequired}
+          onToggleRequired={() => setTitleRequired(!titleRequired)}
         />
         <Box sx={{ width: "100%", maxWidth: "804px", mt: 2 }}>
           <Box
@@ -102,26 +51,21 @@ export function ScreenerScreenContainer() {
               width: "100%",
               height: "auto",
               px: 2,
-              opacity: screenerRequired ? 1 : 0.5,
-              pointerEvents: screenerRequired ? "auto" : "none",
+              opacity: titleRequired ? 1 : 0.5,
+              pointerEvents: titleRequired ? "auto" : "none",
             }}
           >
             <QuestionTitleInput
-              questionText={question.questionText}
-              questionType={question.questionType}
-              required={questionRequired}
-              onTextChange={(text) => handleTextChange(0, text)}
-              onTypeChange={(type) => handleTypeChange(0, type)}
-              onToggleRequired={() => handleRequiredToggle(0)}
+              questionText={questionText || ""}
+              questionType={questionType || "Single choice"}
+              required={isRequired}
+              onTextChange={setQuestionText}
+              onTypeChange={setQuestionType}
+              onToggleRequired={() => setIsRequired(!isRequired)}
             />
-            <SorteableOptions
-              options={sorteableQuestions}
-              questionType={question.questionType}
-              onAddOption={handleAddOption}
-              onUpdateOption={handleUpdateOption}
-              onDeleteOption={handleDeleteOption}
-            />
+            <SorteableOptions />
           </Box>
+          <Button onClick={handleSubmit}>Submit</Button>
         </Box>
       </Box>
       <TechniqueDescription />

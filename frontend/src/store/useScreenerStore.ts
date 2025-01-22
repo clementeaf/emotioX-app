@@ -1,222 +1,175 @@
 import { create } from "zustand";
 import { nanoid } from "nanoid";
 
-// Interfaces
-export interface Question {
-  questionText: string;
-  questionType: string;
-  required: boolean;
-  isRequired: boolean; // Estado para manejar "requerido" por pregunta
-}
-
 export interface SorteableQuestion {
   id: string;
   option1: string;
-  placeholder?: string; // Para manejar valores predeterminados
-  selection: string[]; // ["Qualify", "Disqualify"]
-  required: boolean;
+  placeholder?: string;
+  selection: string;
 }
 
-// Interfaz para Zustand Store
 export interface ScreenerStore {
-  screenerRequired: boolean; // Estado para el toggle principal (TitleRow)
-  setScreenerRequired: (required: boolean) => void; // Método para alternar screenerRequired
+  screenerView: boolean | {};
+  titleRequired: boolean; 
+  questionText: string | null;
+  questionType: string | null;
+  isRequired: boolean;
+  options: SorteableQuestion[];
 
-  questionRequired: boolean; // Estado del switch de la pregunta
-  setQuestionRequired: (required: boolean) => void; // Controlador para el switch de pregunta
+  setTitleRequired: (required: boolean) => void;
+  setScreenerView: (view: boolean | {}) => void;
+  setQuestionText: (text: string | null) => void;
+  setQuestionType: (type: string | null) => void;
+  setIsRequired: (required: boolean) => void;
 
-  sorteableRequired: boolean; // Estado del switch de opciones sorteables
-  setSorteableRequired: (required: boolean) => void; // Controlador para el switch de opciones sorteables
+  addOption: () => void;
+  updateOption: (id: string, updatedData: Partial<SorteableQuestion>) => void;
+  deleteOption: (id: string) => void;
+  resetOptions: () => void;
 
-  questions: Question[]; // Lista de preguntas del formulario
-  sorteableQuestions: SorteableQuestion[]; // Lista de preguntas sorteables
-  showOtherOption: boolean; // Estado para mostrar la opción "Otros"
-  randomizeTheOrderOfQuestions: boolean; // Estado para randomizar preguntas sorteables
-
-  // Métodos globales
-  setShowOtherOption: (show: boolean) => void; // Cambia el estado "Otros"
-  setRandomizeTheOrder: (randomize: boolean) => void; // Cambia el estado de randomización
-
-  // Métodos para preguntas simples
-  addQuestion: (question: Partial<Question>) => void; // Agrega una nueva pregunta
-  updateQuestion: (index: number, updatedData: Partial<Question>) => void; // Actualiza una pregunta específica
-  toggleRequired: (index: number) => void; // Alterna el estado "required" en una pregunta
-  toggleQuestionRequired: (index: number) => void; // Alterna el estado `required` de una pregunta
-  removeQuestion: (index: number) => void; // Elimina una pregunta por índice
-
-  // Métodos para preguntas sorteables
-  addSorteableQuestion: (question?: Partial<SorteableQuestion>) => void; // Agrega una pregunta sorteable
-  updateSorteableQuestion: (id: string, updatedData: Partial<SorteableQuestion>) => void; // Actualiza una pregunta sorteable
-  removeSorteableQuestion: (id: string) => void; // Elimina una pregunta sorteable
-  setSorteableQuestionsOrder: (update: (prev: SorteableQuestion[]) => SorteableQuestion[]) => void; // Reordena preguntas sorteables
-
-  // Resetear preguntas
-  resetQuestions: () => void; // Resetea preguntas y opciones al estado inicial
-  resetToDefaultSorteableQuestions: () => void; // Restaura las opciones sorteables predeterminadas
+  resetToDefaultSorteableQuestions: () => void;
+  getPreparedData: () => { questionText: string; questionType: string; options: SorteableQuestion[] } | null;
 }
 
-// Estado inicial para el store
-const initialState: Pick<
-  ScreenerStore,
-  | "screenerRequired"
-  | "questionRequired"
-  | "sorteableRequired"
-  | "questions"
-  | "sorteableQuestions"
-  | "showOtherOption"
-  | "randomizeTheOrderOfQuestions"
-> = {
-  screenerRequired: false,
-  questionRequired: false,
-  sorteableRequired: false,
-  questions: [
+export const useScreenerStore = create<ScreenerStore>((set, get) => ({
+  screenerView: {},
+  titleRequired: false,
+  questionText: null,
+  questionType: "Single choice",
+  isRequired: false,
+  options: [
     {
-      questionText: "",
-      questionType: "Single choice",
-      required: false,
-      isRequired: true,
+      id: nanoid(),
+      option1: "",
+      placeholder: "Option 1",
+      selection: "Qualify", // String
     },
   ],
-  sorteableQuestions: Array.from({ length: 3 }, (_, i) => ({
-    id: nanoid(),
-    option1: "",
-    placeholder: `Option ${i + 1}`,
-    selection: ["Qualify", "Disqualify"],
-    required: false,
-  })),
-  showOtherOption: false,
-  randomizeTheOrderOfQuestions: false,
-};
 
-const createSorteableQuestion = (
-  question: Partial<SorteableQuestion> = {}
-): SorteableQuestion => ({
-  id: nanoid(),
-  option1: question.option1 || "",
-  placeholder: question.placeholder || "New Option",
-  selection: question.selection || ["Qualify", "Disqualify"],
-  required: question.required ?? false,
-});
-
-// Función para crear una nueva pregunta
-const createQuestion = (data: Partial<Question>): Question => ({
-  questionText: data.questionText || "",
-  questionType: data.questionType || "Single choice",
-  required: data.required ?? false,
-  isRequired: data.isRequired ?? true,
-});
-
-// Zustand Store
-export const useScreenerStore = create<ScreenerStore>((set) => ({
-  ...initialState,
-
-  // Controladores independientes para los toggles
-  setScreenerRequired: (required: boolean) =>
-    set(() => ({ screenerRequired: required })),
-  setQuestionRequired: (required: boolean) =>
-    set(() => ({ questionRequired: required })),
-  setSorteableRequired: (required: boolean) =>
-    set(() => ({ sorteableRequired: required })),
-
-  // Métodos globales
-  setShowOtherOption: (show) => set(() => ({ showOtherOption: show })),
-  setRandomizeTheOrder: (randomize) =>
-    set(() => ({ randomizeTheOrderOfQuestions: randomize })),
-
-  // Métodos para preguntas simples
-  addQuestion: (question) =>
-    set((state) => ({
-      questions: [...state.questions, createQuestion(question)],
+  setScreenerView: (view) => set(() => ({ screenerView: view })),
+  setTitleRequired: (required) =>
+    set(() => {
+      if (!required) {
+        return {
+          titleRequired: false,
+          screenerView: {},
+          questionText: null,
+          questionType: "Single choice",
+          isRequired: false,
+          options: [
+            {
+              id: nanoid(),
+              option1: "",
+              placeholder: "Option 1",
+              selection: "Qualify",
+            },
+          ],
+        };
+      }
+      return { titleRequired: true };
+    }),
+  setQuestionText: (text) =>
+    set(() => ({
+      questionText: get().isRequired && get().titleRequired ? text : null,
     })),
+  setQuestionType: (type) =>
+    set(() => {
+      const options =
+        type === "Multiple choice"
+          ? Array.from({ length: 3 }, (_, i) => ({
+              id: nanoid(),
+              option1: "",
+              placeholder: `Option ${i + 1}`,
+              selection: "Qualify",
+            }))
+          : [
+              {
+                id: nanoid(),
+                option1: "",
+                placeholder: "Option 1",
+                selection: "Qualify",
+              },
+            ];
 
-  updateQuestion: (index, updatedData) =>
-    set((state) => {
-      if (index < 0 || index >= state.questions.length) {
-        console.error(`Invalid question index: ${index}`);
-        return state;
-      }
-      const updatedQuestions = [...state.questions];
-      updatedQuestions[index] = {
-        ...updatedQuestions[index],
-        ...updatedData,
-      };
-      return { questions: updatedQuestions };
-    }),
-
-  toggleRequired: (index) =>
-    set((state) => {
-      if (index < 0 || index >= state.questions.length) {
-        console.error(`Invalid question index: ${index}`);
-        return state;
-      }
-      const updatedQuestions = [...state.questions];
-      updatedQuestions[index].isRequired = !updatedQuestions[index].isRequired;
-      return { questions: updatedQuestions };
-    }),
-
-  removeQuestion: (index) =>
-    set((state) => {
-      if (index < 0 || index >= state.questions.length) {
-        console.error(`Invalid question index: ${index}`);
-        return state;
-      }
       return {
-        questions: state.questions.filter((_, i) => i !== index),
+        questionType: get().isRequired && get().titleRequired ? type : null,
+        options,
       };
     }),
-
-  // Métodos para preguntas sorteables
-  addSorteableQuestion: (question) =>
+  setIsRequired: (required) =>
+    set(() => ({
+      isRequired: required,
+      questionText: required && get().titleRequired ? get().questionText : null,
+      questionType: required && get().titleRequired ? get().questionType : "Single choice",
+      options: required && get().titleRequired
+        ? get().options
+        : [
+            {
+              id: nanoid(),
+              option1: "",
+              placeholder: "Option 1",
+              selection: "Qualify",
+            },
+          ],
+    })),
+  addOption: () =>
     set((state) => ({
-      sorteableQuestions: [
-        ...state.sorteableQuestions,
-        createSorteableQuestion(question),
+      options: [
+        ...state.options,
+        { id: nanoid(), option1: "", placeholder: `Option ${state.options.length + 1}`, selection: "Qualify" },
       ],
     })),
-
-  updateSorteableQuestion: (id, updatedData) =>
+  updateOption: (id, updatedData) =>
     set((state) => ({
-      sorteableQuestions: state.sorteableQuestions.map((q) =>
-        q.id === id ? { ...q, ...updatedData } : q
+      options: state.options.map((option) =>
+        option.id === id ? { ...option, ...updatedData } : option
       ),
     })),
-
-  removeSorteableQuestion: (id: string) =>
+  deleteOption: (id) =>
     set((state) => {
-      if (state.sorteableQuestions.length <= 1) {
-        console.warn("Cannot remove the last remaining question.");
-        return state;
-      }
+      const updatedOptions = state.options.filter((option) => option.id !== id);
+      const isSingleChoice = updatedOptions.length === 1;
       return {
-        sorteableQuestions: state.sorteableQuestions.filter((q) => q.id !== id),
+        options: updatedOptions,
+        questionType: isSingleChoice ? "Single choice" : state.questionType,
       };
     }),
-
-    setSorteableQuestionsOrder: (update) =>
-      set((state) => ({
-        sorteableQuestions: update(state.sorteableQuestions),
-      })),
-
+  resetOptions: () =>
+    set(() => ({
+      options: [
+        {
+          id: nanoid(),
+          option1: "",
+          placeholder: "Option 1",
+          selection: "Qualify",
+        },
+      ],
+    })),
   resetToDefaultSorteableQuestions: () =>
     set(() => ({
-      sorteableQuestions: Array.from({ length: 3 }, (_, i) => ({
+      options: Array.from({ length: 3 }, (_, i) => ({
         id: nanoid(),
         option1: "",
         placeholder: `Option ${i + 1}`,
-        selection: ["Qualify", "Disqualify"],
-        required: false,
+        selection: "Qualify",
       })),
     })),
+  getPreparedData: () => {
+    const { screenerView, titleRequired, isRequired, questionText, questionType, options } = get();
 
-  resetQuestions: () => set(() => initialState),
-  toggleQuestionRequired: (index) =>
-    set((state) => {
-      if (index < 0 || index >= state.questions.length) {
-        console.error(`Invalid question index: ${index}`);
-        return state;
-      }
-      const updatedQuestions = [...state.questions];
-      updatedQuestions[index].required = !updatedQuestions[index].required;
-      return { questions: updatedQuestions };
-    }),
+    if (screenerView && titleRequired && isRequired) {
+      const sanitizedOptions = options.map(({ id, option1, selection }) => ({
+        id,
+        option1,
+        selection,
+      }));
+
+      return {
+        questionText: questionText!,
+        questionType: questionType!,
+        options: sanitizedOptions,
+      };
+    }
+    return null;
+  },
 }));

@@ -1,4 +1,5 @@
 import { createTheme } from "@mui/material";
+import { FormDataState } from "./types/types";
 
 export const steps = ['Name the Research', 'Kind of Research', 'Techniques for Research'];
 
@@ -67,3 +68,24 @@ export const initialItems = [
     { id: '2', text: 'Option 2', eligibility: 'Qualify' },
     { id: '3', text: 'Option 3', eligibility: 'Qualify' },
 ];
+
+export const validateStep = (currentStep: number, formData: FormDataState) => {
+    const validations = [
+      {
+        isValid: !!formData.researchName && !!formData.enterpriseName,
+        error: 'Research Name and Enterprise Name are required.',
+      },
+      {
+        isValid: !!formData.selectedResearchType,
+        error: 'Research Type is required.',
+      },
+      {
+        isValid: true,
+        error: undefined,
+      },
+    ];
+  
+    return validations[currentStep] || { isValid: false, error: 'Unknown validation step.' };
+  };
+  
+  

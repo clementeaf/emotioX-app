@@ -32,6 +32,13 @@ export function QuestionTitleInput({
     (state) => state.resetToDefaultSorteableQuestions
   );
 
+  const handleTypeChange = (type: string) => {
+    onTypeChange(type);
+    if (type === "Multiple choice") {
+      resetToDefaultSorteableQuestions();
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -53,23 +60,16 @@ export function QuestionTitleInput({
         sx={{
           "& .MuiOutlinedInput-root": {
             borderRadius: 1,
-            borderColor: "#E0E0E0",
             fontSize: 14,
+            "& fieldset": { borderColor: "#E0E0E0" },
           },
         }}
       />
 
-      <FormControl size="small" sx={{ minWidth: 160 }}>
+      <FormControl size="small" sx={{ minWidth: 160 }} disabled={!required}>
         <Select
           value={questionType}
-          onChange={(e) => {
-            const newType = e.target.value;
-            onTypeChange(newType);
-
-            if (newType === "Multiple choice") {
-              resetToDefaultSorteableQuestions();
-            }
-          }}
+          onChange={(e) => handleTypeChange(e.target.value)}
           displayEmpty
           sx={{
             bgcolor: "white",
@@ -79,17 +79,17 @@ export function QuestionTitleInput({
             },
           }}
         >
-          <MenuItem value="Single choice">Single choice</MenuItem>
-          <MenuItem value="Multiple choice">Multiple choice</MenuItem>
-          <MenuItem value="Short text">Short text</MenuItem>
-          <MenuItem value="Long text">Long text</MenuItem>
-          <MenuItem value="Linear scale">Linear scale</MenuItem>
-          <MenuItem value="Ranking">Ranking</MenuItem>
+          {["Single choice", "Multiple choice", "Short text", "Long text", "Linear scale", "Ranking"].map(
+            (type) => (
+              <MenuItem key={type} value={type}>
+                {type}
+              </MenuItem>
+            )
+          )}
         </Select>
       </FormControl>
 
       <FormControlLabel
-        sx={{ mr: 2 }}
         control={<AntSwitch checked={required} onChange={onToggleRequired} />}
         label={
           <Typography fontSize="14px" fontWeight={400} color="#8C8C8C">
@@ -97,6 +97,7 @@ export function QuestionTitleInput({
           </Typography>
         }
         labelPlacement="start"
+        sx={{ marginRight: 2 }}
       />
     </Box>
   );

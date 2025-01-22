@@ -3,9 +3,9 @@ import { grey } from "@mui/material/colors";
 import { AntSwitch } from "../Switch";
 
 interface TitleRowProps {
-  title: string; // El título que se mostrará
-  isRequired: boolean; // Estado actual de "Required"
-  onToggleRequired: () => void; // Acción para alternar el estado
+  title: string;
+  isRequired: boolean;
+  onToggleRequired: () => void;
 }
 
 export function TitleRow({ title, isRequired, onToggleRequired }: TitleRowProps) {
@@ -14,6 +14,7 @@ export function TitleRow({ title, isRequired, onToggleRequired }: TitleRowProps)
       sx={{
         width: "100%",
         height: "54px",
+        py: 0.5,
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
