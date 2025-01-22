@@ -11,20 +11,26 @@ import ResumenComponent from '../components/Dashboard/BehaviouralResearch/Result
 import ImplicitAssociationResultsComponent from '../components/Dashboard/BehaviouralResearch/ResultsViewComponents/ImplicitAssociationResultsComponent';
 import ResultsMainScreenV2 from '../components/Dashboard/AIMFrameworkModule/ResultsViewComponents/ResultsMainScreenV2';
 import EyeTrackingResults from '../components/Dashboard/BehaviouralResearch/ResultsViewComponents/EyeTrackingResults';
+import { useWelcomeScreenStore } from '../store/useWelcomeScreenStore';
+import { useScreenerStore } from '../store/useScreenerStore';
+import { useImplicitAssociationStore } from '../store/useImplicitAssociationStore';
 
 type ResearchStage = {
   label: string;
   component: ReactNode;
+  getStore?: () => any;
 };
 
-export const researchStagesConfig: Record<'AIMFramework' | 'BehaviouralResearch', {
+export const researchStagesConfig: Record<'AIMFramework' | 'BehaviouralResearch', 
+{
   Build: ResearchStage[];
   Recruit: ResearchStage[];
   Result: ResearchStage[];
-}> = {
+}
+> = {
   AIMFramework: {
     Build: [
-      { label: 'Welcome Screen', component: <WelcomeScreenContainer /> },
+      { label: 'Welcome Screen', component: <WelcomeScreenContainer />, getStore: () => useWelcomeScreenStore.getState() },
       { label: 'Smart VOC', component: <SmartVocFormV2 /> },
       { label: 'Cognitive Task', component: <CognitiveTaskFormV2 /> },
       { label: 'Thank You', component: <ThankYouScreenContainer /> },
@@ -44,9 +50,9 @@ export const researchStagesConfig: Record<'AIMFramework' | 'BehaviouralResearch'
   },
   BehaviouralResearch: {
     Build: [
-      { label: 'Screener', component: <ScreenerScreenContainer /> },
-      { label: 'Welcome screen', component: <WelcomeScreenContainer /> },
-      { label: 'Implicit Association', component: <ImplicitAssociationView /> },
+      { label: 'Screener', component: <ScreenerScreenContainer />, getStore: () => useScreenerStore.getState() },
+      { label: 'Welcome screen', component: <WelcomeScreenContainer />, getStore: () => useWelcomeScreenStore.getState() },
+      { label: 'Implicit Association', component: <ImplicitAssociationView />, getStore: () => useImplicitAssociationStore.getState() },
       { label: 'Cognitive task', component: <CognitiveTaskView /> },
       { label: 'Eye Tracking', component: <EyeTrackingView /> },
       { label: 'Thank you screen', component: <ThankYouScreenContainer /> },

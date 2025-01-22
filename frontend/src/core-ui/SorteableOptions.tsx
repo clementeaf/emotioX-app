@@ -1,135 +1,57 @@
-import React, { useCallback } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  TextField,
-} from "@mui/material";
-// import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import React from "react";
+import { Box, Typography, Button, TextField } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { EligibilityInput } from "./ElegibilityInput";
-// import { DndContext, closestCenter, useSensor, useSensors, PointerSensor, DragEndEvent } from "@dnd-kit/core";
-// import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
-// import { CSS } from "@dnd-kit/utilities";
-import { useScreenerStore } from "../store/useScreenerStore";
+import { SorteableQuestion } from "../store/useScreenerStore";
 
-export const SorteableOptions = React.memo(function SorteableOptions() {
-  const {
-    sorteableQuestions,
-    addSorteableQuestion,
-    updateSorteableQuestion,
-    // setSorteableQuestionsOrder,
-    questions,
-  } = useScreenerStore();
+interface SorteableOptionsProps {
+  options: SorteableQuestion[];
+  questionType: string;
+  onAddOption: () => void;
+  onUpdateOption: (id: string, updatedData: Partial<SorteableQuestion>) => void;
+  onDeleteOption: (id: string) => void;
+}
 
-  const questionType = questions[0]?.questionType || "Multiple choice";
-  // const sensors = useSensors(useSensor(PointerSensor));
+export const SorteableOptions: React.FC<SorteableOptionsProps> = React.memo(
+  function SorteableOptions({ options, questionType, onAddOption, onUpdateOption, onDeleteOption }) {
 
-  // Manejar la reorganización de los elementos
-  // const handleDragEnd = useCallback(({ active, over }: DragEndEvent) => {
-  //     if (!over || active.id === over.id) return;
+    const filteredOptions =
+      questionType === "Single choice" ? options.slice(0, 1) : options;
 
-  //     const oldIndex = sorteableQuestions.findIndex((item) => item.id === active.id);
-  //     const newIndex = sorteableQuestions.findIndex((item) => item.id === over.id);
-
-  //     if (oldIndex === -1 || newIndex === -1) return;
-
-  //     const updatedOrder = arrayMove(sorteableQuestions, oldIndex, newIndex);
-  //     setSorteableQuestionsOrder(updatedOrder);
-  // }, [sorteableQuestions, setSorteableQuestionsOrder]);
-
-  // Añadir una nueva opción
-  const handleAddChoice = useCallback(() => {
-    if (questionType === "Single choice" && sorteableQuestions.length >= 1) {
-      return;
-    }
-
-    const newId = (sorteableQuestions.length + 1).toString();
-    const newQuestion = {
-      id: newId,
-      option1: `Option ${newId}`,
-      selection: ["Qualify", "Disqualify"],
-      required: false,
-    };
-    addSorteableQuestion(newQuestion);
-  }, [questionType, sorteableQuestions, addSorteableQuestion]);
-
-  const handleDelete = useCallback(
-    (id: string) => {
-      if (!sorteableQuestions.some((q) => q.id === id)) {
-        console.warn(`Question with ID ${id} not found.`);
-        return;
-      }
-
-      // Usar el setter de Zustand para trabajar con el estado actual
-      useScreenerStore.setState((state) => {
-        const updatedSorteableQuestions = state.sorteableQuestions.filter((q) => q.id !== id);
-
-        if (updatedSorteableQuestions.length === 1) {
-
-          return {
-            sorteableQuestions: updatedSorteableQuestions,
-            questions: state.questions.map((q, index) =>
-              index === 0 ? { ...q, questionType: "Single choice" } : q
-            ),
-          };
-        }
-
-        // Caso general: simplemente actualizamos sorteableQuestions
-        return { sorteableQuestions: updatedSorteableQuestions };
-      });
-    },
-    [sorteableQuestions]
-  );
-
-
-
-  const filteredQuestions =
-    questionType === "Single choice" ? sorteableQuestions.slice(0, 1) : sorteableQuestions;
-
-  return (
-    <Box sx={{ width: "100%" }}>
-      <Typography color="#8C8C8C" fontSize={14} fontWeight={400} lineHeight="22px">
-        Choices (Press ENTER for new line or paste a list)
-      </Typography>
-      {/* <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <SortableContext items={filteredQuestions} strategy={verticalListSortingStrategy}> */}
-      <Box sx={{ display: "flex", flexDirection: "column", mt: 2 }}>
-        {filteredQuestions.map((item) => (
-          <SortableItem
-            key={item.id}
-            question={item}
-            onUpdate={(updatedData) => updateSorteableQuestion(item.id, updatedData)}
-            onDelete={() => handleDelete(item.id)}
-            disableDelete={filteredQuestions.length === 1} // Nueva propiedad de control
-          />
-        ))}
+    return (
+      <Box sx={{ width: "100%" }}>
+        <Typography color="#8C8C8C" fontSize={14} fontWeight={400} lineHeight="22px">
+          Choices (Press ENTER for new line or paste a list)
+        </Typography>
+        <Box sx={{ display: "flex", flexDirection: "column", mt: 2 }}>
+          {filteredOptions.map((item) => (
+            <SortableItem
+              key={item.id}
+              question={item}
+              onUpdate={(updatedData) => onUpdateOption(item.id, updatedData)}
+              onDelete={() => onDeleteOption(item.id)}
+              disableDelete={filteredOptions.length === 1}
+            />
+          ))}
+        </Box>
+        <AddChoiceButton
+          handleAddChoice={onAddOption}
+          disabled={questionType === "Single choice" && options.length >= 1}
+        />
       </Box>
-      {/* </SortableContext>
-            </DndContext> */}
-      <AddChoiceButton
-        handleAddChoice={handleAddChoice}
-        disabled={questionType === "Single choice" && sorteableQuestions.length >= 1}
-      />
-    </Box>
-  );
-});
+    );
+  }
+);
 
-// Componente para cada opción
+// Componente para representar cada opción
 const SortableItem = React.memo(function SortableItem({
   question,
   onUpdate,
   onDelete,
   disableDelete,
 }: {
-  question: {
-    id: string;
-    option1: string;
-    placeholder?: string; // Placeholder opcional
-    selection: string[];
-    required: boolean;
-  };
-  onUpdate: (updatedData: Partial<typeof question>) => void;
+  question: SorteableQuestion; // Cambiado de Option a SorteableQuestion
+  onUpdate: (updatedData: Partial<SorteableQuestion>) => void;
   onDelete: () => void;
   disableDelete: boolean;
 }) {
@@ -147,13 +69,13 @@ const SortableItem = React.memo(function SortableItem({
         width: "804px",
       }}
     >
-      {/* Campo de texto con placeholder */}
+      {/* Campo de texto para la opción */}
       <Box sx={{ flexGrow: 1 }}>
         <TextField
           variant="outlined"
-          value={question.option1} // Siempre refleja el valor actual
-          placeholder={question.placeholder || `Option`} // Placeholder dinámico
-          onChange={(e) => onUpdate({ option1: e.target.value })} // Actualiza el estado
+          value={question.option1}
+          placeholder={question.placeholder || `Option`}
+          onChange={(e) => onUpdate({ option1: e.target.value })}
           fullWidth
           sx={{
             "& .MuiOutlinedInput-root": {
@@ -184,8 +106,7 @@ const SortableItem = React.memo(function SortableItem({
   );
 });
 
-
-
+// Botón para agregar nuevas opciones
 function AddChoiceButton({
   handleAddChoice,
   disabled,

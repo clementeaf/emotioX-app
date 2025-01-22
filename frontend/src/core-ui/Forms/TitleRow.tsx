@@ -26,8 +26,8 @@ export function TitleRow({ title, isRequired, onToggleRequired }: TitleRowProps)
         sx={{ mr: 2 }}
         control={
           <AntSwitch
-            checked={isRequired} // Refleja el estado actual
-            onChange={onToggleRequired} // Alterna el estado
+            checked={isRequired}
+            onChange={onToggleRequired}
           />
         }
         label={

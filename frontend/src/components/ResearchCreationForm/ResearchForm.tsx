@@ -31,6 +31,7 @@ export default function ResearchForm() {
     mutationFn: createResearch,
     onSuccess: (data) => {
       const { message, research } = data;
+      localStorage.setItem('currentResearchId', research._id);
 
       if (message.length > 0) {
         setSuccessMessage('Research created successfully! Redirecting...');

@@ -2,17 +2,17 @@ import { create } from "zustand";
 import { nanoid } from "nanoid";
 
 // Interfaces
-interface Question {
+export interface Question {
   questionText: string;
   questionType: string;
   required: boolean;
   isRequired: boolean; // Estado para manejar "requerido" por pregunta
 }
 
-interface SorteableQuestion {
+export interface SorteableQuestion {
   id: string;
   option1: string;
-  placeholder: string; // Para manejar valores predeterminados
+  placeholder?: string; // Para manejar valores predeterminados
   selection: string[]; // ["Qualify", "Disqualify"]
   required: boolean;
 }
@@ -48,7 +48,7 @@ export interface ScreenerStore {
   addSorteableQuestion: (question?: Partial<SorteableQuestion>) => void; // Agrega una pregunta sorteable
   updateSorteableQuestion: (id: string, updatedData: Partial<SorteableQuestion>) => void; // Actualiza una pregunta sorteable
   removeSorteableQuestion: (id: string) => void; // Elimina una pregunta sorteable
-  setSorteableQuestionsOrder: (questions: SorteableQuestion[]) => void; // Reordena preguntas sorteables
+  setSorteableQuestionsOrder: (update: (prev: SorteableQuestion[]) => SorteableQuestion[]) => void; // Reordena preguntas sorteables
 
   // Resetear preguntas
   resetQuestions: () => void; // Resetea preguntas y opciones al estado inicial
@@ -74,13 +74,13 @@ const initialState: Pick<
       questionText: "",
       questionType: "Single choice",
       required: false,
-      isRequired: true, // Estado inicial de "requerido"
+      isRequired: true,
     },
   ],
   sorteableQuestions: Array.from({ length: 3 }, (_, i) => ({
     id: nanoid(),
-    option1: "", // Campo vacío por defecto
-    placeholder: `Option ${i + 1}`, // Placeholder por defecto
+    option1: "",
+    placeholder: `Option ${i + 1}`,
     selection: ["Qualify", "Disqualify"],
     required: false,
   })),
@@ -88,7 +88,6 @@ const initialState: Pick<
   randomizeTheOrderOfQuestions: false,
 };
 
-// Función para crear una nueva opción sorteable
 const createSorteableQuestion = (
   question: Partial<SorteableQuestion> = {}
 ): SorteableQuestion => ({
@@ -193,8 +192,10 @@ export const useScreenerStore = create<ScreenerStore>((set) => ({
       };
     }),
 
-  setSorteableQuestionsOrder: (questions) =>
-    set(() => ({ sorteableQuestions: questions })),
+    setSorteableQuestionsOrder: (update) =>
+      set((state) => ({
+        sorteableQuestions: update(state.sorteableQuestions),
+      })),
 
   resetToDefaultSorteableQuestions: () =>
     set(() => ({
