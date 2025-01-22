@@ -106,8 +106,8 @@ export interface InstructionFieldProps {
 
 export interface ImageUploadProps {
   id: number;
-  handleImageUpload: (id: number, file: File, format: string) => void;
-};
+  handleImageUpload: (file: File, format: string) => void;
+}
 
 export interface ImageUploadV2Props {
   handleImageUpload: (file: File) => void;
@@ -115,14 +115,13 @@ export interface ImageUploadV2Props {
 
 export interface TargetCardProps {
   id: number;
-  title: string;
-  text: string;
   nameOfObject: string;
-  titleAssigned: string;
   imageUploaded: File | null;
-  updateTargetTitleAssigned: (id: number, value: string) => void;
-  handleImageUpload: (id: number, file: File, format: string) => void;
-};
+  imageFormat: string | null;
+  onNameChange: (name: string) => void;
+  onImageUpload: (id: number, file: File, format: string) => void;
+}
+
 
 export interface InputAttribute {
   id: number;

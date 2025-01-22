@@ -1,53 +1,90 @@
-import React from 'react';
-import { Box, Typography, TextField } from '@mui/material';
-import { grey } from '@mui/material/colors';
-import { InstructionFieldsProps } from '../../types/types';
+import React, { useEffect } from "react";
+import { Box, Typography, TextField } from "@mui/material";
+import { grey } from "@mui/material/colors";
 
-export function InstructionFieldsContainer({
-  exerciseInstruction,
-  testInstruction,
-  onExerciseChange,
-  onTestChange,
-}: InstructionFieldsProps) {
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4, width: '800px', alignItems: 'flex-start' }}>
-      <InstructionField
-        label={exerciseInstruction.title}
-        placeholder={exerciseInstruction.placeHolder}
-        maxChars={100}
-        value={exerciseInstruction.textAreaData}
-        onChange={onExerciseChange}
-      />
-      <InstructionField
-        label={testInstruction.title}
-        placeholder={testInstruction.placeHolder}
-        maxChars={100}
-        value={testInstruction.textAreaData}
-        onChange={onTestChange}
-      />
-    </Box>
-  );
-}
-
-type InstructionFieldProps = {
+export interface InstructionFieldProps {
+  id: number;
   label: string;
   placeholder: string;
   maxChars: number;
   value: string;
   onChange: (value: string) => void;
-};
+}
 
-function InstructionField({ label, placeholder, maxChars, value, onChange }: InstructionFieldProps) {
+export function InstructionFieldsContainer({
+  textAreas,
+}: {
+  textAreas: InstructionFieldProps[];
+}) {
+  useEffect(() => {
+    // Cargar datos persistentes desde localStorage
+    const savedData = localStorage.getItem("textAreas");
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      parsedData.forEach((field: any) => {
+        const existingField = textAreas.find((ta) => ta.id === field.id);
+        if (existingField) {
+          existingField.onChange(field.value);
+        }
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    // Guardar datos en localStorage cada vez que cambian los valores
+    const dataToPersist = textAreas.map((field) => ({
+      id: field.id,
+      value: field.value,
+    }));
+    localStorage.setItem("textAreas", JSON.stringify(dataToPersist));
+  }, [textAreas]);
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 4,
+        ml: 2,
+        width: "100%",
+        maxWidth: "798px",
+        alignItems: "flex-start",
+      }}
+    >
+      {textAreas.map((field) => (
+        <InstructionField
+          key={field.id}
+          id={field.id}
+          label={field.label}
+          placeholder={field.placeholder}
+          maxChars={field.maxChars}
+          value={field.value}
+          onChange={field.onChange}
+        />
+      ))}
+    </Box>
+  );
+}
+
+function InstructionField({
+  label,
+  placeholder,
+  maxChars,
+  value,
+  onChange,
+}: InstructionFieldProps) {
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputText = event.target.value;
     if (inputText.length <= maxChars) {
-      onChange(inputText); // Llama al setter correspondiente
+      onChange(inputText);
     }
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, width: 800 }}>
-      <Typography sx={{ fontSize: 14, fontWeight: 500, color: grey[900] }}>{label}</Typography>
+    <Box sx={{ display: "flex", flexDirection: "column", gap: 1, width: "100%" }}>
+      <Typography sx={{ fontSize: 14, fontWeight: 500, color: grey[900] }}>
+        {label}
+      </Typography>
       <TextField
         multiline
         minRows={4}
@@ -57,10 +94,10 @@ function InstructionField({ label, placeholder, maxChars, value, onChange }: Ins
         value={value}
         onChange={handleTextChange}
         sx={{
-          width: '100%',
-          '& .MuiOutlinedInput-root': {
+          width: "100%",
+          "& .MuiOutlinedInput-root": {
             padding: 1,
-            '& textarea': {
+            "& textarea": {
               fontSize: 14,
               color: grey[700],
               opacity: 0.8,
@@ -68,7 +105,9 @@ function InstructionField({ label, placeholder, maxChars, value, onChange }: Ins
           },
         }}
       />
-      <Typography sx={{ fontSize: 12, color: grey[500], placeSelf: 'flex-end' }}>
+      <Typography
+        sx={{ fontSize: 12, color: grey[500], placeSelf: "flex-end" }}
+      >
         {value.length} / {maxChars}
       </Typography>
     </Box>
