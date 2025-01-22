@@ -1,22 +1,47 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { TechniqueDescription } from "./Forms/TechniqueDescription";
 import { TitleRow } from "./Forms/TitleRow";
 import { SorteableOptions } from "./SorteableOptions";
 import { QuestionTitleInput } from "./Forms/QuestionTitleInput";
 import { useScreenerStore } from "../store/useScreenerStore";
+import { useState } from "react";
 
 export function ScreenerScreenContainer() {
   const titleRequired = useScreenerStore((state) => state.titleRequired);
   const isRequired = useScreenerStore((state) => state.isRequired);
   const questionText = useScreenerStore((state) => state.questionText);
   const questionType = useScreenerStore((state) => state.questionType);
+  const options = useScreenerStore((state) => state.options);
 
   const setTitleRequired = useScreenerStore((state) => state.setTitleRequired);
   const setIsRequired = useScreenerStore((state) => state.setIsRequired);
   const setQuestionText = useScreenerStore((state) => state.setQuestionText);
   const setQuestionType = useScreenerStore((state) => state.setQuestionType);
 
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  const validateForm = () => {
+    if (titleRequired && (!questionText || questionText.trim() === "")) {
+      setValidationError("The question text cannot be empty.");
+      return false;
+    }
+
+    if (
+      titleRequired &&
+      isRequired &&
+      options.some((option) => !option.option1 || option.option1.trim() === "")
+    ) {
+      setValidationError("All options must have a value.");
+      return false;
+    }
+
+    setValidationError(null);
+    return true;
+  };
+
   const handleSubmit = () => {
+    if (!validateForm()) return;
+
     const preparedData = useScreenerStore.getState().getPreparedData();
     if (preparedData) {
       console.log("Datos enviados al backend:", preparedData);
@@ -24,6 +49,12 @@ export function ScreenerScreenContainer() {
       console.log("Condiciones no cumplidas. No se envían datos.");
     }
   };
+
+  const isSubmitDisabled =
+    !titleRequired ||
+    !questionText ||
+    questionText.trim() === "" ||
+    (isRequired && options.some((option) => !option.option1 || option.option1.trim() === ""));
 
   return (
     <Box sx={{ display: "flex", maxWidth: 1134, height: "100%", gap: 3 }}>
@@ -65,7 +96,20 @@ export function ScreenerScreenContainer() {
             />
             <SorteableOptions />
           </Box>
-          <Button onClick={handleSubmit}>Submit</Button>
+          {validationError && (
+            <Typography color="error" sx={{ mt: 2 }}>
+              {validationError}
+            </Typography>
+          )}
+          <Button
+            onClick={handleSubmit}
+            disabled={isSubmitDisabled}
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2, ml: 2, }}
+          >
+            Submit
+          </Button>
         </Box>
       </Box>
       <TechniqueDescription />
