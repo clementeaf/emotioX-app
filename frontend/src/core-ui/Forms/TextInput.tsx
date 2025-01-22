@@ -3,8 +3,8 @@ import { Box, TextField, Typography } from "@mui/material";
 interface TextInputProps {
     label: string;
     placeholder: string;
-    value: string; // Propiedad value para el contenido del campo
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Evento para manejar cambios
+    value: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     disabled?: boolean;
   }
 
@@ -14,7 +14,6 @@ export function TextInput({ label, placeholder, value, onChange, disabled }: Tex
             <Typography fontSize={14} fontWeight={500} color="#8C8C8C" textTransform='initial'>
                 {label}
             </Typography>
-            {/* Input */}
             <TextField
                 placeholder={placeholder}
                 variant="outlined"
