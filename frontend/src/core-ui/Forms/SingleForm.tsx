@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Box,
     Button,
@@ -10,17 +10,18 @@ import {
     IconButton,
     SelectChangeEvent,
     FormControl,
+    Stack,
+    Checkbox,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { AntSwitch } from "../Switch";
 import { useCognitiveTaskStore, Choice } from "../../store/useCognitiveTaskStore";
 
 interface SingleFormProps {
-    questionId: number; // ID de la pregunta desde el store
+    questionId: number;
 }
 
 export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
-    // Extraer datos y acciones del store
     const {
         questions,
         toggleVisibility,
@@ -28,7 +29,6 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
         updateQuestionText,
         updateUploadedFile,
         updateSelectedFrame,
-        toggleConditionality,
         addChoice,
         removeChoice,
         updateChoice,
@@ -45,7 +45,6 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
         placeholder,
         choiceType,
         choices,
-        showConditionality,
         fileUploadLabel,
         deviceFrameOptions,
         selectedFrame,
@@ -54,16 +53,13 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
 
     // Handlers
     const handleAddChoice = () => addChoice(questionId);
-
     const handleDeleteChoice = (choiceId: number) => removeChoice(questionId, choiceId);
-
     const handleChoiceChange = (choiceId: number, key: keyof Choice, value: string) => {
         updateChoice(questionId, choiceId, key, value);
     };
 
-    const handleOptionChange = (event: SelectChangeEvent<"singleChoice" | "multipleChoice">) => {
-        const value = event.target.value as "singleChoice" | "multipleChoice";
-        setChoiceType(questionId, value);
+    const handleOptionChange = (event: SelectChangeEvent<"singleChoice" | "multipleChoice" | "linearScale">) => {
+        setChoiceType(questionId, event.target.value as "singleChoice" | "multipleChoice" | "linearScale");
     };
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,11 +101,12 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
                 />
                 <Select
                     value={choiceType}
-                    onChange={handleOptionChange} // Cambiar entre Single y Multiple Choice
+                    onChange={handleOptionChange}
                     sx={{ minWidth: 180 }}
                 >
                     <MenuItem value="singleChoice">Single Choice</MenuItem>
                     <MenuItem value="multipleChoice">Multiple Choice</MenuItem>
+                    <MenuItem value="linearScale">Linear Scale</MenuItem>
                 </Select>
                 <FormControlLabel
                     control={
@@ -122,7 +119,22 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
                 />
             </Box>
 
-            {/* Opciones dinámicas (solo si es Multiple Choice) */}
+            {choiceType === "singleChoice" && (
+                <Box sx={{ mt: 3 }}>
+                    {choices.map((choice) => (
+                        <SimpleItem
+                            key={choice.id}
+                            item={choice}
+                            onDelete={handleDeleteChoice}
+                            onChange={handleChoiceChange}
+                        />
+                    ))}
+                    <Button variant="contained" onClick={handleAddChoice} sx={{ mt: 2 }}>
+                        Add Option
+                    </Button>
+                </Box>
+            )}
+
             {choiceType === "multipleChoice" && (
                 <Box sx={{ mt: 3 }}>
                     {choices.map((choice) => (
@@ -136,6 +148,18 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
                     <Button variant="contained" onClick={handleAddChoice} sx={{ mt: 2 }}>
                         Add Option
                     </Button>
+                </Box>
+            )}
+
+            {/* Opciones dinámicas (solo si es Linear Scale) */}
+            {choiceType === "linearScale" && (
+                <Box sx={{ mt: 3 }}>
+                    <LinearScaleForm
+                        question={questionText}
+                        isRequired={required}
+                        fileUploadLabel={fileUploadLabel}
+                        deviceFrameOptions={deviceFrameOptions}
+                    />
                 </Box>
             )}
 
@@ -206,7 +230,7 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
                     <FormControl>
                         <Select
                             value={selectedFrame}
-                            onChange={(e) => updateSelectedFrame(questionId, e.target.value)}
+                            onChange={handleFrameChange}
                             sx={{
                                 backgroundColor: 'white',
                             }}
@@ -221,40 +245,17 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
 
                 </Box>
             </Box>
-
-            {/* Selección del marco del dispositivo */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}>
-                <Typography>Device Frame</Typography>
-                <Select
-                    value={selectedFrame}
-                    onChange={handleFrameChange}
-                    sx={{ minWidth: 180 }}
-                >
-                    {deviceFrameOptions.map((option) => (
-                        <MenuItem key={option} value={option}>
-                            {option}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </Box>
-
-            {/* Mostrar condición adicional */}
-            <Box sx={{ mt: 2 }}>
-                <FormControlLabel
-                    control={
-                        <AntSwitch
-                            checked={showConditionality}
-                            onChange={() => toggleConditionality(questionId)}
-                        />
-                    }
-                    label="Enable Conditionality"
-                />
-            </Box>
+            <div style={{
+                width: 800,
+                height: 1,
+                backgroundColor: 'lightgray',
+                marginTop: 30,
+                marginBottom: 30
+            }} />
         </Box>
     );
 };
 
-// Subcomponente SimpleItem para manejar cada opción individual
 interface SimpleItemProps {
     item: Choice;
     onDelete: (id: number) => void;
@@ -280,16 +281,114 @@ const SimpleItem: React.FC<SimpleItemProps> = ({ item, onDelete, onChange }) => 
                 fullWidth
             />
             <Select
-                value={item.qualifier}
+                value={["qualify", "disqualify"].includes(item.qualifier) ? item.qualifier : "qualify"}
                 onChange={(e) => onChange(item.id, "qualifier", e.target.value)}
                 sx={{ minWidth: 180 }}
             >
                 <MenuItem value="qualify">Qualify</MenuItem>
                 <MenuItem value="disqualify">Disqualify</MenuItem>
             </Select>
+
             <IconButton onClick={() => onDelete(item.id)} color="error">
                 <DeleteIcon />
             </IconButton>
+        </Box>
+    );
+};
+
+
+interface LinearScaleProps {
+    question: string;
+    isRequired?: boolean;
+    fileUploadLabel?: string;
+    deviceFrameOptions?: string[];
+};
+
+const LinearScaleForm: React.FC<LinearScaleProps> = () => {
+    const [startValue, setStartValue] = useState(1);
+
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+                p: 3,
+                maxWidth: 800,
+                margin: 'auto',
+            }}
+        >
+
+            {/* Linear scale inputs */}
+            <Stack direction="column" spacing={2} width='100%' alignItems="start">
+                <Typography fontSize={14} fontWeight={400} color='#8C8C8C'>Choices (Press ENTER for new line or paste a list)</Typography>
+                <Stack direction='column' width='100%' gap={2}>
+                    {/* Start Range Value */}
+                    <Stack width='100%' direction='row' alignItems='center' gap={2}>
+                        <Typography variant="subtitle2" mb={1} width={100}>
+                            Start value
+                        </Typography>
+                        <TextField
+                            type="number"
+                            value={startValue}
+                            onChange={(e) => setStartValue(Number(e.target.value))}
+                            sx={{
+                                width: 65,
+                            }}
+                            placeholder="Start value"
+                        />
+                        <TextField
+                            type="text"
+                            value={startValue}
+                            onChange={(e) => setStartValue(Number(e.target.value))}
+                            fullWidth
+                            placeholder="Start label (optional)"
+                        />
+                    </Stack>
+
+                    {/* End Range Value */}
+                    <Stack width='100%' direction='row' alignItems='center' gap={2}>
+                        <Typography variant="subtitle2" mb={1} width={100}>
+                            End value
+                        </Typography>
+                        <TextField
+                            type="number"
+                            value={startValue}
+                            onChange={(e) => setStartValue(Number(e.target.value))}
+                            sx={{
+                                width: 65,
+                            }}
+                            placeholder="Start value"
+                        />
+                        <TextField
+                            type="text"
+                            value={startValue}
+                            onChange={(e) => setStartValue(Number(e.target.value))}
+                            fullWidth
+                            placeholder="End label (optional)"
+                        />
+                    </Stack>
+                </Stack>
+            </Stack>
+
+            {/* Checkboxes adicionales */}
+            <Stack spacing={1}>
+                <FormControlLabel
+                    control={<Checkbox />}
+                    label={<Typography fontSize="14px">Show “Other” option</Typography>}
+                />
+                <FormControlLabel
+                    control={<Checkbox />}
+                    label={<Typography fontSize="14px">Randomize the order of questions</Typography>}
+                />
+            </Stack>
+            <div style={{
+                width: 800,
+                height: 1,
+                backgroundColor: 'lightgray',
+                marginLeft: 20,
+                marginTop: 30
+            }} />
         </Box>
     );
 };

@@ -19,9 +19,8 @@ export interface Question {
   inputText?: string;
   selectedOption?: string;
 
-  // Nuevas propiedades
   showConditionality: boolean;
-  choiceType: "singleChoice" | "multipleChoice";
+  choiceType: "singleChoice" | "multipleChoice" | "linearScale";
   choices: Choice[];
   randomizeChoices: boolean;
   showOtherOption: boolean;
@@ -41,7 +40,7 @@ export interface CognitiveTaskStore {
 
   // Métodos adicionales
   toggleConditionality: (id: number) => void;
-  setChoiceType: (id: number, type: "singleChoice" | "multipleChoice") => void;
+  setChoiceType: (id: number, type: "singleChoice" | "multipleChoice" | "linearScale") => void;
   addChoice: (id: number) => void;
   removeChoice: (id: number, choiceId: number) => void;
   updateChoice: (id: number, choiceId: number, key: keyof Choice, value: string) => void;
@@ -66,10 +65,12 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
       selectedOption: "Single choice",
       uploadedFile: null,
 
-      // Nuevas propiedades
       showConditionality: false,
       choiceType: "singleChoice",
-      choices: [{ id: 1, textInput: "", qualifier: "qualify" }],
+      choices: [
+        { id: 1, textInput: "Option 1", qualifier: "qualify" },
+        { id: 2, textInput: "Option 2", qualifier: "disqualify" },
+      ],
       randomizeChoices: false,
       showOtherOption: false,
     },
@@ -86,10 +87,12 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
       selectedOption: "Single choice",
       uploadedFile: null,
 
-      // Nuevas propiedades
       showConditionality: false,
       choiceType: "singleChoice",
-      choices: [{ id: 1, textInput: "", qualifier: "qualify" }],
+      choices: [
+        { id: 1, textInput: "Option 1", qualifier: "qualify" },
+        { id: 2, textInput: "Option 2", qualifier: "disqualify" },
+      ],
       randomizeChoices: false,
       showOtherOption: false,
     },
@@ -153,22 +156,21 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
     set((state) => ({
       questions: state.questions.map((q) => {
         if (q.id === id) {
-          // Definir el tipo explícito de las opciones
           const updatedChoices: Choice[] =
             type === "singleChoice"
-              ? [{ id: 1, textInput: "", qualifier: "qualify" }] // Tipo explícito para singleChoice
-              : Array.from({ length: 3 }, (_, index) => ({
-                id: index + 1,
-                textInput: `Option ${index + 1}`,
-                qualifier: "qualify", // Tipo explícito para cada opción
-              }));
-
+              ? [{ id: 1, textInput: "", qualifier: "qualify" }]
+              : type === "multipleChoice"
+              ? Array.from({ length: 3 }, (_, index) => ({
+                  id: index + 1,
+                  textInput: `Option ${index + 1}`,
+                  qualifier: "qualify",
+                }))
+              : [];
           return { ...q, choiceType: type, choices: updatedChoices };
         }
         return q;
       }),
     })),
-
 
   addChoice: (id) =>
     set((state) => ({
@@ -192,7 +194,10 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
           const updatedChoices = q.choices.filter((c) => c.id !== choiceId);
           return {
             ...q,
-            choices: updatedChoices.length === 0 ? [{ id: 1, textInput: "", qualifier: "qualify" }] : updatedChoices,
+            choices:
+              updatedChoices.length === 0
+                ? [{ id: 1, textInput: "", qualifier: "qualify" }]
+                : updatedChoices,
           };
         }
         return q;
@@ -226,3 +231,4 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
       ),
     })),
 }));
+
