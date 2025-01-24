@@ -12,7 +12,7 @@ import { ImageUploadV2 } from '../FIleUpload/ImageUpload';
 import trash from "../../assets/trash.png";
 
 interface Item {
-    id: string;
+    id: string | number; 
     text: string;
     eligibility: string;
 }
@@ -480,61 +480,139 @@ export function FormSorteableWithSwitch({
 
 }
 
+export interface Choice {
+    id: number;
+    textInput: string;
+    qualifier: "qualify" | "disqualify";
+}
+
+export interface FormSorteableProps {
+    question: string;
+    showConditionality?: boolean;
+    choiceType?: "singleChoice" | "multipleChoice";
+    choices?: Choice[];
+    randomizeChoices?: boolean;
+    showOtherOption?: boolean;
+
+    // Event handlers
+    onToggleConditionality?: (value: boolean) => void;
+    onChangeChoiceType?: (value: "singleChoice" | "multipleChoice") => void;
+    onAddChoice?: () => void;
+    onDeleteChoice?: (choiceId: number) => void;
+    onUpdateChoice?: (choiceId: number, key: keyof Choice, value: string) => void;
+    onToggleRandomizeChoices?: (value: boolean) => void;
+    onToggleShowOtherOption?: (value: boolean) => void;
+}
+
 export function FormSorteableWithSwitchNoImg({
     question,
-    isRequired = false,
-}: FormSorteableWithSwitchProps) {
-    const [items, setItems] = useState<Item[]>(initialItems);
+    showConditionality = false,
+    choiceType = "singleChoice",
+    choices: initialChoices = [{ id: 1, textInput: "", qualifier: "qualify" }],
+    randomizeChoices = false,
+    showOtherOption = false,
 
-    const handleOnDragEnd = ({ active, over }: { active: Active; over: Over | null }) => {
+    // Event handlers (optional)
+    onToggleConditionality,
+    onChangeChoiceType,
+    onAddChoice,
+    onDeleteChoice,
+    onUpdateChoice,
+    onToggleRandomizeChoices,
+    onToggleShowOtherOption,
+}: FormSorteableProps) {
+    // Local state fallback if handlers are not provided
+    const [localChoices, setLocalChoices] = useState<Choice[]>(initialChoices);
+    const [localShowConditionality, setLocalShowConditionality] = useState(showConditionality);
+    const [localChoiceType, setLocalChoiceType] = useState(choiceType);
+    const [localRandomizeChoices, setLocalRandomizeChoices] = useState(randomizeChoices);
+    const [localShowOtherOption, setLocalShowOtherOption] = useState(showOtherOption);
+
+    // Helper functions
+    const handleAddChoice = () => {
+        if (onAddChoice) {
+            onAddChoice();
+        } else {
+            setLocalChoices([
+                ...localChoices,
+                { id: localChoices.length + 1, textInput: "", qualifier: "qualify" },
+            ]);
+        }
+    };
+
+    const handleDeleteChoice = (choiceId: number) => {
+        if (onDeleteChoice) {
+            onDeleteChoice(choiceId);
+        } else {
+            setLocalChoices(localChoices.filter((choice) => choice.id !== choiceId));
+        }
+    };
+
+    const handleUpdateChoice = (choiceId: number, key: keyof Choice, value: string) => {
+        if (onUpdateChoice) {
+            onUpdateChoice(choiceId, key, value);
+        } else {
+            setLocalChoices(
+                localChoices.map((choice) =>
+                    choice.id === choiceId ? { ...choice, [key]: value } : choice
+                )
+            );
+        }
+    };
+
+    const handleOnDragEnd = ({ active, over }: { active: any; over: any }) => {
         if (!over || active.id === over.id) return;
 
-        setItems((items) => {
-            const oldIndex = items.findIndex((item) => item.id === active.id);
-            const newIndex = items.findIndex((item) => item.id === over.id);
-            return arrayMove(items, oldIndex, newIndex);
-        });
+        const choices = onUpdateChoice ? initialChoices : localChoices;
+        const oldIndex = choices.findIndex((item) => item.id === active.id);
+        const newIndex = choices.findIndex((item) => item.id === over.id);
+
+        const updatedChoices = arrayMove(choices, oldIndex, newIndex);
+
+        if (onUpdateChoice) {
+            updatedChoices.forEach((choice, index) => {
+                onUpdateChoice(choice.id, "id", (index + 1).toString());
+            });
+        } else {
+            setLocalChoices(updatedChoices);
+        }
     };
 
-    // Handle adding a new choice
-    const handleAddChoice = () => {
-        const newId = (items.length + 1).toString();
-        setItems([...items, { id: newId, text: `Option ${newId}`, eligibility: 'Qualify' }]);
-    };
-
-    // Handle deleting a choice
-    const handleDelete = (id: string) => {
-        setItems(items.filter(item => item.id !== id));
-    };
+    const choices = onUpdateChoice ? initialChoices : localChoices;
 
     return (
-        <Box sx={{
-            width: '100%',
-            height: 'auto',
-        }}>
-            <Stack sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-                justifyContent: 'center',
-                ml: 2,
-                mt: 2,
-                gap: 1,
-            }}>
-                <Box sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    maxWidth: '100%',
-                    width: '100%'
-                }}>
+        <Box sx={{ width: "100%", height: "auto" }}>
+            <Stack
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    justifyContent: "center",
+                    ml: 2,
+                    mt: 2,
+                    gap: 1,
+                }}
+            >
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        maxWidth: "100%",
+                        width: "100%",
+                    }}
+                >
                     <Typography>{question}</Typography>
                     {/* Condicionalidad */}
                     <FormControlLabel
                         sx={{ mr: 1 }}
                         control={
                             <AntSwitch
-                                checked={isRequired}
-                                onChange={() => { }}
+                                checked={onToggleConditionality ? showConditionality : localShowConditionality}
+                                onChange={() =>
+                                    onToggleConditionality
+                                        ? onToggleConditionality(!showConditionality)
+                                        : setLocalShowConditionality((prev) => !prev)
+                                }
                             />
                         }
                         label={
@@ -545,141 +623,63 @@ export function FormSorteableWithSwitchNoImg({
                         labelPlacement="start"
                     />
                 </Box>
-                <Stack sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    width: '100%'
-                }}>
-                    <TextField
-                        placeholder='Ask something'
-                        variant="outlined"
-                        sx={{ flexGrow: 1, mr: 2, width: '100%' }}
-                        onChange={() => { }}
-                    />
+
+                <Stack
+                    sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        width: "100%",
+                    }}
+                >
+                    <TextField placeholder="Ask something" variant="outlined" sx={{ flexGrow: 1, mr: 2, width: "100%" }} />
                     <Select
-                        value='Single choice'
-                        onChange={() => { }}
-                        sx={{ minWidth: '120px', mr: 2 }}
+                        value={onChangeChoiceType ? choiceType : localChoiceType}
+                        onChange={(e) =>
+                            onChangeChoiceType
+                                ? onChangeChoiceType(e.target.value as "singleChoice" | "multipleChoice")
+                                : setLocalChoiceType(e.target.value as "singleChoice" | "multipleChoice")
+                        }
+                        sx={{ minWidth: "120px", mr: 2 }}
                     >
-                        <MenuItem value="Single choice">Single choice</MenuItem>
+                        <MenuItem value="singleChoice">Single choice</MenuItem>
+                        <MenuItem value="multipleChoice">Multiple choice</MenuItem>
                     </Select>
-                    {/* Condicionalidad */}
-                    <FormControlLabel
-                        sx={{ mr: 1 }}
-                        control={
-                            <AntSwitch
-                                checked={isRequired}
-                                onChange={() => { }}
-                            />
-                        }
-                        label={
-                            <Typography fontSize="14px" fontWeight={400} color="#8C8C8C">
-                                Required
-                            </Typography>
-                        }
-                        labelPlacement="start"
-                    />
                 </Stack>
             </Stack>
-            <DndContext
-                collisionDetection={closestCenter}
-                onDragEnd={handleOnDragEnd}
-            >
-                <SortableContext
-                    items={items.map(item => item.id)}
-                    strategy={verticalListSortingStrategy}
-                >
+
+            <DndContext collisionDetection={closestCenter} onDragEnd={handleOnDragEnd}>
+                <SortableContext items={choices.map((choice) => choice.id)} strategy={verticalListSortingStrategy}>
                     <Box
                         sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            width: '100%',
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "100%",
                             mt: 2,
                         }}
                     >
-                        <Stack sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            px: 2
-                        }}>
-                            <Stack sx={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                justifyContent: 'flex-start',
-                                width: '100%',
-                            }}>
-                                <Typography
-                                    fontWeight={400}
-                                    fontSize='14px'
-                                    lineHeight='22px'
-                                    color='#8C8C8C'
-                                    mb={2}
-                                >
-                                    Choices (Press ENTER for new line or paste a list)
-                                </Typography>
-                                <Typography
-                                    fontWeight={400}
-                                    fontSize='14px'
-                                    lineHeight='22px'
-                                    color='#8C8C8C'
-                                    mb={2}
-                                    ml={38.5}
-                                >
-                                    Elegibility
-                                </Typography>
-                            </Stack>
+                        <Stack sx={{ display: "flex", flexDirection: "column", px: 2 }}>
+                            {choices.map((choice) => (
+                                <SortableItem
+                                    key={choice.id}
+                                    item={{
+                                        id: choice.id,
+                                        text: choice.textInput, // Mapear `textInput` a `text`
+                                        eligibility: choice.qualifier, // Mapear `qualifier` a `eligibility`
+                                    }}
+                                    onDelete={() => handleDeleteChoice(choice.id)}
+                                    onChange={(key: keyof Choice, value: string) => handleUpdateChoice(choice.id, key, value)}
+                                />
+                            ))}
 
-                            <Stack sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                width: '100%',
-                            }}>
-                                {items.map((item) => (
-                                    <SortableItem
-                                        key={item.id}
-                                        item={item}
-                                        onDelete={handleDelete}
-                                    />
-                                ))}
-                            </Stack>
-
-                            <Button
-                                variant="contained"
-                                onClick={handleAddChoice}
-                                sx={{ mt: 1, bgcolor: '#6C9EFF', width: '158px', height: '40px' }}
-                            >
-                                <Typography textTransform='initial' fontWeight={400} fontSize={14} color='#fffff' lineHeight='22px'>
-                                    Add another choice
-                                </Typography>
+                            <Button variant="contained" onClick={handleAddChoice} sx={{ mt: 1 }}>
+                                Add another choice
                             </Button>
-                            <FormControlLabel
-                                control={<Checkbox />}
-                                label={<Typography fontSize='14px' fontWeight={400} color='#8C8C8C'>Show “Other” option</Typography>}
-                                labelPlacement="end"
-                                sx={{
-                                    mt: 1,
-                                }}
-                            />
-                            <FormControlLabel
-                                control={<Checkbox />}
-                                label={<Typography fontSize='14px' fontWeight={400} color='#8C8C8C'>Randomize the order of questions</Typography>}
-                                labelPlacement="end"
-                            />
                         </Stack>
                     </Box>
                 </SortableContext>
             </DndContext>
-            <div style={{
-                width: 800,
-                height: 1,
-                backgroundColor: 'lightgray',
-                marginLeft: 20,
-                marginTop: 30
-            }} />
         </Box>
     );
-
 }
 
 interface ImageTableProps {
@@ -701,13 +701,13 @@ export function FormSorteableWithMultipleImg({
 
     const handleImageUpload = (file: File) => {
         if (!file) return;
-    
+
         const newImage = {
             file,
             error: file.size > 5 * 1024 * 1024, // Archivo mayor a 5 MB
             time: 0, // Agregar la propiedad 'time' con un valor inicial
         };
-    
+
         setUploadedImages((prevImages) => {
             // Limitar a un máximo de 3 imágenes
             const updatedImages = [...prevImages, newImage];

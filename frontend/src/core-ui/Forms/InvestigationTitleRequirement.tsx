@@ -4,8 +4,8 @@ import { grey } from "@mui/material/colors";
 
 interface InvestigationTitleRequirementProps {
   title: string;
-  required: boolean; // Estado del switch
-  onToggleRequired: (checked: boolean) => void;
+  required?: boolean;
+  onToggleRequired?: (checked: boolean) => void;
 }
 
 export default function InvestigationTitleRequirement({
@@ -41,7 +41,7 @@ export default function InvestigationTitleRequirement({
             control={
               <AntSwitch
                 checked={required}
-                onChange={(event) => onToggleRequired(event.target.checked)}
+                onChange={(event) => onToggleRequired && onToggleRequired(event.target.checked)}
               />
             }
             label={
