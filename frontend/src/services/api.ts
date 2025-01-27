@@ -1,21 +1,12 @@
 import axios from 'axios';
 import { FormDataState, ResearchResponse } from '../types/types';
-import { apiConfig } from '../config/apiConfig';
-
-// Configuración base para Axios, usando el `ApiUrl` del archivo de configuración
-const api = axios.create({
-  baseURL: apiConfig.ApiUrl, // Carga dinámica de la URL base
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+import { api } from './axiosConfig';
 
 // Función para logout
 export const logout = async (token: string): Promise<void> => {
   if (!token) {
     throw new Error('No access token found');
   }
-  console.log('API: ', api);
 
   await api.post('/logout', {}, {
     headers: {
