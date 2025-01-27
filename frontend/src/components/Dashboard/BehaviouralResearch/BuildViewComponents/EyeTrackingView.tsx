@@ -4,9 +4,39 @@ import { grey } from '@mui/material/colors'
 import { useState } from 'react'
 import { TechniqueDescription } from '../../../../core-ui/Forms/TechniqueDescription'
 import InvestigationTitleRequirement from '../../../../core-ui/Forms/InvestigationTitleRequirement'
+import { useEyeTrackingStore } from '../../../../store/useEyeTrackingStore'
+import { TaskConfigurationProps } from '../../../../types/types'
 
 export default function EyeTrackingView() {
-  const [randomize, setRandomize] = useState<boolean>(true);
+  const {
+    required,
+    setRequired,
+    taskInstruction,
+    setTaskInstruction,
+    uploadedFiles,
+    addUploadedFiles,
+    removeUploadedFile,
+    randomize,
+    setRandomize,
+    isShelfTask,
+    setIsShelfTask,
+    resizeImage,
+    setResizeImage,
+    useEyeTrackingDevice,
+    setUseEyeTrackingDevice,
+    useWebcamBasedTracking,
+    setUseWebcamBasedTracking,
+    enableClickMeasurement,
+    setEnableClickMeasurement,
+    finishOnAnyKey,
+    setFinishOnAnyKey,
+    holdDeviceVertical,
+    setHoldDeviceVertical,
+    holdDeviceHorizontal,
+    setHoldDeviceHorizontal,
+    displayTime, 
+    setDisplayTime,
+  } = useEyeTrackingStore();
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRandomize(event.target.checked);
@@ -23,6 +53,8 @@ export default function EyeTrackingView() {
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, backgroundColor: 'white', borderRadius: 2, pb: 2 }}>
         <InvestigationTitleRequirement
           title='6.0.- Cognitive task'
+          required={required}
+          onToggleRequired={() => setRequired(!required)}
         />
         <Box sx={{
           display: 'flex',
@@ -43,31 +75,34 @@ export default function EyeTrackingView() {
             <Typography mb={1}>Instruction for the task <span>_italic_ **bold** - bullet list 1. ordered list</span></Typography>
             <TextField
               placeholder="Where would you click to..."
+              value={taskInstruction}
+              onChange={(e) => setTaskInstruction(e.target.value)}
               variant="outlined"
               InputProps={{
                 style: {
-                  borderRadius: '8px',
+                  borderRadius: "8px",
                   borderColor: grey[300],
                   fontSize: 14,
                   color: grey[600],
                 },
               }}
               sx={{
-                maxWidth: '100%',
-                bgcolor: 'white',
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
+                maxWidth: "100%",
+                bgcolor: "white",
+                "& .MuiOutlinedInput-root": {
+                  "& fieldset": {
                     borderColor: grey[300],
                   },
-                  '&:hover fieldset': {
+                  "&:hover fieldset": {
                     borderColor: grey[400],
                   },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#6200EE',
+                  "&.Mui-focused fieldset": {
+                    borderColor: "#6200EE",
                   },
                 },
               }}
             />
+
           </Box>
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: 2 }}>
@@ -84,11 +119,20 @@ export default function EyeTrackingView() {
             <Box p={2}>
               <Typography fontSize={14} fontWeight={700} color='#262626'>Eye Tracking Stimulation</Typography>
               <Typography fontSize={14} fontWeight={400} color='#8C8C8C'>Please, upload the image or video to be tested with eye tracking. The duration</Typography>
-              <FileUpload title={''} accept={{}} maxSize={0} onUpload={function (): void {
-                throw new Error('Function not implemented.')
-              }} uploadedFiles={[]} removeFile={function (): void {
-                throw new Error('Function not implemented.')
-              }} />
+              <FileUpload
+                accept={{ "image/*": [".jpg", ".jpeg", ".png", ".gif"], "video/*": [".mp4"] }}
+                maxSize={30 * 1024 * 1024}
+                onUpload={(files) =>
+                  addUploadedFiles(
+                    files.map((file) => ({
+                      fileName: file.name,
+                      fileSize: file.size,
+                    }))
+                  )
+                }
+                uploadedFiles={uploadedFiles}
+                removeFile={removeUploadedFile}
+              />
             </Box>
             <Box sx={{
               ml: 2,
@@ -121,7 +165,27 @@ export default function EyeTrackingView() {
               />
             </Box>
           </Box>
-          <TaskConfiguration showShelfConfiguration={randomize} />
+          <TaskConfiguration
+            showShelfConfiguration={randomize}
+            isShelfTask={isShelfTask}
+            setIsShelfTask={setIsShelfTask}
+            resizeImage={resizeImage}
+            setResizeImage={setResizeImage}
+            useEyeTrackingDevice={useEyeTrackingDevice}
+            setUseEyeTrackingDevice={setUseEyeTrackingDevice}
+            useWebcamBasedTracking={useWebcamBasedTracking}
+            setUseWebcamBasedTracking={setUseWebcamBasedTracking}
+            enableClickMeasurement={enableClickMeasurement}
+            setEnableClickMeasurement={setEnableClickMeasurement}
+            finishOnAnyKey={finishOnAnyKey}
+            setFinishOnAnyKey={setFinishOnAnyKey}
+            holdDeviceVertical={holdDeviceVertical}
+            setHoldDeviceVertical={setHoldDeviceVertical}
+            holdDeviceHorizontal={holdDeviceHorizontal}
+            setHoldDeviceHorizontal={setHoldDeviceHorizontal}
+            displayTime={displayTime}
+            setDisplayTime={setDisplayTime}
+          />
         </Box>
       </Box>
       <TechniqueDescription />
@@ -129,14 +193,29 @@ export default function EyeTrackingView() {
   )
 }
 
-interface TaskConfigurationProps {
-  showShelfConfiguration: boolean;
-}
-
-export const TaskConfiguration: React.FC<TaskConfigurationProps> = ({ showShelfConfiguration }) => {
+export const TaskConfiguration: React.FC<TaskConfigurationProps> = ({
+  showShelfConfiguration,
+  isShelfTask,
+  setIsShelfTask,
+  resizeImage,
+  setResizeImage,
+  useEyeTrackingDevice,
+  setUseEyeTrackingDevice,
+  useWebcamBasedTracking,
+  setUseWebcamBasedTracking,
+  enableClickMeasurement,
+  setEnableClickMeasurement,
+  finishOnAnyKey,
+  setFinishOnAnyKey,
+  holdDeviceVertical,
+  setHoldDeviceVertical,
+  holdDeviceHorizontal,
+  setHoldDeviceHorizontal,
+  displayTime,
+  setDisplayTime
+}) => {
   const [shelfCount, setShelfCount] = useState(2);
   const [itemsPerShelf, setItemsPerShelf] = useState(5);
-  const [displayTime, setDisplayTime] = useState<string>('10 secs');
 
   const handleDisplayTimeChange = (
     _event: React.MouseEvent<HTMLElement>,
@@ -158,16 +237,89 @@ export const TaskConfiguration: React.FC<TaskConfigurationProps> = ({ showShelfC
         </Typography>
 
         {/* Checkbox options */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, m: 0, p: 0 }}>
-          <FormControlLabel control={<Checkbox defaultChecked sx={{ height: 16 }} />} label={<Typography fontSize={14}>This is a Shelf Task</Typography>} />
-          <FormControlLabel control={<Checkbox defaultChecked sx={{ height: 16 }} />} label={<Typography fontSize={14}>Resize image to fit screen</Typography>} />
-          <FormControlLabel control={<Checkbox sx={{ height: 16 }} />} label={<Typography fontSize={14}>Eye tracking Device (Soon)</Typography>} />
-          <FormControlLabel control={<Checkbox defaultChecked sx={{ height: 16 }} />} label={<Typography fontSize={14}>Eye tracking (Webcam based)</Typography>} />
-          <FormControlLabel control={<Checkbox defaultChecked sx={{ height: 16 }} />} label={<Typography fontSize={14}>Click measurement</Typography>} />
-          <FormControlLabel control={<Checkbox sx={{ height: 16 }} />} label={<Typography fontSize={14}>Finish by pressing any key or mouse click</Typography>} />
-          <FormControlLabel control={<Checkbox sx={{ height: 16 }} />} label={<Typography fontSize={14}>Hold device in vertical position while testing</Typography>} />
-          <FormControlLabel control={<Checkbox sx={{ height: 16 }} />} label={<Typography fontSize={14}>Hold device in horizontal position while testing</Typography>} />
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 1, m: 0, p: 0 }}>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={isShelfTask}
+                onChange={(e) => setIsShelfTask(e.target.checked)}
+                sx={{ height: 16 }}
+              />
+            }
+            label={<Typography fontSize={14}>This is a Shelf Task</Typography>}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={resizeImage}
+                onChange={(e) => setResizeImage(e.target.checked)}
+                sx={{ height: 16 }}
+              />
+            }
+            label={<Typography fontSize={14}>Resize image to fit screen</Typography>}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={useEyeTrackingDevice}
+                onChange={(e) => setUseEyeTrackingDevice(e.target.checked)}
+                sx={{ height: 16 }}
+              />
+            }
+            label={<Typography fontSize={14}>Eye tracking Device (Soon)</Typography>}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={useWebcamBasedTracking}
+                onChange={(e) => setUseWebcamBasedTracking(e.target.checked)}
+                sx={{ height: 16 }}
+              />
+            }
+            label={<Typography fontSize={14}>Eye tracking (Webcam based)</Typography>}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={enableClickMeasurement}
+                onChange={(e) => setEnableClickMeasurement(e.target.checked)}
+                sx={{ height: 16 }}
+              />
+            }
+            label={<Typography fontSize={14}>Click measurement</Typography>}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={finishOnAnyKey}
+                onChange={(e) => setFinishOnAnyKey(e.target.checked)}
+                sx={{ height: 16 }}
+              />
+            }
+            label={<Typography fontSize={14}>Finish by pressing any key or mouse click</Typography>}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={holdDeviceVertical}
+                onChange={(e) => setHoldDeviceVertical(e.target.checked)}
+                sx={{ height: 16 }}
+              />
+            }
+            label={<Typography fontSize={14}>Hold device in vertical position while testing</Typography>}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={holdDeviceHorizontal}
+                onChange={(e) => setHoldDeviceHorizontal(e.target.checked)}
+                sx={{ height: 16 }}
+              />
+            }
+            label={<Typography fontSize={14}>Hold device in horizontal position while testing</Typography>}
+          />
         </Box>
+
 
         {/* Priming display time options */}
         <Box sx={{
@@ -194,39 +346,39 @@ export const TaskConfiguration: React.FC<TaskConfigurationProps> = ({ showShelfC
 
       {/* Shelf configuration section */}
       {showShelfConfiguration && (
-      <Box sx={{ p: 2, bgcolor: '#e9f0fc' }}>
-        <Typography fontWeight={700} sx={{ mb: 1, color: '#262626' }}>
-          Shelf configuration
-        </Typography>
-        <Box sx={{ width: '100%', height: 150, bgcolor: '#E0E0E0', display: 'flex', justifyContent: 'center', alignItems: 'center', border: '1px solid black' }}>
-          <Box sx={{ width: 60, height: 60, bgcolor: '#B0BEC5', borderRadius: 1 }} />
-        </Box>
-
-        {/* Select controls */}
-        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', mt: 2, gap: 1 }}>
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', gap: 1, width: '100%' }}>
-            <Typography color='#262626' fontWeight={400} fontSize={14} width='100%' lineHeight='22px'>Number of Shelfs</Typography>
-            <FormControl variant="outlined" sx={{ width: '100%' }}>
-              <Select value={shelfCount} onChange={(e) => setShelfCount(e.target.value as number)}>
-                {[1, 2, 3, 4].map((count) => (
-                  <MenuItem key={count} value={count}>{count}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+        <Box sx={{ p: 2, bgcolor: '#e9f0fc' }}>
+          <Typography fontWeight={700} sx={{ mb: 1, color: '#262626' }}>
+            Shelf configuration
+          </Typography>
+          <Box sx={{ width: '100%', height: 150, bgcolor: '#E0E0E0', display: 'flex', justifyContent: 'center', alignItems: 'center', border: '1px solid black' }}>
+            <Box sx={{ width: 60, height: 60, bgcolor: '#B0BEC5', borderRadius: 1 }} />
           </Box>
 
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', gap: 1, width: '100%' }}>
-            <Typography color='#262626' fontWeight={400} fontSize={14} lineHeight='22px'>Items per Shelf</Typography>
-            <FormControl variant="outlined" sx={{ width: '100%' }}>
-              <Select value={itemsPerShelf} onChange={(e) => setItemsPerShelf(e.target.value as number)}>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((count) => (
-                  <MenuItem key={count} value={count}>{count}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          {/* Select controls */}
+          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', mt: 2, gap: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', gap: 1, width: '100%' }}>
+              <Typography color='#262626' fontWeight={400} fontSize={14} width='100%' lineHeight='22px'>Number of Shelfs</Typography>
+              <FormControl variant="outlined" sx={{ width: '100%' }}>
+                <Select value={shelfCount} onChange={(e) => setShelfCount(e.target.value as number)}>
+                  {[1, 2, 3, 4].map((count) => (
+                    <MenuItem key={count} value={count}>{count}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+
+            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', gap: 1, width: '100%' }}>
+              <Typography color='#262626' fontWeight={400} fontSize={14} lineHeight='22px'>Items per Shelf</Typography>
+              <FormControl variant="outlined" sx={{ width: '100%' }}>
+                <Select value={itemsPerShelf} onChange={(e) => setItemsPerShelf(e.target.value as number)}>
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((count) => (
+                    <MenuItem key={count} value={count}>{count}</MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
           </Box>
         </Box>
-      </Box>
       )}
     </Box>
   );

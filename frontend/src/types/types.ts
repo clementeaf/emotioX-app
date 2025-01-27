@@ -224,3 +224,25 @@ export interface DeviceFrameProps {
   deviceFrameOptions?: string[];
   disabled: boolean;
 }
+
+export interface TaskConfigurationProps {
+  showShelfConfiguration: boolean;
+  isShelfTask: boolean;
+  setIsShelfTask: (value: boolean) => void;
+  resizeImage: boolean;
+  setResizeImage: (value: boolean) => void;
+  useEyeTrackingDevice: boolean;
+  setUseEyeTrackingDevice: (value: boolean) => void;
+  useWebcamBasedTracking: boolean;
+  setUseWebcamBasedTracking: (value: boolean) => void;
+  enableClickMeasurement: boolean;
+  setEnableClickMeasurement: (value: boolean) => void;
+  finishOnAnyKey: boolean;
+  setFinishOnAnyKey: (value: boolean) => void;
+  holdDeviceVertical: boolean;
+  setHoldDeviceVertical: (value: boolean) => void;
+  holdDeviceHorizontal: boolean;
+  setHoldDeviceHorizontal: (value: boolean) => void;
+  displayTime: string;
+  setDisplayTime: (value: string) => void;
+}
