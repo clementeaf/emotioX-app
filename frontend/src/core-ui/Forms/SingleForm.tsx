@@ -106,6 +106,13 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
                     disabled={!isVisible}
                 />
             )}
+            <div style={{
+                width: '100%',
+                height: 1,
+                backgroundColor: 'lightgray',
+                marginTop: 30,
+                marginBottom: 30
+            }}/>
         </Box>
     );
 };
