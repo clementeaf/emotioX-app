@@ -55,7 +55,7 @@ export function ImageUpload({ handleImageUpload }: Omit<ImageUploadProps, "id">)
   
   
 
-export function ImageUploadV2({ handleImageUpload }: ImageUploadV2Props) {
+export function ImageUploadV2({ handleImageUpload, disabled }: ImageUploadV2Props) {
     const { getRootProps, getInputProps } = useDropzone({
         accept: {
             'image/jpeg': [],
@@ -86,7 +86,7 @@ export function ImageUploadV2({ handleImageUpload }: ImageUploadV2Props) {
                 '&:hover': { borderColor: grey[500] },
             }}
         >
-            <input {...getInputProps()} />
+            <input disabled={!disabled} {...getInputProps()} />
             <Icon sx={{ fontSize: 40, color: grey[600], mb: 2 }}>
                 <UploadOutlinedIcon />
             </Icon>

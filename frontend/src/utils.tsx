@@ -71,21 +71,43 @@ export const initialItems = [
 
 export const validateStep = (currentStep: number, formData: FormDataState) => {
     const validations = [
-      {
-        isValid: !!formData.researchName && !!formData.enterpriseName,
-        error: 'Research Name and Enterprise Name are required.',
-      },
-      {
-        isValid: !!formData.selectedResearchType,
-        error: 'Research Type is required.',
-      },
-      {
-        isValid: true,
-        error: undefined,
-      },
+        {
+            isValid: !!formData.researchName && !!formData.enterpriseName,
+            error: 'Research Name and Enterprise Name are required.',
+        },
+        {
+            isValid: !!formData.selectedResearchType,
+            error: 'Research Type is required.',
+        },
+        {
+            isValid: true,
+            error: undefined,
+        },
     ];
-  
+
     return validations[currentStep] || { isValid: false, error: 'Unknown validation step.' };
-  };
-  
-  
+};
+
+// Estilos memoizados
+export const typographyStyles = {
+    opacity: 0.45,
+    fontWeight: 400,
+    fontSize: 14,
+    lineHeight: '22px',
+    width: '100%',
+};
+
+export const containerStyles = {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    gap: 3,
+};
+
+export const formContainerStyles = {
+    display: 'flex',
+    width: '845px',
+    bgcolor: 'white',
+    flexDirection: 'column',
+    pb: 2,
+};

@@ -8,19 +8,26 @@ import {
     Select,
     MenuItem,
     IconButton,
-    SelectChangeEvent,
-    FormControl,
     Stack,
+    FormControl,
+    TableContainer,
+    Table,
+    TableHead,
+    TableRow,
+    TableCell,
+    TableBody,
+    SelectChangeEvent,
     Checkbox,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { AntSwitch } from "../Switch";
 import { useCognitiveTaskStore, Choice } from "../../store/useCognitiveTaskStore";
+import { ImageUploadV2 } from "../FIleUpload/ImageUpload";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
+import { DeviceFrameProps, LinearScaleProps, SingleFormProps } from "../../types/types";
 
-interface SingleFormProps {
-    questionId: number;
-}
-
+/** Componente Principal */
 export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
     const {
         questions,
@@ -29,9 +36,6 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
         updateQuestionText,
         updateUploadedFile,
         updateSelectedFrame,
-        addChoice,
-        removeChoice,
-        updateChoice,
         setChoiceType,
     } = useCognitiveTaskStore((state) => state);
 
@@ -44,22 +48,14 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
         required,
         placeholder,
         choiceType,
-        choices,
         fileUploadLabel,
         deviceFrameOptions,
         selectedFrame,
         uploadedFile,
     } = question;
 
-    // Handlers
-    const handleAddChoice = () => addChoice(questionId);
-    const handleDeleteChoice = (choiceId: number) => removeChoice(questionId, choiceId);
-    const handleChoiceChange = (choiceId: number, key: keyof Choice, value: string) => {
-        updateChoice(questionId, choiceId, key, value);
-    };
-
-    const handleOptionChange = (event: SelectChangeEvent<"singleChoice" | "multipleChoice" | "linearScale">) => {
-        setChoiceType(questionId, event.target.value as "singleChoice" | "multipleChoice" | "linearScale");
+    const handleOptionChange = (event: SelectChangeEvent) => {
+        setChoiceType(questionId, event.target.value as any);
     };
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,243 +64,329 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
         }
     };
 
-    const handleFrameChange = (event: SelectChangeEvent<string>) => {
-        updateSelectedFrame(questionId, event.target.value);
+    const handleFrameChange = (event: SelectChangeEvent) => {
+        const value = event.target.value;
+        if (deviceFrameOptions?.includes(value)) {
+            updateSelectedFrame(questionId, value);
+        }
     };
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, maxWidth: 800 }}>
-            {/* Encabezado */}
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-                    {questionText}
-                </Typography>
-                <FormControlLabel
-                    control={
-                        <AntSwitch
-                            checked={isVisible}
-                            onChange={() => toggleVisibility(questionId)}
-                        />
-                    }
-                    label="Show Conditionality"
-                />
-            </Box>
+            <Header
+                questionText={questionText}
+                isVisible={isVisible}
+                toggleVisibility={() => toggleVisibility(questionId)}
+            />
+            <MainInputSection
+                placeholder={placeholder}
+                inputText={question.inputText || ""}
+                updateQuestionText={(text) => updateQuestionText(questionId, text)}
+                choiceType={choiceType}
+                handleOptionChange={handleOptionChange}
+                required={required}
+                disabled={!isVisible}
+                setQuestionRequired={(value) => setQuestionRequired(questionId, value)}
+            />
 
-            {/* Campo de entrada principal */}
-            <Box sx={{ display: "flex", gap: 2 }}>
-                <TextField
-                    fullWidth
-                    variant="outlined"
-                    placeholder={placeholder}
-                    value={question.inputText || ""}
-                    onChange={(e) => updateQuestionText(questionId, e.target.value)}
-                />
-                <Select
-                    value={choiceType}
-                    onChange={handleOptionChange}
-                    sx={{ minWidth: 180 }}
-                >
-                    <MenuItem value="singleChoice">Single Choice</MenuItem>
-                    <MenuItem value="multipleChoice">Multiple Choice</MenuItem>
-                    <MenuItem value="linearScale">Linear Scale</MenuItem>
-                </Select>
-                <FormControlLabel
-                    control={
-                        <AntSwitch
-                            checked={required}
-                            onChange={(e) => setQuestionRequired(questionId, e.target.checked)}
-                        />
-                    }
-                    label="Required"
-                />
-            </Box>
-
-            {choiceType === "singleChoice" && (
-                <Box sx={{ mt: 3 }}>
-                    {choices.map((choice) => (
-                        <SimpleItem
-                            key={choice.id}
-                            item={choice}
-                            onDelete={handleDeleteChoice}
-                            onChange={handleChoiceChange}
-                        />
-                    ))}
-                    <Button variant="contained" onClick={handleAddChoice} sx={{ mt: 2 }}>
-                        Add Option
-                    </Button>
-                </Box>
+            {choiceType === "multipleImages" ? (
+                <ImageUploadManager disabled={isVisible} />
+            ) : (
+                <QuestionForm choiceType={choiceType} questionId={questionId} disabled={!isVisible} />
             )}
 
-            {choiceType === "multipleChoice" && (
-                <Box sx={{ mt: 3 }}>
-                    {choices.map((choice) => (
-                        <SimpleItem
-                            key={choice.id}
-                            item={choice}
-                            onDelete={handleDeleteChoice}
-                            onChange={handleChoiceChange}
-                        />
-                    ))}
-                    <Button variant="contained" onClick={handleAddChoice} sx={{ mt: 2 }}>
-                        Add Option
-                    </Button>
-                </Box>
+            {fileUploadLabel && choiceType !== "multipleImages" && (
+                <UploadSection
+                    fileUploadLabel={fileUploadLabel}
+                    uploadedFile={uploadedFile}
+                    handleFileUpload={handleFileUpload}
+                    selectedFrame={selectedFrame}
+                    deviceFrameOptions={deviceFrameOptions}
+                    handleFrameChange={handleFrameChange}
+                    disabled={!isVisible}
+                />
             )}
-
-            {/* Opciones dinámicas (solo si es Linear Scale) */}
-            {choiceType === "linearScale" && (
-                <Box sx={{ mt: 3 }}>
-                    <LinearScaleForm
-                        question={questionText}
-                        isRequired={required}
-                        fileUploadLabel={fileUploadLabel}
-                        deviceFrameOptions={deviceFrameOptions}
-                    />
-                </Box>
-            )}
-
-            {/* Subida de archivo */}
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'start',
-                    gap: 2,
-                    p: 2,
-                    border: '1px solid #aaa',
-                    width: '100%',
-                    maxWidth: 775,
-                    height: 104,
-                    bgcolor: '#e9f0fc',
-                }}
-            >
-                <Typography>
-                    <strong>{required ? '*' : ''} Upload (optional):</strong>
-                </Typography>
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column'
-                }}>
-                    <Box sx={{
-                        height: '100%',
-                        maxHeight: 40,
-                        width: '100%',
-                        maxWidth: 148,
-                        backgroundColor: 'white',
-                        border: '1px solid lightgray',
-                        borderRadius: 1.5,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}>
-                        <Button
-                            variant='text'
-                            component="label"
-                            sx={{ textTransform: 'none', color: 'black' }}
-                        >
-                            {fileUploadLabel}
-                            <input
-                                type="file"
-                                hidden
-                                onChange={handleFileUpload}
-                            />
-                        </Button>
-                    </Box>
-                    {uploadedFile && (
-                        <Typography
-                            variant="body2"
-                            sx={{ color: 'green', mt: 1 }}
-                        >
-                            File uploaded: {uploadedFile.name}
-                        </Typography>
-                    )}
-                    <Typography variant="caption" sx={{ color: '#555', fontSize: 14, }}>
-                        Recommended resolution is 1000x1000px with file size
-                    </Typography>
-                </Box>
-                {/* Selección de marco del dispositivo */}
-                <Box sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                }}>
-                    <Typography >Device Frame</Typography>
-                    <FormControl>
-                        <Select
-                            value={selectedFrame}
-                            onChange={handleFrameChange}
-                            sx={{
-                                backgroundColor: 'white',
-                            }}
-                        >
-                            {deviceFrameOptions.map((option) => (
-                                <MenuItem key={option} value={option}>
-                                    {option}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-
-                </Box>
-            </Box>
-            <div style={{
-                width: 800,
-                height: 1,
-                backgroundColor: 'lightgray',
-                marginTop: 30,
-                marginBottom: 30
-            }} />
         </Box>
     );
 };
 
-interface SimpleItemProps {
-    item: Choice;
-    onDelete: (id: number) => void;
-    onChange: (id: number, key: keyof Choice, value: string) => void;
-}
+/** Subcomponentes */
+const Header: React.FC<{
+    questionText: string;
+    isVisible: boolean;
+    toggleVisibility: () => void;
+}> = ({ questionText, isVisible, toggleVisibility }) => (
+    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            {questionText}
+        </Typography>
+        <FormControlLabel
+            control={<AntSwitch checked={isVisible} onChange={toggleVisibility} />}
+            label="Show Conditionality"
+        />
+    </Box>
+);
 
-const SimpleItem: React.FC<SimpleItemProps> = ({ item, onDelete, onChange }) => {
+const MainInputSection: React.FC<{
+    placeholder: string;
+    inputText: string;
+    updateQuestionText: (text: string) => void;
+    choiceType: string;
+    handleOptionChange: (event: SelectChangeEvent) => void;
+    required: boolean;
+    setQuestionRequired: (value: boolean) => void;
+    disabled: boolean;
+}> = ({ placeholder, inputText, updateQuestionText, choiceType, handleOptionChange, required, setQuestionRequired, disabled }) => {
+    const options = [
+        { value: "singleChoice", label: "Single Choice" },
+        { value: "multipleChoice", label: "Multiple Choice" },
+        { value: "linearScale", label: "Linear Scale" },
+        { value: "multipleImages", label: "Multiple Images" },
+    ];
+    return (
+        <Stack direction="row" spacing={2}>
+            <TextField
+                fullWidth
+                variant="outlined"
+                placeholder={placeholder}
+                value={inputText}
+                onChange={(e) => updateQuestionText(e.target.value)}
+                disabled={disabled}
+            />
+            <Select
+                value={choiceType}
+                onChange={handleOptionChange}
+                sx={{ minWidth: 180 }}
+                disabled={disabled}
+            >
+                {options.map(({value, label}) => (
+                    <MenuItem key={value} value={value}>
+                        {label}
+                    </MenuItem>
+                ))}
+            </Select>
+            <FormControlLabel
+                control={
+                    <AntSwitch
+                        checked={required}
+                        onChange={(e) => setQuestionRequired(e.target.checked)}
+                        disabled={disabled}
+                    />
+                }
+                label="Required"
+            />
+        </Stack>
+    )
+};
+
+const UploadSection: React.FC<{
+    fileUploadLabel: string;
+    uploadedFile?: File | null;
+    handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    selectedFrame?: string;
+    deviceFrameOptions?: string[];
+    handleFrameChange: (event: SelectChangeEvent) => void;
+    disabled: boolean;
+}> = ({ fileUploadLabel, uploadedFile, handleFileUpload, selectedFrame, deviceFrameOptions, handleFrameChange, disabled }) => (
+    <Box
+        sx={{
+            display: "flex",
+            alignItems: "start",
+            gap: 2,
+            p: 2,
+            borderRadius: 2,
+            width: "100%",
+            maxWidth: 775,
+            height: 104,
+            bgcolor: "#e9f0fc",
+        }}
+    >
+        <Typography color={disabled ? "#8C8C8C" : ''}>
+            <strong><span style={{ color: 'red', marginRight: 8 }}>*</span>Upload (optional):</strong>
+        </Typography>
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+            <Button
+                variant="text"
+                component="label"
+                sx={{ textTransform: "none", color: "black", backgroundColor: 'white', border: '1px solid lightgrey', px: 2, py: 1.5, maxWidth: 148 }}
+                disabled={disabled}
+            >
+                {fileUploadLabel}
+                <input type="file" hidden onChange={handleFileUpload} disabled={disabled} />
+            </Button>
+            <span style={{
+                marginTop: 4,
+                fontSize: '14px',
+                color: '#8C8C8C',
+                fontFamily: 'Arial'
+            }}>Recommended resolution is 1000*1000px with file size</span>
+            {uploadedFile && (
+                <Typography variant="body2" sx={{ color: "green", mt: 1 }}>
+                    File uploaded: {uploadedFile.name}
+                </Typography>
+            )}
+        </Box>
+        <DeviceFrame
+            selectedFrame={selectedFrame}
+            handleFrameChange={handleFrameChange}
+            deviceFrameOptions={deviceFrameOptions}
+            disabled={disabled}
+        />
+    </Box>
+);
+
+const DeviceFrame: React.FC<DeviceFrameProps> = ({
+    selectedFrame,
+    handleFrameChange,
+    deviceFrameOptions,
+    disabled
+}) => {
     return (
         <Box
             sx={{
                 display: "flex",
                 alignItems: "center",
                 gap: 2,
-                mb: 2,
-                p: 1,
-                border: "1px solid #ccc",
-                borderRadius: 1,
             }}
         >
-            <TextField
-                value={item.textInput}
-                onChange={(e) => onChange(item.id, "textInput", e.target.value)}
-                fullWidth
-            />
-            <Select
-                value={["qualify", "disqualify"].includes(item.qualifier) ? item.qualifier : "qualify"}
-                onChange={(e) => onChange(item.id, "qualifier", e.target.value)}
-                sx={{ minWidth: 180 }}
-            >
-                <MenuItem value="qualify">Qualify</MenuItem>
-                <MenuItem value="disqualify">Disqualify</MenuItem>
-            </Select>
-
-            <IconButton onClick={() => onDelete(item.id)} color="error">
-                <DeleteIcon />
-            </IconButton>
+            <Typography fontWeight={500} color={disabled ? "#8C8C8C" : ''}>Device Frame</Typography>
+            <FormControl>
+                <Select
+                    value={selectedFrame || ""}
+                    onChange={handleFrameChange}
+                    sx={{
+                        backgroundColor: "white",
+                        height: 30,
+                    }}
+                    disabled={disabled}
+                >
+                    {deviceFrameOptions?.map((option) => (
+                        <MenuItem key={option} value={option}>
+                            {option}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
         </Box>
     );
 };
 
+const ImageTable: React.FC<{
+    uploadedImages: { file: File; error: boolean; time: number }[];
+    onDelete: (index: number) => void;
+    onIncreaseTime: (index: number) => void;
+    onDecreaseTime: (index: number) => void;
+    disabled?: boolean;
+}> = ({ uploadedImages, onDelete, onIncreaseTime, onDecreaseTime, disabled }) => (
+    <TableContainer sx={{
+        width: 500,
+    }}>
+        <Table>
+            <TableHead>
+                <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell align="center">Time</TableCell>
+                    <TableCell align="center">Actions</TableCell>
+                </TableRow>
+            </TableHead>
+            <TableBody>
+                {uploadedImages.map((img, index) => (
+                    <TableRow key={index}>
+                        <TableCell>{img.file.name}</TableCell>
+                        <TableCell align="center">
+                            <Stack direction="row" spacing={1} alignItems="center">
+                                <IconButton disabled={disabled} onClick={() => onDecreaseTime(index)} size="small">
+                                    <RemoveIcon />
+                                </IconButton>
+                                {img.time}s
+                                <IconButton disabled={disabled} onClick={() => onIncreaseTime(index)} size="small">
+                                    <AddIcon />
+                                </IconButton>
+                            </Stack>
+                        </TableCell>
+                        <TableCell align="center">
+                            <Button onClick={() => onDelete(index)}>Delete</Button>
+                        </TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
+    </TableContainer>
+);
 
-interface LinearScaleProps {
-    question: string;
-    isRequired?: boolean;
-    fileUploadLabel?: string;
-    deviceFrameOptions?: string[];
+const QuestionForm: React.FC<{ choiceType: string; questionId: number, disabled: boolean }> = ({ choiceType, questionId, disabled }) => {
+    const { questions, addChoice, removeChoice, updateChoice } = useCognitiveTaskStore((state) => state);
+    const question = questions.find((q) => q.id === questionId);
+    if (!question) return null;
+
+    if (choiceType === "multipleChoice") {
+        return (
+            <Stack spacing={2} sx={{ mt: 3 }}>
+                {question.choices.map((choice) => (
+                    <SimpleItem
+                        key={choice.id}
+                        item={choice}
+                        disabled={disabled}
+                        onDelete={(id) => removeChoice(questionId, id)}
+                        onChange={(id, key, value) => updateChoice(questionId, id, key, value)}
+                    />
+                ))}
+                {choiceType === "multipleChoice" && (
+                    <Button variant="contained" sx={{ width: '100%', maxWidth: 150 }} onClick={() => addChoice(questionId)} disabled={disabled}>
+                        Add Option
+                    </Button>
+                )}
+            </Stack>
+        );
+    }
+
+
+    if (choiceType === "linearScale") {
+        return (
+            <Box sx={{ mt: 3 }}>
+                <LinearScaleForm
+                    question={question.question}
+                    isRequired={question.required}
+                    fileUploadLabel={question.fileUploadLabel}
+                    deviceFrameOptions={question.deviceFrameOptions}
+                    disabled={disabled}
+                />
+            </Box>
+        );
+    }
+
+    return null;
 };
 
-const LinearScaleForm: React.FC<LinearScaleProps> = () => {
+export const SimpleItem: React.FC<{
+    item: Choice;
+    onDelete: (id: number) => void;
+    onChange: (id: number, key: keyof Choice, value: string) => void;
+    disabled: boolean;
+}> = ({ item, onDelete, onChange, disabled }) => (
+    <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <TextField
+            value={item.textInput}
+            onChange={(e) => onChange(item.id, "textInput", e.target.value)}
+            fullWidth
+            disabled={disabled}
+        />
+        <Select
+            value={item.qualifier}
+            onChange={(e) => onChange(item.id, "qualifier", e.target.value)}
+            sx={{ minWidth: 180 }}
+            disabled={disabled}
+        >
+            <MenuItem value="Qualify">Qualify</MenuItem>
+            <MenuItem value="Disqualify">Disqualify</MenuItem>
+        </Select>
+        <IconButton onClick={() => onDelete(item.id)} color="error" disabled={disabled}>
+            <DeleteIcon />
+        </IconButton>
+    </Stack>
+);
+
+const LinearScaleForm: React.FC<LinearScaleProps> = ({ disabled }) => {
     const [startValue, setStartValue] = useState(1);
 
     return (
@@ -313,12 +395,10 @@ const LinearScaleForm: React.FC<LinearScaleProps> = () => {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 2,
-                p: 3,
                 maxWidth: 800,
                 margin: 'auto',
             }}
         >
-
             {/* Linear scale inputs */}
             <Stack direction="column" spacing={2} width='100%' alignItems="start">
                 <Typography fontSize={14} fontWeight={400} color='#8C8C8C'>Choices (Press ENTER for new line or paste a list)</Typography>
@@ -331,6 +411,7 @@ const LinearScaleForm: React.FC<LinearScaleProps> = () => {
                         <TextField
                             type="number"
                             value={startValue}
+                            disabled={disabled}
                             onChange={(e) => setStartValue(Number(e.target.value))}
                             sx={{
                                 width: 65,
@@ -340,6 +421,7 @@ const LinearScaleForm: React.FC<LinearScaleProps> = () => {
                         <TextField
                             type="text"
                             value={startValue}
+                            disabled={disabled}
                             onChange={(e) => setStartValue(Number(e.target.value))}
                             fullWidth
                             placeholder="Start label (optional)"
@@ -353,6 +435,7 @@ const LinearScaleForm: React.FC<LinearScaleProps> = () => {
                         </Typography>
                         <TextField
                             type="number"
+                            disabled={disabled}
                             value={startValue}
                             onChange={(e) => setStartValue(Number(e.target.value))}
                             sx={{
@@ -363,6 +446,7 @@ const LinearScaleForm: React.FC<LinearScaleProps> = () => {
                         <TextField
                             type="text"
                             value={startValue}
+                            disabled={disabled}
                             onChange={(e) => setStartValue(Number(e.target.value))}
                             fullWidth
                             placeholder="End label (optional)"
@@ -374,10 +458,12 @@ const LinearScaleForm: React.FC<LinearScaleProps> = () => {
             {/* Checkboxes adicionales */}
             <Stack spacing={1}>
                 <FormControlLabel
+                    disabled={disabled}
                     control={<Checkbox />}
                     label={<Typography fontSize="14px">Show “Other” option</Typography>}
                 />
                 <FormControlLabel
+                    disabled={disabled}
                     control={<Checkbox />}
                     label={<Typography fontSize="14px">Randomize the order of questions</Typography>}
                 />
@@ -390,5 +476,47 @@ const LinearScaleForm: React.FC<LinearScaleProps> = () => {
                 marginTop: 30
             }} />
         </Box>
+    );
+};
+
+const ImageUploadManager = ({ disabled }: { disabled: boolean }) => {
+    const [uploadedImages, setUploadedImages] = useState<
+        { file: File; error: boolean; time: number }[]
+    >([]);
+
+    const handleImageUpload = (file: File) => {
+        const newImage = {
+            file,
+            error: file.size > 5 * 1024 * 1024,
+            time: 0,
+        };
+        setUploadedImages((prev) => [...prev, newImage].slice(0, 3));
+    };
+
+    const removeImage = (index: number) => setUploadedImages((prev) => prev.filter((_, i) => i !== index));
+
+    const adjustTime = (index: number, delta: number) => {
+        setUploadedImages((prev) =>
+            prev.map((img, i) => (i === index ? { ...img, time: Math.max(0, img.time + delta) } : img))
+        );
+    };
+
+    return (
+        <Stack sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            width: '100%',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start'
+        }}>
+            <ImageUploadV2 disabled={disabled} handleImageUpload={handleImageUpload} />
+            <ImageTable
+                uploadedImages={uploadedImages}
+                disabled={disabled}
+                onDelete={removeImage}
+                onIncreaseTime={(index) => adjustTime(index, 1)}
+                onDecreaseTime={(index) => adjustTime(index, -1)}
+            />
+        </Stack>
     );
 };

@@ -1,3 +1,5 @@
+import { SelectChangeEvent } from "@mui/material";
+
 export interface ResearchState {
   // Estado general del formulario
   step: number; // Paso actual del formulario
@@ -110,6 +112,7 @@ export interface ImageUploadProps {
 }
 
 export interface ImageUploadV2Props {
+  disabled?: boolean;
   handleImageUpload: (file: File) => void;
 };
 
@@ -202,3 +205,22 @@ export interface ResearchResponse {
     _id: string;
   };
 };
+
+export interface SingleFormProps {
+  questionId: number;
+}
+
+export interface LinearScaleProps {
+    question: string;
+    isRequired?: boolean;
+    fileUploadLabel?: string;
+    deviceFrameOptions?: string[];
+    disabled?: boolean;
+};
+
+export interface DeviceFrameProps {
+  selectedFrame?: string;
+  handleFrameChange: (event: SelectChangeEvent<string>) => void;
+  deviceFrameOptions?: string[];
+  disabled: boolean;
+}
