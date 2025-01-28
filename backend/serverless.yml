@@ -75,6 +75,12 @@ custom:
     includeModules:
       forceExclude:
         - aws-sdk
+  exportOutputs:
+    fileName: outputs.json
+  exportEndpoints:
+    fileName: endpoints.json
+    include:
+      - 'httpApi'
   esbuild:
     bundle: true
     external:
@@ -84,6 +90,8 @@ custom:
 plugins:
   - serverless-esbuild
   - serverless-offline
+  - serverless-export-outputs
+  - serverless-plugin-export-endpoints
 
 functions:
   registerUser:
@@ -201,6 +209,7 @@ functions:
           path: /upload-image
           method: post
 
+  ### SCREENER ROUTES ###
   # Crear un Screener
   createScreener:
     handler: dist/controllers/screenerController.createScreener
@@ -232,6 +241,42 @@ functions:
       - httpApi:
           path: /screener/{screenerId}
           method: delete
+
+  
+  ### WELCOME SCREENER ROUTES ###
+  functions:
+  # Crear una WelcomeScreen
+  createWelcomeScreen:
+    handler: dist/controllers/welcomeScreenController.createWelcomeScreen
+    events:
+      - httpApi:
+          path: /welcome-screen
+          method: post
+
+  # Obtener una WelcomeScreen por el ID de investigación
+  getWelcomeScreenByResearch:
+    handler: dist/controllers/welcomeScreenController.getWelcomeScreenByResearch
+    events:
+      - httpApi:
+          path: /welcome-screen/{researchId}
+          method: get
+
+  # Actualizar una WelcomeScreen existente
+  updateWelcomeScreen:
+    handler: dist/controllers/welcomeScreenController.updateWelcomeScreen
+    events:
+      - httpApi:
+          path: /welcome-screen/{researchId}
+          method: put
+
+  # Eliminar una WelcomeScreen por su ID
+  deleteWelcomeScreen:
+    handler: dist/controllers/welcomeScreenController.deleteWelcomeScreen
+    events:
+      - httpApi:
+          path: /welcome-screen/{welcomeScreenId}
+          method: delete
+
 
 resources:
   Resources:
@@ -322,9 +367,16 @@ resources:
     ApiUrl:
       Description: "URL base de la API desplegada"
       Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+    WelcomeScreenApiUrl:
+      Description: "URL para las rutas de WelcomeScreen"
+      Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/welcome-screen"
+    ScreenerApiUrl:
+      Description: "URL para las rutas de Screener"
+      Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/screener"
     WebSocketApiEndpoint:
       Description: "WebSocket API Endpoint"
       Value: !Sub "wss://${WebSocketApi}.execute-api.${AWS::Region}.amazonaws.com/${self:provider.stage}"
     S3BucketName:
       Description: "Nombre del bucket de S3 para este entorno"
       Value: !Ref DeploymentBucket
+      

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "npx rimraf dist",
-    "build": "npm run clean && tsc",
+    "build": "npm run clean && tsc && serverless deploy --stage dev --force && serverless exportEndpoints",
     "deploy": "npm run build && sls deploy",
     "start:offline": "ts-node -r tsconfig-paths/register src/server.ts & sls offline"
   },
@@ -26,7 +26,9 @@
     "@types/yamljs": "^0.2.34",
     "rimraf": "^6.0.1",
     "serverless-dotenv-plugin": "^6.0.0",
+    "serverless-export-outputs": "^1.0.2",
     "serverless-offline": "^11.3.0",
+    "serverless-plugin-export-endpoints": "^0.1.3",
     "serverless-plugin-typescript": "^2.1.5",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",

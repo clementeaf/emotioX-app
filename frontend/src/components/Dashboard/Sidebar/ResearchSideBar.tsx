@@ -3,7 +3,7 @@ import { grey } from '@mui/material/colors';
 import { useSelectedResearchStore } from '../../../store/useSelectedResearchStore';
 import { researchStagesConfig } from '../../../config/researchConfig';
 import { useResultsStore } from '../../../store/useResultStore';
-import { submitScreenerData } from '../../../services/researchModulesApi';
+import { submitEyeTrackingData, submitScreenerData, submitThankYouScreenData, submitWelcomeScreenData } from '../../../services/screenerModulesApi';
 
 type StageType = 'Build' | 'Recruit' | 'Result';
 
@@ -12,37 +12,57 @@ type ResearchSidebarProps = {
   stageType: StageType;
 };
 
+const normalizeLabel = (label: string): string => label.trim().toLowerCase();
+
+const submitActions: Record<string, (researchId: string) => Promise<void>> = {
+  [normalizeLabel("Screener")]: submitScreenerData,
+  [normalizeLabel("Welcome Screen")]: submitWelcomeScreenData,
+  [normalizeLabel("Thank You Screen")]: submitThankYouScreenData,
+  [normalizeLabel("Eye Tracking")]: submitEyeTrackingData,
+};
+
 export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarProps) {
   const { setStageIndex } = useSelectedResearchStore();
   const { setSelectedSection } = useResultsStore();
-
-  // Obtener las etapas de configuración
   const stages = researchStagesConfig[frameworkType][stageType];
 
-  // Manejar el evento del checkbox
-  const handleCheckboxChange = async (label: string, getStore?: () => any) => {
-    console.log('Checkbox clicked for label:', label);
-
-    if (label === 'Screener') {
-      try {
-        const researchId = localStorage.getItem('currentResearchId');
-        if (!researchId) {
-          console.error('Research ID not found in localStorage');
-          return;
-        }
-
-        if (getStore) {
-          const data = getStore();
-          console.log(`Store data for ${label}:`, data);
-          await submitScreenerData(researchId);
-        }
-      } catch (error) {
-        console.error('Error submitting screener data:', error);
-      }
-    } else {
-      console.warn(`No store associated with label: ${label}`);
+  const handleCheckboxChange = async (
+    label: string,
+    getStore?: () => any,
+    checked?: boolean
+  ) => {
+    console.log("Checkbox clicked for label:", label);
+  
+    if (!checked) {
+      console.log("Checkbox is unchecked, skipping submission.");
+      return;
     }
-  };
+  
+    try {
+      const researchId = localStorage.getItem("currentResearchId");
+      if (!researchId) {
+        console.error("Research ID not found in localStorage");
+        return;
+      }
+  
+      if (!getStore) {
+        console.warn(`getStore not defined for label: ${label}`);
+        return;
+      }
+  
+      const normalizedLabel = normalizeLabel(label);
+      const submitAction = submitActions[normalizedLabel];
+  
+      if (submitAction) {
+        await submitAction(researchId);
+        console.log(`${label} data submitted successfully.`);
+      } else {
+        console.warn(`No associated action for label: ${label}`);
+      }
+    } catch (error) {
+      console.error(`Error submitting data for label: ${label}`, error);
+    }
+  }; 
 
   return (
     <Box sx={{ width: '250px' }}>
@@ -69,7 +89,7 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
             }}
           >
             <Checkbox
-              onChange={() => handleCheckboxChange(label, getStore)}
+              onChange={(event) => handleCheckboxChange(label, getStore, event.target.checked)}
               sx={{ mr: 1 }}
             />
             <Typography
