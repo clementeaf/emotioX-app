@@ -58,5 +58,17 @@
  },
  "deleteWelcomeScreen": {
   "DELETE": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/welcome-screen/{{welcomeScreenId}}"
+ },
+ "createImplicitAssociation": {
+  "POST": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/implicit-association"
+ },
+ "getImplicitAssociationById": {
+  "GET": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/implicit-association/{{id}}"
+ },
+ "updateImplicitAssociation": {
+  "PUT": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/implicit-association/{{id}}"
+ },
+ "deleteImplicitAssociation": {
+  "DELETE": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/implicit-association/{{id}}"
  }
 }

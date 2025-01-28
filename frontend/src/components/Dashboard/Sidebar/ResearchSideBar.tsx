@@ -3,7 +3,7 @@ import { grey } from '@mui/material/colors';
 import { useSelectedResearchStore } from '../../../store/useSelectedResearchStore';
 import { researchStagesConfig } from '../../../config/researchConfig';
 import { useResultsStore } from '../../../store/useResultStore';
-import { submitEyeTrackingData, submitScreenerData, submitThankYouScreenData, submitWelcomeScreenData } from '../../../services/screenerModulesApi';
+import { submitEyeTrackingData, submitImplicitAssociationData, submitScreenerData, submitThankYouScreenData, submitWelcomeScreenData } from '../../../services/screenerModulesApi';
 
 type StageType = 'Build' | 'Recruit' | 'Result';
 
@@ -19,6 +19,7 @@ const submitActions: Record<string, (researchId: string) => Promise<void>> = {
   [normalizeLabel("Welcome Screen")]: submitWelcomeScreenData,
   [normalizeLabel("Thank You Screen")]: submitThankYouScreenData,
   [normalizeLabel("Eye Tracking")]: submitEyeTrackingData,
+  [normalizeLabel("Implicit Association")]: submitImplicitAssociationData,
 };
 
 export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarProps) {
@@ -31,38 +32,36 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
     getStore?: () => any,
     checked?: boolean
   ) => {
-    console.log("Checkbox clicked for label:", label);
-  
+
     if (!checked) {
       console.log("Checkbox is unchecked, skipping submission.");
       return;
     }
-  
+
     try {
       const researchId = localStorage.getItem("currentResearchId");
       if (!researchId) {
         console.error("Research ID not found in localStorage");
         return;
       }
-  
+
       if (!getStore) {
         console.warn(`getStore not defined for label: ${label}`);
         return;
       }
-  
+
       const normalizedLabel = normalizeLabel(label);
       const submitAction = submitActions[normalizedLabel];
-  
+
       if (submitAction) {
         await submitAction(researchId);
-        console.log(`${label} data submitted successfully.`);
       } else {
         console.warn(`No associated action for label: ${label}`);
       }
     } catch (error) {
       console.error(`Error submitting data for label: ${label}`, error);
     }
-  }; 
+  };
 
   return (
     <Box sx={{ width: '250px' }}>

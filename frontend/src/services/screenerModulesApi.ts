@@ -4,6 +4,7 @@ import { useImplicitAssociationStore } from '../store/useImplicitAssociationStor
 import { useCognitiveTaskStore } from '../store/useCognitiveTaskStore';
 import { useEyeTrackingStore } from '../store/useEyeTrackingStore';
 import { api } from './axiosConfig';
+import { fileToBase64, validateTargets } from '../utils';
 
 /**
  * Función para enviar los datos del Screener
@@ -52,11 +53,60 @@ export const submitWelcomeScreenData = async (researchId: string): Promise<void>
 
 
 /**
- * Función para enviar los datos de la Implicit Association
+ * Filtra y envía los datos del estado actual del store de ImplicitAssociation.
+ * @param researchId - ID de la investigación asociada.
+ * @returns Promesa que resuelve cuando los datos son enviados.
  */
 export const submitImplicitAssociationData = async (researchId: string): Promise<void> => {
-  const implicitAssociationData = useImplicitAssociationStore.getState();
-  await api.post(`/implicit-association`, { ...implicitAssociationData, researchId });
+  try {
+    const { required, targets, textAreas, testConfigurations } = useImplicitAssociationStore.getState();
+
+    // Filtrar targets vacíos (sin nameOfObject ni imageUploaded)
+    const validTargets = targets.filter(
+      (target) => target.nameOfObject?.trim() || target.imageUploaded
+    );
+
+    // Validar los targets restantes
+    validateTargets(validTargets);
+
+    // Formatear los targets, convirtiendo las imágenes a Base64
+    const formattedTargets = await Promise.all(
+      validTargets.map(async (target) => {
+        let imageBase64 = null;
+
+        if (target.imageUploaded) {
+          // Convertir archivo a Base64
+          imageBase64 = await fileToBase64(target.imageUploaded);
+        }
+
+        return {
+          id: target.id,
+          nameOfObject: target.nameOfObject || null,
+          imageUploaded: imageBase64, // Base64 de la imagen o null
+          imageFormat: target.imageFormat || null,
+        };
+      })
+    );
+
+    // Crear el payload
+    const payload = {
+      researchId,
+      required,
+      targets: formattedTargets,
+      textAreas,
+      testConfigurations,
+    };
+
+    // Enviar datos al backend
+    const response = await api.post("/implicit-association", payload);
+    console.log("Implicit Association data submitted successfully:", response.data);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error submitting Implicit Association data:", error.message);
+      throw new Error(error.message || "Failed to submit Implicit Association data. Please try again.");
+    }
+    throw new Error("Unexpected error occurred.");
+  }
 };
 
 /**

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface Target {
+export interface Target {
   id: number;
   nameOfObject: string;
   imageUploaded: File | null;

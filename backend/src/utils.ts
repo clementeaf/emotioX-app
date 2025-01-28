@@ -41,6 +41,31 @@ export const validateScreenerFields = (
   return { isValid: true };
 };
 
+export const validateImplicitAssociationFields = (
+  required: boolean,
+  targets: any[],
+  textAreas: any[],
+  testConfigurations: any[]
+) => {
+  if (typeof required !== 'boolean') {
+    return { isValid: false, errorMessage: 'The "required" field must be a boolean.' };
+  }
+
+  if (!Array.isArray(targets) || !targets.length) {
+    return { isValid: false, errorMessage: 'The "targets" field must be a non-empty array.' };
+  }
+
+  if (!Array.isArray(textAreas) || !textAreas.length) {
+    return { isValid: false, errorMessage: 'The "textAreas" field must be a non-empty array.' };
+  }
+
+  if (!Array.isArray(testConfigurations) || !testConfigurations.length) {
+    return { isValid: false, errorMessage: 'The "testConfigurations" field must be a non-empty array.' };
+  }
+
+  return { isValid: true };
+};
+
 
 /**
  * Crea una respuesta genérica.

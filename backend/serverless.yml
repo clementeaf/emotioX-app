@@ -277,6 +277,39 @@ functions:
           path: /welcome-screen/{welcomeScreenId}
           method: delete
 
+  ### IMPLICIT ASSOCIATION ###
+  # Crear un ImplicitAssociation
+  createImplicitAssociation:
+    handler: dist/controllers/implicitAssociationController.createImplicitAssociation
+    events:
+      - httpApi:
+          path: /implicit-association
+          method: post
+
+  # Obtener un ImplicitAssociation por su ID
+  getImplicitAssociationById:
+    handler: dist/controllers/implicitAssociationController.getImplicitAssociationById
+    events:
+      - httpApi:
+          path: /implicit-association/{id}
+          method: get
+
+  # Actualizar un ImplicitAssociation existente
+  updateImplicitAssociation:
+    handler: dist/controllers/implicitAssociationController.updateImplicitAssociation
+    events:
+      - httpApi:
+          path: /implicit-association/{id}
+          method: put
+
+  # Eliminar un ImplicitAssociation por su ID
+  deleteImplicitAssociation:
+    handler: dist/controllers/implicitAssociationController.deleteImplicitAssociation
+    events:
+      - httpApi:
+          path: /implicit-association/{id}
+          method: delete
+
 
 resources:
   Resources:
@@ -373,6 +406,9 @@ resources:
     ScreenerApiUrl:
       Description: "URL para las rutas de Screener"
       Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/screener"
+    ImplicitAssociationApiUrl:
+      Description: "URL para las rutas de Implicit Association"
+      Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/implicit-association"
     WebSocketApiEndpoint:
       Description: "WebSocket API Endpoint"
       Value: !Sub "wss://${WebSocketApi}.execute-api.${AWS::Region}.amazonaws.com/${self:provider.stage}"

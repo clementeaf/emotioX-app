@@ -1,5 +1,6 @@
 import { createTheme } from "@mui/material";
 import { FormDataState } from "./types/types";
+import { Target } from "./store/useImplicitAssociationStore";
 
 export const steps = ['Name the Research', 'Kind of Research', 'Techniques for Research'];
 
@@ -87,6 +88,31 @@ export const validateStep = (currentStep: number, formData: FormDataState) => {
 
     return validations[currentStep] || { isValid: false, error: 'Unknown validation step.' };
 };
+
+/**
+ * Valida que cada target tenga un id válido y un nameOfObject no vacío.
+ */
+export const validateTargets = (targets: Target[]): void => {
+    targets.forEach((target) => {
+      if (!target.id || !target.nameOfObject.trim()) {
+        throw new Error("Each target must have a valid id and nameOfObject.");
+      }
+    });
+  };
+
+/**
+ * Convierte un archivo en una cadena Base64.
+ * @param file - Archivo que se convertirá.
+ * @returns Promesa que resuelve con la cadena Base64 del archivo.
+ */
+export const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve((reader.result as string).split(",")[1]); // Obtener solo el contenido Base64
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
+  };
 
 // Estilos memoizados
 export const typographyStyles = {
