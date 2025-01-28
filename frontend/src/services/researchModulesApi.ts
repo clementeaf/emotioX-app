@@ -10,8 +10,21 @@ import api from './api';
  */
 export const submitScreenerData = async (researchId: string): Promise<void> => {
   const screenerData = useScreenerStore.getState();
-  await api.post(`/research/${researchId}/screener`, { ...screenerData, researchId });
+  const { questionText, options } = screenerData.getStringsAndSelection();
+
+  if (!questionText || !options || options.length === 0) {
+    throw new Error('Invalid screener data. Ensure questionText and options are provided.');
+  }
+
+  try {
+    await api.post(`/screener`, { researchId, questionText, options });
+    console.log('Screener submitted successfully');
+  } catch (error) {
+    console.error('Error submitting screener:', error);
+    throw new Error('Failed to submit screener. Please try again.');
+  }
 };
+
 
 /**
  * Función para enviar los datos de la Welcome Screen

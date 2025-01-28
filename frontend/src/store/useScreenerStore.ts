@@ -47,7 +47,7 @@ export const useScreenerStore = create<ScreenerStore>((set, get) => ({
       id: nanoid(),
       option1: "",
       placeholder: "Option 1",
-      selection: "Qualify", // String
+      selection: "Qualify",
     },
   ],
 

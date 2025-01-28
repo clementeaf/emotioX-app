@@ -201,6 +201,38 @@ functions:
           path: /upload-image
           method: post
 
+  # Crear un Screener
+  createScreener:
+    handler: dist/controllers/screenerController.createScreener
+    events:
+      - httpApi:
+          path: /screener
+          method: post
+
+  # Obtener un Screener por el ID de la investigación
+  getScreenerByResearch:
+    handler: dist/controllers/screenerController.getScreenerByResearch
+    events:
+      - httpApi:
+          path: /screener/{researchId}
+          method: get
+
+  # Actualizar un Screener existente
+  updateScreener:
+    handler: dist/controllers/screenerController.updateScreener
+    events:
+      - httpApi:
+          path: /screener/{researchId}
+          method: put
+
+  # Eliminar un Screener por su ID
+  deleteScreener:
+    handler: dist/controllers/screenerController.deleteScreener
+    events:
+      - httpApi:
+          path: /screener/{screenerId}
+          method: delete
+
 resources:
   Resources:
     WebSocketLogGroup:

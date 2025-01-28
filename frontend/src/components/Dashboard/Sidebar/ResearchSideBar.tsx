@@ -3,6 +3,7 @@ import { grey } from '@mui/material/colors';
 import { useSelectedResearchStore } from '../../../store/useSelectedResearchStore';
 import { researchStagesConfig } from '../../../config/researchConfig';
 import { useResultsStore } from '../../../store/useResultStore';
+import { submitScreenerData } from '../../../services/researchModulesApi';
 
 type StageType = 'Build' | 'Recruit' | 'Result';
 
@@ -19,12 +20,25 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
   const stages = researchStagesConfig[frameworkType][stageType];
 
   // Manejar el evento del checkbox
-  const handleCheckboxChange = (label: string, getStore?: () => any) => {
+  const handleCheckboxChange = async (label: string, getStore?: () => any) => {
     console.log('Checkbox clicked for label:', label);
 
-    if (getStore) {
-      const data = getStore();
-      console.log(`Store data for ${label}:`, data);
+    if (label === 'Screener') {
+      try {
+        const researchId = localStorage.getItem('currentResearchId');
+        if (!researchId) {
+          console.error('Research ID not found in localStorage');
+          return;
+        }
+
+        if (getStore) {
+          const data = getStore();
+          console.log(`Store data for ${label}:`, data);
+          await submitScreenerData(researchId);
+        }
+      } catch (error) {
+        console.error('Error submitting screener data:', error);
+      }
     } else {
       console.warn(`No store associated with label: ${label}`);
     }
