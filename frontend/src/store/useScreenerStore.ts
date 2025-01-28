@@ -29,6 +29,11 @@ export interface ScreenerStore {
 
   resetToDefaultSorteableQuestions: () => void;
   getPreparedData: () => { questionText: string; questionType: string; options: SorteableQuestion[] } | null;
+
+  getStringsAndSelection: () => {
+    questionText: string | null;
+    options: { option1: string; selection: string }[];
+  };
 }
 
 export const useScreenerStore = create<ScreenerStore>((set, get) => ({
@@ -45,6 +50,18 @@ export const useScreenerStore = create<ScreenerStore>((set, get) => ({
       selection: "Qualify", // String
     },
   ],
+
+  getStringsAndSelection: () => {
+    const { questionText, options } = get();
+    return {
+      questionText,
+      options: options.map(({ option1, selection }) => ({
+        option1,
+        selection,
+      })),
+    };
+  },
+  
 
   setScreenerView: (view) => set(() => ({ screenerView: view })),
   setTitleRequired: (required) =>

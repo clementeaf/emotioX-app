@@ -1,4 +1,4 @@
-import { Box, Typography, List, ListItem, Checkbox } from '@mui/material';
+import { Box, Typography, List, ListItem, Checkbox, Button } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { useSelectedResearchStore } from '../../../store/useSelectedResearchStore';
 import { researchStagesConfig } from '../../../config/researchConfig';
@@ -66,6 +66,9 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
             </Typography>
           </ListItem>
         ))}
+        <Box p={2}>
+          <Button variant="contained" color="primary" fullWidth>Save Modules</Button>
+        </Box>
       </List>
     </Box>
   );

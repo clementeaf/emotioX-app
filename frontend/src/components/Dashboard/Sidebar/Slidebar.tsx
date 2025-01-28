@@ -30,8 +30,8 @@ export default function Sidebar() {
   return (
     <Stack
       sx={{
-        minWidth: '260px',
-        width: '260px',
+        minWidth: '270px',
+        width: '100%',
         height: '100vh',
         bgcolor: 'white',
         borderRight: `1px solid ${grey[200]}`,

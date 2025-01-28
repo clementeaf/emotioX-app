@@ -52,7 +52,7 @@ export const researchStagesConfig: Record<'AIMFramework' | 'BehaviouralResearch'
   },
   BehaviouralResearch: {
     Build: [
-      { label: 'Screener', component: <ScreenerScreenContainer />, getStore: () => useScreenerStore.getState() },
+      { label: 'Screener', component: <ScreenerScreenContainer />, getStore: () => useScreenerStore.getState().getStringsAndSelection() },
       { label: 'Welcome screen', component: <WelcomeScreenContainer />, getStore: () => useWelcomeScreenStore.getState().welcomeScreen },
       { label: 'Implicit Association', component: <ImplicitAssociationView />, getStore: () => useImplicitAssociationStore.getState() },
       { label: 'Cognitive task', component: <CognitiveTaskView />,  getStore: () => useCognitiveTaskStore.getState()},
