@@ -5,11 +5,6 @@ import ResearchCreation from '../models/researchCreation';
 import Project from '../models/project';
 
 /**
- * Tipos de investigación que requieren imágenes.
- */
-const researchTypesRequiringImages = ['TypeWithImages1', 'TypeWithImages2'];
-
-/**
  * Controlador para crear un nuevo documento de investigación, opcionalmente manejando imágenes previamente almacenadas.
  */
 export const createResearchWithImages = async (event: APIGatewayEvent): Promise<APIGatewayProxyResult> => {

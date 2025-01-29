@@ -37,6 +37,7 @@
   "dependencies": {
     "@aws-sdk/client-apigatewaymanagementapi": "^3.731.1",
     "@aws-sdk/client-ses": "^3.699.0",
+    "@aws-sdk/s3-request-presigner": "^3.735.0",
     "@graphql-tools/schema": "^10.0.8",
     "@types/mongoose": "^5.11.97",
     "apollo-server-lambda": "^3.13.0",

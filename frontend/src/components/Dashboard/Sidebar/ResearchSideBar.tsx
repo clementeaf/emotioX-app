@@ -4,6 +4,7 @@ import { useSelectedResearchStore } from '../../../store/useSelectedResearchStor
 import { researchStagesConfig } from '../../../config/researchConfig';
 import { useResultsStore } from '../../../store/useResultStore';
 import { submitCognitiveTaskData, submitEyeTrackingData, submitImplicitAssociationData, submitScreenerData, submitThankYouScreenData, submitWelcomeScreenData } from '../../../services/screenerModulesApi';
+import { uploadFileToS3 } from '../../../services/uploadImageToS3';
 
 type StageType = 'Build' | 'Recruit' | 'Result';
 
@@ -51,7 +52,39 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
         return;
       }
 
+      // Buscar recursivamente valores del tipo `File`
+      const filesToUpload: { file: File; path: string }[] = [];
+      const findFiles = (obj: any, path = "") => {
+        for (const [key, value] of Object.entries(obj)) {
+          const currentPath = path ? `${path}.${key}` : key; // Ruta actual para depuración
+          if (value instanceof File) {
+            filesToUpload.push({ file: value, path: currentPath });
+          } else if (typeof value === "object" && value !== null) {
+            findFiles(value, currentPath); // Explorar recursivamente
+          }
+        }
+      };
+
       const normalizedLabel = normalizeLabel(label);
+      const store = getStore();
+      findFiles(store);
+
+      if (filesToUpload.length > 0) {
+        console.log(`🔄 Found ${filesToUpload.length} files to upload for label: ${label}.`);
+  
+        // Subir los archivos encontrados a S3
+        await Promise.all(
+          filesToUpload.map(async ({ file, path }) => {
+            const uploadedUrl = await uploadFileToS3(file);
+            console.log(`✅ File uploaded from path '${path}': ${uploadedUrl}`);
+          })
+        );
+  
+        console.log("✅ All files uploaded successfully.");
+      } else {
+        console.log(`✅ No files to upload for label: ${label}.`);
+      }
+
       const submitAction = submitActions[normalizedLabel];
 
       if (submitAction) {
