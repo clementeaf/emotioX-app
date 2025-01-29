@@ -70,5 +70,17 @@
  },
  "deleteImplicitAssociation": {
   "DELETE": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/implicit-association/{{id}}"
+ },
+ "createCognitiveTask": {
+  "POST": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/cognitive-task"
+ },
+ "getCognitiveTaskById": {
+  "GET": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/cognitive-task/{{id}}"
+ },
+ "updateCognitiveTask": {
+  "PUT": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/cognitive-task/{{id}}"
+ },
+ "deleteCognitiveTask": {
+  "DELETE": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/cognitive-task/{{id}}"
  }
 }

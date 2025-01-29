@@ -3,7 +3,7 @@ import { grey } from '@mui/material/colors';
 import { useSelectedResearchStore } from '../../../store/useSelectedResearchStore';
 import { researchStagesConfig } from '../../../config/researchConfig';
 import { useResultsStore } from '../../../store/useResultStore';
-import { submitEyeTrackingData, submitImplicitAssociationData, submitScreenerData, submitThankYouScreenData, submitWelcomeScreenData } from '../../../services/screenerModulesApi';
+import { submitCognitiveTaskData, submitEyeTrackingData, submitImplicitAssociationData, submitScreenerData, submitThankYouScreenData, submitWelcomeScreenData } from '../../../services/screenerModulesApi';
 
 type StageType = 'Build' | 'Recruit' | 'Result';
 
@@ -18,8 +18,9 @@ const submitActions: Record<string, (researchId: string) => Promise<void>> = {
   [normalizeLabel("Screener")]: submitScreenerData,
   [normalizeLabel("Welcome Screen")]: submitWelcomeScreenData,
   [normalizeLabel("Thank You Screen")]: submitThankYouScreenData,
-  [normalizeLabel("Eye Tracking")]: submitEyeTrackingData,
   [normalizeLabel("Implicit Association")]: submitImplicitAssociationData,
+  [normalizeLabel("Cognitive Task")]: submitCognitiveTaskData,
+  [normalizeLabel("Eye Tracking")]: submitEyeTrackingData,
 };
 
 export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarProps) {

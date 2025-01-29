@@ -310,6 +310,39 @@ functions:
           path: /implicit-association/{id}
           method: delete
 
+  ### COGNITIVE TASK ###
+  # Crear una Cognitive Task
+  createCognitiveTask:
+    handler: dist/controllers/cognitiveTaskController.createCognitiveTask
+    events:
+      - httpApi:
+          path: /cognitive-task
+          method: post
+
+  # Obtener una Cognitive Task por su ID
+  getCognitiveTaskById:
+    handler: dist/controllers/cognitiveTaskController.getCognitiveTaskById
+    events:
+      - httpApi:
+          path: /cognitive-task/{id}
+          method: get
+
+  # Actualizar una Cognitive Task existente
+  updateCognitiveTask:
+    handler: dist/controllers/cognitiveTaskController.updateCognitiveTask
+    events:
+      - httpApi:
+          path: /cognitive-task/{id}
+          method: put
+
+  # Eliminar una Cognitive Task por su ID
+  deleteCognitiveTask:
+    handler: dist/controllers/cognitiveTaskController.deleteCognitiveTask
+    events:
+      - httpApi:
+          path: /cognitive-task/{id}
+          method: delete
+
 
 resources:
   Resources:
@@ -409,6 +442,9 @@ resources:
     ImplicitAssociationApiUrl:
       Description: "URL para las rutas de Implicit Association"
       Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/implicit-association"
+    CognitiveTaskApiUrl:
+      Description: "URL para las rutas de Cognitive Task"
+      Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/cognitive-task"
     WebSocketApiEndpoint:
       Description: "WebSocket API Endpoint"
       Value: !Sub "wss://${WebSocketApi}.execute-api.${AWS::Region}.amazonaws.com/${self:provider.stage}"

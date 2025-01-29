@@ -33,7 +33,7 @@ export const submitScreenerData = async (researchId: string): Promise<void> => {
 export const submitWelcomeScreenData = async (researchId: string): Promise<void> => {
   try {
     const { welcomeScreen } = useWelcomeScreenStore.getState();
-    console.log('API: ', api )
+    console.log('API: ', api)
     const response = await api.post(`/welcome-screen`, {
       ...welcomeScreen,
       researchId,
@@ -113,9 +113,71 @@ export const submitImplicitAssociationData = async (researchId: string): Promise
  * Función para enviar los datos de la Cognitive Task
  */
 export const submitCognitiveTaskData = async (researchId: string): Promise<void> => {
-  const cognitiveTaskData = useCognitiveTaskStore.getState();
-  await api.post(`/cognitive-task`, { ...cognitiveTaskData, researchId });
+  try {
+    // Obtener datos del store
+    const cognitiveTaskData = useCognitiveTaskStore.getState();
+
+    const validateCognitiveTaskData = (data: typeof cognitiveTaskData) => {
+      if (!data.questions || !Array.isArray(data.questions) || data.questions.length === 0) {
+        throw new Error("Questions array is required and must not be empty.");
+      }
+
+      data.questions.forEach((q, index) => {
+        if (!q.id || !q.question || !q.choiceType) {
+          throw new Error(
+            `Question at index ${index} is missing required fields: 'id', 'question', or 'choiceType'.`
+          );
+        }
+      });
+    };
+
+    // Validar los datos
+    validateCognitiveTaskData(cognitiveTaskData);
+
+    const formatQuestions = (questions: typeof cognitiveTaskData.questions) => {
+      return questions.map((q) => ({
+        id: q.id,
+        question: q.question,
+        choiceType: q.choiceType,
+        isVisible: q.isVisible ?? true,
+        required: q.required ?? false,
+        placeholder: q.placeholder ?? "",
+        fileUploadLabel: q.fileUploadLabel ?? "",
+        deviceFrameOptions: q.deviceFrameOptions || [],
+        selectedFrame: q.selectedFrame || "No Frame",
+        inputText: q.inputText || "",
+        selectedOption: q.selectedOption || "",
+        // Eliminar lógica de Buffer
+        uploadedFile: q.uploadedFile || null,
+        uploadedImages: q.uploadedImages || [],
+        showConditionality: q.showConditionality ?? false,
+        choices: q.choices || [],
+        randomizeChoices: q.randomizeChoices ?? false,
+        showOtherOption: q.showOtherOption ?? false,
+      }));
+    };
+
+
+    // Formatear las preguntas antes de enviarlas
+    const formattedQuestions = formatQuestions(cognitiveTaskData.questions);
+
+    // Enviar datos al backend
+    const response = await api.post(`/cognitive-task`, {
+      ...cognitiveTaskData,
+      questions: formattedQuestions,
+      researchId,
+    });
+
+    console.log("Cognitive Task data submitted successfully:", response.data);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error submitting Cognitive task data:", error.message);
+      throw new Error(error.message || "Failed to submit Cognitive task data. Please try again.");
+    }
+    throw new Error("Unexpected error occurred.");
+  }
 };
+
 
 /**
  * Función para enviar los datos del Eye Tracking

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "npx rimraf dist",
-    "build": "npm run clean && tsc && serverless deploy --stage dev --force && serverless exportEndpoints",
+    "build": "npm run clean && tsc && serverless deploy --stage dev --force && serverless exportEndpoints && cd .. && powershell -File ./generateApiConfig.ps1",
     "deploy": "npm run build && sls deploy",
     "start:offline": "ts-node -r tsconfig-paths/register src/server.ts & sls offline"
   },
