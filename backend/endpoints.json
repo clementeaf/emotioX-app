@@ -94,5 +94,17 @@
  },
  "deleteEyeTrackingTask": {
   "DELETE": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/eye-tracking-task/{{id}}"
+ },
+ "createThankYouScreen": {
+  "POST": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/thank-you-screen"
+ },
+ "getThankYouScreenById": {
+  "GET": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/thank-you-screen/{{id}}"
+ },
+ "updateThankYouScreen": {
+  "PUT": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/thank-you-screen/{{id}}"
+ },
+ "deleteThankYouScreen": {
+  "DELETE": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/thank-you-screen/{{id}}"
  }
 }

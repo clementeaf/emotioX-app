@@ -392,6 +392,30 @@
               "LogGroupName": "/aws/lambda/emotio-x-backend-dev-deleteEyeTrackingTask"
             }
           },
+          "CreateThankYouScreenLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/emotio-x-backend-dev-createThankYouScreen"
+            }
+          },
+          "GetThankYouScreenByIdLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/emotio-x-backend-dev-getThankYouScreenById"
+            }
+          },
+          "UpdateThankYouScreenLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/emotio-x-backend-dev-updateThankYouScreen"
+            }
+          },
+          "DeleteThankYouScreenLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/emotio-x-backend-dev-deleteThankYouScreen"
+            }
+          },
           "IamRoleLambdaExecution": {
             "Type": "AWS::IAM::Role",
             "Properties": {
@@ -503,7 +527,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/controller.registerUser",
               "Runtime": "nodejs18.x",
@@ -537,7 +561,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/controller.getAllUsers",
               "Runtime": "nodejs18.x",
@@ -571,7 +595,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/controller.getUserById",
               "Runtime": "nodejs18.x",
@@ -605,7 +629,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/controller.deleteUserById",
               "Runtime": "nodejs18.x",
@@ -639,7 +663,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/controller.updateUserById",
               "Runtime": "nodejs18.x",
@@ -673,7 +697,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/controller.loginUser",
               "Runtime": "nodejs18.x",
@@ -707,7 +731,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/controller.logoutUser",
               "Runtime": "nodejs18.x",
@@ -741,7 +765,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/controller.refreshToken",
               "Runtime": "nodejs18.x",
@@ -775,7 +799,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/createResearchController.createResearchWithImages",
               "Runtime": "nodejs18.x",
@@ -809,7 +833,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/imageController.uploadFilesToS3",
               "Runtime": "nodejs18.x",
@@ -843,7 +867,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/websocket/connectHandler.connectHandler",
               "Runtime": "nodejs18.x",
@@ -877,7 +901,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/websocket/disconnectHandler.disconnectHandler",
               "Runtime": "nodejs18.x",
@@ -911,7 +935,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/websocket/defaultHandler.defaultHandler",
               "Runtime": "nodejs18.x",
@@ -945,7 +969,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/websocket/sendMessageHandler.sendMessageHandler",
               "Runtime": "nodejs18.x",
@@ -979,7 +1003,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "src/websocket/refreshHandler.refreshHandler",
               "Runtime": "nodejs18.x",
@@ -1013,7 +1037,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/controller.sendTemporaryPassword",
               "Runtime": "nodejs18.x",
@@ -1047,7 +1071,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/imageController.uploadFilesToS3",
               "Runtime": "nodejs18.x",
@@ -1081,7 +1105,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/screenerController.createScreener",
               "Runtime": "nodejs18.x",
@@ -1115,7 +1139,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/screenerController.getScreenerByResearch",
               "Runtime": "nodejs18.x",
@@ -1149,7 +1173,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/screenerController.updateScreener",
               "Runtime": "nodejs18.x",
@@ -1183,7 +1207,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/screenerController.deleteScreener",
               "Runtime": "nodejs18.x",
@@ -1217,7 +1241,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/welcomeScreenController.createWelcomeScreen",
               "Runtime": "nodejs18.x",
@@ -1251,7 +1275,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/welcomeScreenController.getWelcomeScreenByResearch",
               "Runtime": "nodejs18.x",
@@ -1285,7 +1309,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/welcomeScreenController.updateWelcomeScreen",
               "Runtime": "nodejs18.x",
@@ -1319,7 +1343,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/welcomeScreenController.deleteWelcomeScreen",
               "Runtime": "nodejs18.x",
@@ -1353,7 +1377,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/implicitAssociationController.createImplicitAssociation",
               "Runtime": "nodejs18.x",
@@ -1387,7 +1411,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/implicitAssociationController.getImplicitAssociationById",
               "Runtime": "nodejs18.x",
@@ -1421,7 +1445,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/implicitAssociationController.updateImplicitAssociation",
               "Runtime": "nodejs18.x",
@@ -1455,7 +1479,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/implicitAssociationController.deleteImplicitAssociation",
               "Runtime": "nodejs18.x",
@@ -1489,7 +1513,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/cognitiveTaskController.createCognitiveTask",
               "Runtime": "nodejs18.x",
@@ -1523,7 +1547,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/cognitiveTaskController.getCognitiveTaskById",
               "Runtime": "nodejs18.x",
@@ -1557,7 +1581,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/cognitiveTaskController.updateCognitiveTask",
               "Runtime": "nodejs18.x",
@@ -1591,7 +1615,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/cognitiveTaskController.deleteCognitiveTask",
               "Runtime": "nodejs18.x",
@@ -1625,7 +1649,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/eyeTrackingController.createEyeTrackingTask",
               "Runtime": "nodejs18.x",
@@ -1659,7 +1683,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/eyeTrackingController.getEyeTrackingTaskById",
               "Runtime": "nodejs18.x",
@@ -1693,7 +1717,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/eyeTrackingController.updateEyeTrackingTask",
               "Runtime": "nodejs18.x",
@@ -1727,7 +1751,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/emotio-x-backend.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
               },
               "Handler": "dist/controllers/eyeTrackingController.deleteEyeTrackingTask",
               "Runtime": "nodejs18.x",
@@ -1754,374 +1778,550 @@
               "DeleteEyeTrackingTaskLogGroup"
             ]
           },
-          "RegisterUserLambdaVersionZMIuupjRLc6vxcvEySbrS44vnTHIfs3RAq8mUaqvE": {
+          "CreateThankYouScreenLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
+              },
+              "Handler": "dist/controllers/thankYouScreenController.createThankYouScreen",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "emotio-x-backend-dev-createThankYouScreen",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "CONNECTIONS_TABLE": "emotio-x-backend-dev-WebSocketConnections",
+                  "WEBSOCKET_ENDPOINT": {
+                    "$ref": "$[\"service\"][\"provider\"][\"environment\"][\"WEBSOCKET_ENDPOINT\"]"
+                  },
+                  "S3_BUCKET_NAME": "emotio-x-backend-dev-deployment-bucket"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "CreateThankYouScreenLogGroup"
+            ]
+          },
+          "GetThankYouScreenByIdLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
+              },
+              "Handler": "dist/controllers/thankYouScreenController.getThankYouScreenById",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "emotio-x-backend-dev-getThankYouScreenById",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "CONNECTIONS_TABLE": "emotio-x-backend-dev-WebSocketConnections",
+                  "WEBSOCKET_ENDPOINT": {
+                    "$ref": "$[\"service\"][\"provider\"][\"environment\"][\"WEBSOCKET_ENDPOINT\"]"
+                  },
+                  "S3_BUCKET_NAME": "emotio-x-backend-dev-deployment-bucket"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "GetThankYouScreenByIdLogGroup"
+            ]
+          },
+          "UpdateThankYouScreenLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
+              },
+              "Handler": "dist/controllers/thankYouScreenController.updateThankYouScreen",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "emotio-x-backend-dev-updateThankYouScreen",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "CONNECTIONS_TABLE": "emotio-x-backend-dev-WebSocketConnections",
+                  "WEBSOCKET_ENDPOINT": {
+                    "$ref": "$[\"service\"][\"provider\"][\"environment\"][\"WEBSOCKET_ENDPOINT\"]"
+                  },
+                  "S3_BUCKET_NAME": "emotio-x-backend-dev-deployment-bucket"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "UpdateThankYouScreenLogGroup"
+            ]
+          },
+          "DeleteThankYouScreenLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/emotio-x-backend.zip"
+              },
+              "Handler": "dist/controllers/thankYouScreenController.deleteThankYouScreen",
+              "Runtime": "nodejs18.x",
+              "FunctionName": "emotio-x-backend-dev-deleteThankYouScreen",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "Environment": {
+                "Variables": {
+                  "CONNECTIONS_TABLE": "emotio-x-backend-dev-WebSocketConnections",
+                  "WEBSOCKET_ENDPOINT": {
+                    "$ref": "$[\"service\"][\"provider\"][\"environment\"][\"WEBSOCKET_ENDPOINT\"]"
+                  },
+                  "S3_BUCKET_NAME": "emotio-x-backend-dev-deployment-bucket"
+                }
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "DeleteThankYouScreenLogGroup"
+            ]
+          },
+          "RegisterUserLambdaVersionwZiutPF4m7pvMKK1whvg0W55BDHzV4cAQqmzSP4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "RegisterUserLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "GetAllUsersLambdaVersionkCnx1nA936LM2g14pFjl4Vx1GxWGU82CZA9EWiVMpA": {
+          "GetAllUsersLambdaVersionPtXAYenFFdww0RQD1UvI17ma56hrJG7nntJpzai8": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetAllUsersLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "GetUserByIdLambdaVersionj1pJQQQbjzu7PRu0HQoHoEuSO6HWasvJCIyhzJvNCQ": {
+          "GetUserByIdLambdaVersioneT1ZphKzQm1BbuJB6PZXbxcQ61xlUsCDA6kfjfHH84": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetUserByIdLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "DeleteUserByIdLambdaVersionnsrUdyLlFKbGRx3gcu2EdMnKx85FcbrtPwpPnmxaE0": {
+          "DeleteUserByIdLambdaVersionZjty6T6ApkbmmgJBtt3BfpAMjCZLpG7AmuHkNml24": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DeleteUserByIdLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "UpdateUserByIdLambdaVersion1wUK51nZ3YEZkRexkL1tKSxbgbl0OPMAPU1wkE": {
+          "UpdateUserByIdLambdaVersionUlcDRAKdTfZIZG4lDmGOSYTYvY7pmcgR2ivb2upX9m8": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UpdateUserByIdLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "LoginUserLambdaVersionUELgJO7UCg0DgYaacXq0SPxlhBgzm6NqSOuFZr97k": {
+          "LoginUserLambdaVersionJ1FN4JIjgRvjfRXwPerT6dSKyX0pIItG5sedgitqA": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "LoginUserLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "LogoutUserLambdaVersionV1UnrFdB8mX4XscIS0FskLmRhJ2rgFaJSwkmVv7t0": {
+          "LogoutUserLambdaVersionNGZOpRfHu55abOUfnw2KyatU4y7vkTGCoUP2lJEy9k": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "LogoutUserLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "RefreshTokenLambdaVersionVgO5DRLiUCN4fExV11h31RnB1jwsjcGtbtH6vYjeGQ": {
+          "RefreshTokenLambdaVersionea1QYSKyHXcRnjRSmM4BaD98PX5jboeeZVHuRMc": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "RefreshTokenLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "CreateResearchLambdaVersionnvYuKH8CuEEOFw8jV6waOVcVazmTPa5kGoKwYdHYQ": {
+          "CreateResearchLambdaVersionMPGaYcpDTpl5SFKYw1eQLZHW7QaIWpwjQeRuRS9u0": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateResearchLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "GeneratePresignedUrlsLambdaVersionMDwohNT45I7oaSI2EzIBDBBucAWkFf2OfRogPjfg4": {
+          "GeneratePresignedUrlsLambdaVersion7WacYh6I6GtujVuQ9HxlLuOtyKFJA8RKLTGbTFK0": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GeneratePresignedUrlsLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "ConnectLambdaVersionZPK4FcpdWYaJDnkCCbynGhd7HdzbyyVpEsd73W9ZYk": {
+          "ConnectLambdaVersionhmqO8feM2f7b0k8ixIZWFQt6PK31FyKgzrpzHs0DLBU": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ConnectLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "DisconnectLambdaVersionLbfeAr8WzGW3msWkHybz5xToOCGmL7Wm9jgewDUo2k": {
+          "DisconnectLambdaVersiondunr5xcTfuig7Z0yECyZDsWinfJAA2AlAgpjUMdk": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DisconnectLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "DefaultHandlerLambdaVersione6zP2RK0AH46dftlRqMwuqXgE3l9QJCtijIIRYeOCE": {
+          "DefaultHandlerLambdaVersionIDqhWkssTxTkO3Yr921wI9bRuJmMyfz2I2G7HDOXzE": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DefaultHandlerLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "SendMessageLambdaVersionu5yCDOtFYmgTPx1fc8UXOtJToOgnOKmaqgsuWaTKUc": {
+          "SendMessageLambdaVersionhmQYaQGXKws4J2tmRaldboNfxlEaBSeRsM32M4Nk": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SendMessageLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "RefreshLambdaVersion4quMB0I7QWxr7bGLZIY9j09t86WuXmVPaUvUy2XtFc": {
+          "RefreshLambdaVersiontgrdSB6wi26TDr2Hz8H1dD5bAwydKyyj9gJqLUu5A": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "RefreshLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "SendTemporaryPasswordLambdaVersionpCyGyFpR3HPUYywWt9s18b3CMGbcrrvzy5cu7nJqlqQ": {
+          "SendTemporaryPasswordLambdaVersion6euT1OA86PS4GSS5nptl5eslUvdO8VcVR0OwiVbDvY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SendTemporaryPasswordLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "UploadFilesToS3LambdaVersionTJluSfcC4vwjxtDaXnYk9EjqFYASahZrLTIm8ctQ4": {
+          "UploadFilesToS3LambdaVersionQuhPRGjPThg5sWFknZXS5Eer8kB0ysyvB4gWEKyRkI": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UploadFilesToS3LambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "CreateScreenerLambdaVersion755dCLudSLzTaOyRglwZXEI7X0s2Lsno7i0rfRLh0s": {
+          "CreateScreenerLambdaVersionWnZ1X2LNS91UUR2a5mDkThLMpJ6EctBuLQEbSsME": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateScreenerLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "GetScreenerByResearchLambdaVersionaxalHAoagXIEvrvRbfIiGXSeHHNLpAmWXqwzn35NE": {
+          "GetScreenerByResearchLambdaVersionxjMFxBSXGsq8wNzYPWJdTntcvzbnd9YtPxYlshoZNMI": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetScreenerByResearchLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "UpdateScreenerLambdaVersionWqagkkKTOydQsAd30aTt74U2DavqwrUXR2sZX68Zc": {
+          "UpdateScreenerLambdaVersionaFt7aIXoR1ko4Ium1JT5N18Akx4tCD9w6EvgAm30": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UpdateScreenerLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "DeleteScreenerLambdaVersionKvBTpChGSX7Y9UQH6B6LEnRe1j7ZPxfgazD8QkBX4dk": {
+          "DeleteScreenerLambdaVersionzHhzv792T3qmvMTjeytbfN90MkDuLSLPpZlaenVJjo": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DeleteScreenerLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "CreateWelcomeScreenLambdaVersionNQOQXOOD8gig8k0tZ9SFLuTcwF6BRKZ0YLm1yeUxoo": {
+          "CreateWelcomeScreenLambdaVersionT4HgyMIFAffTkmICOC4XDunPFqu95VvnwmZWlp8Bc": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateWelcomeScreenLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "GetWelcomeScreenByResearchLambdaVersiont2VC9thN0HEsg7IUsKaWVDDbqJdMoyRIOWPuj4fx9m0": {
+          "GetWelcomeScreenByResearchLambdaVersionCna8MdrIwE9Fr6w4iK51ZbT38loabVIc2oi5y5Gxm4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetWelcomeScreenByResearchLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "UpdateWelcomeScreenLambdaVersionChReQEygCb91QQXDsJIwAJgzpJw8lQa6J8m8z2J8g64": {
+          "UpdateWelcomeScreenLambdaVersiontTCBHzVnCldkSbx0elaKu6s13XV2QDKsNMJsg0rd5l0": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UpdateWelcomeScreenLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "DeleteWelcomeScreenLambdaVersionFMjdaW3FmuY1j7NJTrElUFo8qa4n4WV7zfEJpQ5n0Bs": {
+          "DeleteWelcomeScreenLambdaVersionirf5hM6E0PEo9aT5SEWbh3v4Ks88diDsDyPeqs3AM": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DeleteWelcomeScreenLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "CreateImplicitAssociationLambdaVersionrtJ0pYPql0oMrPzK7zu2Siz2S7Z7Ymq1s2rAdQf79Y": {
+          "CreateImplicitAssociationLambdaVersionJSCWXc3Oib0ONxBeJEJi4YGOwpeSlb1OLNSEmpmI": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateImplicitAssociationLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "GetImplicitAssociationByIdLambdaVersionb9wypozIcOVb5zNQSl733fJhLpNhEWc7jPMYqm8": {
+          "GetImplicitAssociationByIdLambdaVersionmkHzLhlKuMqVWeiTQFNS03Q22KeKuwvs3FpcLttAic": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetImplicitAssociationByIdLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "UpdateImplicitAssociationLambdaVersionatEyv42g8mQ2IPxt1OLDVdGNbhhNnUe2CiksOFKPrw": {
+          "UpdateImplicitAssociationLambdaVersionRl2dupDCs9gN8Gpt7UfMJYNB4zAOsFj4RVkhQn5eMds": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UpdateImplicitAssociationLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "DeleteImplicitAssociationLambdaVersionejy87ljf0F5x7BrCPBp7zgt6xU1Rb3csNlD4oSOYo": {
+          "DeleteImplicitAssociationLambdaVersion1MTqEcPnFZ91taJAWKbWS71UuCDfbBL5lKBbmbNcY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DeleteImplicitAssociationLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "CreateCognitiveTaskLambdaVersionVT6zzsFhc218bYK0kt8r2S4JByC28dt4xeFSOKJZE": {
+          "CreateCognitiveTaskLambdaVersiondQvxtSaD04wYLp7PRLIxL6tV5Lc5jf0WcFjqLcEt7Y": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateCognitiveTaskLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "GetCognitiveTaskByIdLambdaVersionAecMXe4TMoMqlKAb46lWfuyfvheA8M5LxVjd56HIo": {
+          "GetCognitiveTaskByIdLambdaVersionQGGsyZuRP0Bu42KMoVR8syhljqejhV6vw2S5FxitMg": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetCognitiveTaskByIdLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "UpdateCognitiveTaskLambdaVersionvWeKqNrMxyERw8fnwXA0gm6MTuwKIBYKRFqZ27I00A": {
+          "UpdateCognitiveTaskLambdaVersion1HaPPMYHAQAT1SLfCuiEMMDMxdJAkTSbFDjoaxnZ0": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UpdateCognitiveTaskLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "DeleteCognitiveTaskLambdaVersionhyHNwtBQ3WwvPlJh1oSsdI1XmVlUy7oATtYUfT4MHE": {
+          "DeleteCognitiveTaskLambdaVersionXcRkVKVCCuqWMaosLnUNWcUgJHCaQMDzC2pH8": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DeleteCognitiveTaskLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "CreateEyeTrackingTaskLambdaVersiondpjf1hfAurrqrQ0ptrrBLSbeHW8Tu6r5tzOA9QKdn60": {
+          "CreateEyeTrackingTaskLambdaVersiondBTLEKTHXPQSSVowhliANT1GzgjoMD0YC2gGx5aHY": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateEyeTrackingTaskLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "GetEyeTrackingTaskByIdLambdaVersionVqBGfDOJ2kWPBg48c1FyuAxAyGgjtUqdvKRO5zM": {
+          "GetEyeTrackingTaskByIdLambdaVersionqusBlewJJcgGhKgmbl1RpHLlf4dGlS4doWBktmqbQ": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GetEyeTrackingTaskByIdLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "UpdateEyeTrackingTaskLambdaVersionOkwJYIQ2dGMHNmC1jcFbsOs9b1B3bLAU1RqMlrrsHfo": {
+          "UpdateEyeTrackingTaskLambdaVersionc0FjssDwLIXnjnqhKdXJdO4vSV0ZpdtyBkj8MPmSI": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UpdateEyeTrackingTaskLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
-          "DeleteEyeTrackingTaskLambdaVersionc8Hcv43xyQ3tIXQw2t3vFxn7qSax6Jxl9xQCg5JI": {
+          "DeleteEyeTrackingTaskLambdaVersion0FmTmTbZ0xuMMBwQQ5kvqdbHqkfAb9GXHcMj9f305Q": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DeleteEyeTrackingTaskLambdaFunction"
               },
-              "CodeSha256": "PBSLqwENcVbZcjer5iuDK9FZ7frlu3Q+VKNSWuG1vYc="
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
+            }
+          },
+          "CreateThankYouScreenLambdaVersione26IgBjndAFNrwaiPnKldGMKFF1fYI2eUFbRjcpWpw": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "CreateThankYouScreenLambdaFunction"
+              },
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
+            }
+          },
+          "GetThankYouScreenByIdLambdaVersionNsFrGGXjkM7hrzAzKwLJHQ2PtvpsRqcZtnlZIN8A": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "GetThankYouScreenByIdLambdaFunction"
+              },
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
+            }
+          },
+          "UpdateThankYouScreenLambdaVersionMPeydIuFGsqvtrSf5R9d918dRs56H6TAjIFUzCiRQE": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "UpdateThankYouScreenLambdaFunction"
+              },
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
+            }
+          },
+          "DeleteThankYouScreenLambdaVersionaT7yHnzUudghuvWkusWNnjQcoZnQEwrfqBzy0IFmM": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "DeleteThankYouScreenLambdaFunction"
+              },
+              "CodeSha256": "3dvmTBUw+Xpa1RofwD+xUZ11D5OYnthHCYv7Icgx+Mc="
             }
           },
           "RefreshEventsRuleSchedule1": {
@@ -2652,7 +2852,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z/custom-resources.zip"
+                "S3Key": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z/custom-resources.zip"
               },
               "FunctionName": "emotio-x-backend-dev-custom-resource-apigw-cw-role",
               "Handler": "api-gateway-cloud-watch-role/handler.handler",
@@ -5048,6 +5248,294 @@
             },
             "DependsOn": "HttpApiIntegrationDeleteEyeTrackingTask"
           },
+          "CreateThankYouScreenLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "CreateThankYouScreenLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationCreateThankYouScreen": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"CreateThankYouScreenLambdaPermissionHttpApi\"][\"Properties\"][\"FunctionName\"]"
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 30000
+            }
+          },
+          "HttpApiRoutePostThankDashyouDashscreen": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "POST /thank-you-screen",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationCreateThankYouScreen"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationCreateThankYouScreen"
+          },
+          "GetThankYouScreenByIdLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "GetThankYouScreenByIdLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationGetThankYouScreenById": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"GetThankYouScreenByIdLambdaPermissionHttpApi\"][\"Properties\"][\"FunctionName\"]"
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 30000
+            }
+          },
+          "HttpApiRouteGetThankDashyouDashscreenIdVar": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "GET /thank-you-screen/{id}",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationGetThankYouScreenById"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationGetThankYouScreenById"
+          },
+          "UpdateThankYouScreenLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "UpdateThankYouScreenLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationUpdateThankYouScreen": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"UpdateThankYouScreenLambdaPermissionHttpApi\"][\"Properties\"][\"FunctionName\"]"
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 30000
+            }
+          },
+          "HttpApiRoutePutThankDashyouDashscreenIdVar": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "PUT /thank-you-screen/{id}",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationUpdateThankYouScreen"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationUpdateThankYouScreen"
+          },
+          "DeleteThankYouScreenLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "DeleteThankYouScreenLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationDeleteThankYouScreen": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"DeleteThankYouScreenLambdaPermissionHttpApi\"][\"Properties\"][\"FunctionName\"]"
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 30000
+            }
+          },
+          "HttpApiRouteDeleteThankDashyouDashscreenIdVar": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "DELETE /thank-you-screen/{id}",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationDeleteThankYouScreen"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationDeleteThankYouScreen"
+          },
           "WebSocketLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
@@ -5183,7 +5671,7 @@
           "RegisterUserLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "RegisterUserLambdaVersionZMIuupjRLc6vxcvEySbrS44vnTHIfs3RAq8mUaqvE"
+              "Ref": "RegisterUserLambdaVersionwZiutPF4m7pvMKK1whvg0W55BDHzV4cAQqmzSP4"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-RegisterUserLambdaFunctionQualifiedArn"
@@ -5192,7 +5680,7 @@
           "GetAllUsersLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetAllUsersLambdaVersionkCnx1nA936LM2g14pFjl4Vx1GxWGU82CZA9EWiVMpA"
+              "Ref": "GetAllUsersLambdaVersionPtXAYenFFdww0RQD1UvI17ma56hrJG7nntJpzai8"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-GetAllUsersLambdaFunctionQualifiedArn"
@@ -5201,7 +5689,7 @@
           "GetUserByIdLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetUserByIdLambdaVersionj1pJQQQbjzu7PRu0HQoHoEuSO6HWasvJCIyhzJvNCQ"
+              "Ref": "GetUserByIdLambdaVersioneT1ZphKzQm1BbuJB6PZXbxcQ61xlUsCDA6kfjfHH84"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-GetUserByIdLambdaFunctionQualifiedArn"
@@ -5210,7 +5698,7 @@
           "DeleteUserByIdLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DeleteUserByIdLambdaVersionnsrUdyLlFKbGRx3gcu2EdMnKx85FcbrtPwpPnmxaE0"
+              "Ref": "DeleteUserByIdLambdaVersionZjty6T6ApkbmmgJBtt3BfpAMjCZLpG7AmuHkNml24"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-DeleteUserByIdLambdaFunctionQualifiedArn"
@@ -5219,7 +5707,7 @@
           "UpdateUserByIdLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UpdateUserByIdLambdaVersion1wUK51nZ3YEZkRexkL1tKSxbgbl0OPMAPU1wkE"
+              "Ref": "UpdateUserByIdLambdaVersionUlcDRAKdTfZIZG4lDmGOSYTYvY7pmcgR2ivb2upX9m8"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-UpdateUserByIdLambdaFunctionQualifiedArn"
@@ -5228,7 +5716,7 @@
           "LoginUserLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "LoginUserLambdaVersionUELgJO7UCg0DgYaacXq0SPxlhBgzm6NqSOuFZr97k"
+              "Ref": "LoginUserLambdaVersionJ1FN4JIjgRvjfRXwPerT6dSKyX0pIItG5sedgitqA"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-LoginUserLambdaFunctionQualifiedArn"
@@ -5237,7 +5725,7 @@
           "LogoutUserLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "LogoutUserLambdaVersionV1UnrFdB8mX4XscIS0FskLmRhJ2rgFaJSwkmVv7t0"
+              "Ref": "LogoutUserLambdaVersionNGZOpRfHu55abOUfnw2KyatU4y7vkTGCoUP2lJEy9k"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-LogoutUserLambdaFunctionQualifiedArn"
@@ -5246,7 +5734,7 @@
           "RefreshTokenLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "RefreshTokenLambdaVersionVgO5DRLiUCN4fExV11h31RnB1jwsjcGtbtH6vYjeGQ"
+              "Ref": "RefreshTokenLambdaVersionea1QYSKyHXcRnjRSmM4BaD98PX5jboeeZVHuRMc"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-RefreshTokenLambdaFunctionQualifiedArn"
@@ -5255,7 +5743,7 @@
           "CreateResearchLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateResearchLambdaVersionnvYuKH8CuEEOFw8jV6waOVcVazmTPa5kGoKwYdHYQ"
+              "Ref": "CreateResearchLambdaVersionMPGaYcpDTpl5SFKYw1eQLZHW7QaIWpwjQeRuRS9u0"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-CreateResearchLambdaFunctionQualifiedArn"
@@ -5264,7 +5752,7 @@
           "GeneratePresignedUrlsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GeneratePresignedUrlsLambdaVersionMDwohNT45I7oaSI2EzIBDBBucAWkFf2OfRogPjfg4"
+              "Ref": "GeneratePresignedUrlsLambdaVersion7WacYh6I6GtujVuQ9HxlLuOtyKFJA8RKLTGbTFK0"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-GeneratePresignedUrlsLambdaFunctionQualifiedArn"
@@ -5273,7 +5761,7 @@
           "ConnectLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ConnectLambdaVersionZPK4FcpdWYaJDnkCCbynGhd7HdzbyyVpEsd73W9ZYk"
+              "Ref": "ConnectLambdaVersionhmqO8feM2f7b0k8ixIZWFQt6PK31FyKgzrpzHs0DLBU"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-ConnectLambdaFunctionQualifiedArn"
@@ -5282,7 +5770,7 @@
           "DisconnectLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DisconnectLambdaVersionLbfeAr8WzGW3msWkHybz5xToOCGmL7Wm9jgewDUo2k"
+              "Ref": "DisconnectLambdaVersiondunr5xcTfuig7Z0yECyZDsWinfJAA2AlAgpjUMdk"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-DisconnectLambdaFunctionQualifiedArn"
@@ -5291,7 +5779,7 @@
           "DefaultHandlerLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DefaultHandlerLambdaVersione6zP2RK0AH46dftlRqMwuqXgE3l9QJCtijIIRYeOCE"
+              "Ref": "DefaultHandlerLambdaVersionIDqhWkssTxTkO3Yr921wI9bRuJmMyfz2I2G7HDOXzE"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-DefaultHandlerLambdaFunctionQualifiedArn"
@@ -5300,7 +5788,7 @@
           "SendMessageLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SendMessageLambdaVersionu5yCDOtFYmgTPx1fc8UXOtJToOgnOKmaqgsuWaTKUc"
+              "Ref": "SendMessageLambdaVersionhmQYaQGXKws4J2tmRaldboNfxlEaBSeRsM32M4Nk"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-SendMessageLambdaFunctionQualifiedArn"
@@ -5309,7 +5797,7 @@
           "RefreshLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "RefreshLambdaVersion4quMB0I7QWxr7bGLZIY9j09t86WuXmVPaUvUy2XtFc"
+              "Ref": "RefreshLambdaVersiontgrdSB6wi26TDr2Hz8H1dD5bAwydKyyj9gJqLUu5A"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-RefreshLambdaFunctionQualifiedArn"
@@ -5318,7 +5806,7 @@
           "SendTemporaryPasswordLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SendTemporaryPasswordLambdaVersionpCyGyFpR3HPUYywWt9s18b3CMGbcrrvzy5cu7nJqlqQ"
+              "Ref": "SendTemporaryPasswordLambdaVersion6euT1OA86PS4GSS5nptl5eslUvdO8VcVR0OwiVbDvY"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-SendTemporaryPasswordLambdaFunctionQualifiedArn"
@@ -5327,7 +5815,7 @@
           "UploadFilesToS3LambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UploadFilesToS3LambdaVersionTJluSfcC4vwjxtDaXnYk9EjqFYASahZrLTIm8ctQ4"
+              "Ref": "UploadFilesToS3LambdaVersionQuhPRGjPThg5sWFknZXS5Eer8kB0ysyvB4gWEKyRkI"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-UploadFilesToS3LambdaFunctionQualifiedArn"
@@ -5336,7 +5824,7 @@
           "CreateScreenerLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateScreenerLambdaVersion755dCLudSLzTaOyRglwZXEI7X0s2Lsno7i0rfRLh0s"
+              "Ref": "CreateScreenerLambdaVersionWnZ1X2LNS91UUR2a5mDkThLMpJ6EctBuLQEbSsME"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-CreateScreenerLambdaFunctionQualifiedArn"
@@ -5345,7 +5833,7 @@
           "GetScreenerByResearchLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetScreenerByResearchLambdaVersionaxalHAoagXIEvrvRbfIiGXSeHHNLpAmWXqwzn35NE"
+              "Ref": "GetScreenerByResearchLambdaVersionxjMFxBSXGsq8wNzYPWJdTntcvzbnd9YtPxYlshoZNMI"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-GetScreenerByResearchLambdaFunctionQualifiedArn"
@@ -5354,7 +5842,7 @@
           "UpdateScreenerLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UpdateScreenerLambdaVersionWqagkkKTOydQsAd30aTt74U2DavqwrUXR2sZX68Zc"
+              "Ref": "UpdateScreenerLambdaVersionaFt7aIXoR1ko4Ium1JT5N18Akx4tCD9w6EvgAm30"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-UpdateScreenerLambdaFunctionQualifiedArn"
@@ -5363,7 +5851,7 @@
           "DeleteScreenerLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DeleteScreenerLambdaVersionKvBTpChGSX7Y9UQH6B6LEnRe1j7ZPxfgazD8QkBX4dk"
+              "Ref": "DeleteScreenerLambdaVersionzHhzv792T3qmvMTjeytbfN90MkDuLSLPpZlaenVJjo"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-DeleteScreenerLambdaFunctionQualifiedArn"
@@ -5372,7 +5860,7 @@
           "CreateWelcomeScreenLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateWelcomeScreenLambdaVersionNQOQXOOD8gig8k0tZ9SFLuTcwF6BRKZ0YLm1yeUxoo"
+              "Ref": "CreateWelcomeScreenLambdaVersionT4HgyMIFAffTkmICOC4XDunPFqu95VvnwmZWlp8Bc"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-CreateWelcomeScreenLambdaFunctionQualifiedArn"
@@ -5381,7 +5869,7 @@
           "GetWelcomeScreenByResearchLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetWelcomeScreenByResearchLambdaVersiont2VC9thN0HEsg7IUsKaWVDDbqJdMoyRIOWPuj4fx9m0"
+              "Ref": "GetWelcomeScreenByResearchLambdaVersionCna8MdrIwE9Fr6w4iK51ZbT38loabVIc2oi5y5Gxm4"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-GetWelcomeScreenByResearchLambdaFunctionQualifiedArn"
@@ -5390,7 +5878,7 @@
           "UpdateWelcomeScreenLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UpdateWelcomeScreenLambdaVersionChReQEygCb91QQXDsJIwAJgzpJw8lQa6J8m8z2J8g64"
+              "Ref": "UpdateWelcomeScreenLambdaVersiontTCBHzVnCldkSbx0elaKu6s13XV2QDKsNMJsg0rd5l0"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-UpdateWelcomeScreenLambdaFunctionQualifiedArn"
@@ -5399,7 +5887,7 @@
           "DeleteWelcomeScreenLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DeleteWelcomeScreenLambdaVersionFMjdaW3FmuY1j7NJTrElUFo8qa4n4WV7zfEJpQ5n0Bs"
+              "Ref": "DeleteWelcomeScreenLambdaVersionirf5hM6E0PEo9aT5SEWbh3v4Ks88diDsDyPeqs3AM"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-DeleteWelcomeScreenLambdaFunctionQualifiedArn"
@@ -5408,7 +5896,7 @@
           "CreateImplicitAssociationLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateImplicitAssociationLambdaVersionrtJ0pYPql0oMrPzK7zu2Siz2S7Z7Ymq1s2rAdQf79Y"
+              "Ref": "CreateImplicitAssociationLambdaVersionJSCWXc3Oib0ONxBeJEJi4YGOwpeSlb1OLNSEmpmI"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-CreateImplicitAssociationLambdaFunctionQualifiedArn"
@@ -5417,7 +5905,7 @@
           "GetImplicitAssociationByIdLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetImplicitAssociationByIdLambdaVersionb9wypozIcOVb5zNQSl733fJhLpNhEWc7jPMYqm8"
+              "Ref": "GetImplicitAssociationByIdLambdaVersionmkHzLhlKuMqVWeiTQFNS03Q22KeKuwvs3FpcLttAic"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-GetImplicitAssociationByIdLambdaFunctionQualifiedArn"
@@ -5426,7 +5914,7 @@
           "UpdateImplicitAssociationLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UpdateImplicitAssociationLambdaVersionatEyv42g8mQ2IPxt1OLDVdGNbhhNnUe2CiksOFKPrw"
+              "Ref": "UpdateImplicitAssociationLambdaVersionRl2dupDCs9gN8Gpt7UfMJYNB4zAOsFj4RVkhQn5eMds"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-UpdateImplicitAssociationLambdaFunctionQualifiedArn"
@@ -5435,7 +5923,7 @@
           "DeleteImplicitAssociationLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DeleteImplicitAssociationLambdaVersionejy87ljf0F5x7BrCPBp7zgt6xU1Rb3csNlD4oSOYo"
+              "Ref": "DeleteImplicitAssociationLambdaVersion1MTqEcPnFZ91taJAWKbWS71UuCDfbBL5lKBbmbNcY"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-DeleteImplicitAssociationLambdaFunctionQualifiedArn"
@@ -5444,7 +5932,7 @@
           "CreateCognitiveTaskLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateCognitiveTaskLambdaVersionVT6zzsFhc218bYK0kt8r2S4JByC28dt4xeFSOKJZE"
+              "Ref": "CreateCognitiveTaskLambdaVersiondQvxtSaD04wYLp7PRLIxL6tV5Lc5jf0WcFjqLcEt7Y"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-CreateCognitiveTaskLambdaFunctionQualifiedArn"
@@ -5453,7 +5941,7 @@
           "GetCognitiveTaskByIdLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetCognitiveTaskByIdLambdaVersionAecMXe4TMoMqlKAb46lWfuyfvheA8M5LxVjd56HIo"
+              "Ref": "GetCognitiveTaskByIdLambdaVersionQGGsyZuRP0Bu42KMoVR8syhljqejhV6vw2S5FxitMg"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-GetCognitiveTaskByIdLambdaFunctionQualifiedArn"
@@ -5462,7 +5950,7 @@
           "UpdateCognitiveTaskLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UpdateCognitiveTaskLambdaVersionvWeKqNrMxyERw8fnwXA0gm6MTuwKIBYKRFqZ27I00A"
+              "Ref": "UpdateCognitiveTaskLambdaVersion1HaPPMYHAQAT1SLfCuiEMMDMxdJAkTSbFDjoaxnZ0"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-UpdateCognitiveTaskLambdaFunctionQualifiedArn"
@@ -5471,7 +5959,7 @@
           "DeleteCognitiveTaskLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DeleteCognitiveTaskLambdaVersionhyHNwtBQ3WwvPlJh1oSsdI1XmVlUy7oATtYUfT4MHE"
+              "Ref": "DeleteCognitiveTaskLambdaVersionXcRkVKVCCuqWMaosLnUNWcUgJHCaQMDzC2pH8"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-DeleteCognitiveTaskLambdaFunctionQualifiedArn"
@@ -5480,7 +5968,7 @@
           "CreateEyeTrackingTaskLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateEyeTrackingTaskLambdaVersiondpjf1hfAurrqrQ0ptrrBLSbeHW8Tu6r5tzOA9QKdn60"
+              "Ref": "CreateEyeTrackingTaskLambdaVersiondBTLEKTHXPQSSVowhliANT1GzgjoMD0YC2gGx5aHY"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-CreateEyeTrackingTaskLambdaFunctionQualifiedArn"
@@ -5489,7 +5977,7 @@
           "GetEyeTrackingTaskByIdLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GetEyeTrackingTaskByIdLambdaVersionVqBGfDOJ2kWPBg48c1FyuAxAyGgjtUqdvKRO5zM"
+              "Ref": "GetEyeTrackingTaskByIdLambdaVersionqusBlewJJcgGhKgmbl1RpHLlf4dGlS4doWBktmqbQ"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-GetEyeTrackingTaskByIdLambdaFunctionQualifiedArn"
@@ -5498,7 +5986,7 @@
           "UpdateEyeTrackingTaskLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UpdateEyeTrackingTaskLambdaVersionOkwJYIQ2dGMHNmC1jcFbsOs9b1B3bLAU1RqMlrrsHfo"
+              "Ref": "UpdateEyeTrackingTaskLambdaVersionc0FjssDwLIXnjnqhKdXJdO4vSV0ZpdtyBkj8MPmSI"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-UpdateEyeTrackingTaskLambdaFunctionQualifiedArn"
@@ -5507,10 +5995,46 @@
           "DeleteEyeTrackingTaskLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DeleteEyeTrackingTaskLambdaVersionc8Hcv43xyQ3tIXQw2t3vFxn7qSax6Jxl9xQCg5JI"
+              "Ref": "DeleteEyeTrackingTaskLambdaVersion0FmTmTbZ0xuMMBwQQ5kvqdbHqkfAb9GXHcMj9f305Q"
             },
             "Export": {
               "Name": "sls-emotio-x-backend-dev-DeleteEyeTrackingTaskLambdaFunctionQualifiedArn"
+            }
+          },
+          "CreateThankYouScreenLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "CreateThankYouScreenLambdaVersione26IgBjndAFNrwaiPnKldGMKFF1fYI2eUFbRjcpWpw"
+            },
+            "Export": {
+              "Name": "sls-emotio-x-backend-dev-CreateThankYouScreenLambdaFunctionQualifiedArn"
+            }
+          },
+          "GetThankYouScreenByIdLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "GetThankYouScreenByIdLambdaVersionNsFrGGXjkM7hrzAzKwLJHQ2PtvpsRqcZtnlZIN8A"
+            },
+            "Export": {
+              "Name": "sls-emotio-x-backend-dev-GetThankYouScreenByIdLambdaFunctionQualifiedArn"
+            }
+          },
+          "UpdateThankYouScreenLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "UpdateThankYouScreenLambdaVersionMPeydIuFGsqvtrSf5R9d918dRs56H6TAjIFUzCiRQE"
+            },
+            "Export": {
+              "Name": "sls-emotio-x-backend-dev-UpdateThankYouScreenLambdaFunctionQualifiedArn"
+            }
+          },
+          "DeleteThankYouScreenLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "DeleteThankYouScreenLambdaVersionaT7yHnzUudghuvWkusWNnjQcoZnQEwrfqBzy0IFmM"
+            },
+            "Export": {
+              "Name": "sls-emotio-x-backend-dev-DeleteThankYouScreenLambdaFunctionQualifiedArn"
             }
           },
           "ServiceEndpointWebsocket": {
@@ -5607,6 +6131,12 @@
             "Description": "URL para las rutas de Eye Tracking Task",
             "Value": {
               "Fn::Sub": "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/eye-tracking-task"
+            }
+          },
+          "ThankYouScreenApiUrl": {
+            "Description": "URL para las rutas de Thank You Screen",
+            "Value": {
+              "Fn::Sub": "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/thank-you-screen"
             }
           },
           "WebSocketApiEndpoint": {
@@ -5758,7 +6288,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "RegisterUserLambdaVersionZMIuupjRLc6vxcvEySbrS44vnTHIfs3RAq8mUaqvE"
+        "versionLogicalId": "RegisterUserLambdaVersionwZiutPF4m7pvMKK1whvg0W55BDHzV4cAQqmzSP4"
       },
       "getAllUsers": {
         "handler": "dist/controllers/controller.getAllUsers",
@@ -5778,7 +6308,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetAllUsersLambdaVersionkCnx1nA936LM2g14pFjl4Vx1GxWGU82CZA9EWiVMpA"
+        "versionLogicalId": "GetAllUsersLambdaVersionPtXAYenFFdww0RQD1UvI17ma56hrJG7nntJpzai8"
       },
       "getUserById": {
         "handler": "dist/controllers/controller.getUserById",
@@ -5798,7 +6328,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetUserByIdLambdaVersionj1pJQQQbjzu7PRu0HQoHoEuSO6HWasvJCIyhzJvNCQ"
+        "versionLogicalId": "GetUserByIdLambdaVersioneT1ZphKzQm1BbuJB6PZXbxcQ61xlUsCDA6kfjfHH84"
       },
       "deleteUserById": {
         "handler": "dist/controllers/controller.deleteUserById",
@@ -5818,7 +6348,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "DeleteUserByIdLambdaVersionnsrUdyLlFKbGRx3gcu2EdMnKx85FcbrtPwpPnmxaE0"
+        "versionLogicalId": "DeleteUserByIdLambdaVersionZjty6T6ApkbmmgJBtt3BfpAMjCZLpG7AmuHkNml24"
       },
       "updateUserById": {
         "handler": "dist/controllers/controller.updateUserById",
@@ -5838,7 +6368,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "UpdateUserByIdLambdaVersion1wUK51nZ3YEZkRexkL1tKSxbgbl0OPMAPU1wkE"
+        "versionLogicalId": "UpdateUserByIdLambdaVersionUlcDRAKdTfZIZG4lDmGOSYTYvY7pmcgR2ivb2upX9m8"
       },
       "loginUser": {
         "handler": "dist/controllers/controller.loginUser",
@@ -5858,7 +6388,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "LoginUserLambdaVersionUELgJO7UCg0DgYaacXq0SPxlhBgzm6NqSOuFZr97k"
+        "versionLogicalId": "LoginUserLambdaVersionJ1FN4JIjgRvjfRXwPerT6dSKyX0pIItG5sedgitqA"
       },
       "logoutUser": {
         "handler": "dist/controllers/controller.logoutUser",
@@ -5878,7 +6408,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "LogoutUserLambdaVersionV1UnrFdB8mX4XscIS0FskLmRhJ2rgFaJSwkmVv7t0"
+        "versionLogicalId": "LogoutUserLambdaVersionNGZOpRfHu55abOUfnw2KyatU4y7vkTGCoUP2lJEy9k"
       },
       "refreshToken": {
         "handler": "dist/controllers/controller.refreshToken",
@@ -5898,7 +6428,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "RefreshTokenLambdaVersionVgO5DRLiUCN4fExV11h31RnB1jwsjcGtbtH6vYjeGQ"
+        "versionLogicalId": "RefreshTokenLambdaVersionea1QYSKyHXcRnjRSmM4BaD98PX5jboeeZVHuRMc"
       },
       "createResearch": {
         "handler": "dist/controllers/createResearchController.createResearchWithImages",
@@ -5918,7 +6448,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "CreateResearchLambdaVersionnvYuKH8CuEEOFw8jV6waOVcVazmTPa5kGoKwYdHYQ"
+        "versionLogicalId": "CreateResearchLambdaVersionMPGaYcpDTpl5SFKYw1eQLZHW7QaIWpwjQeRuRS9u0"
       },
       "generatePresignedUrls": {
         "handler": "dist/controllers/imageController.uploadFilesToS3",
@@ -5938,7 +6468,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GeneratePresignedUrlsLambdaVersionMDwohNT45I7oaSI2EzIBDBBucAWkFf2OfRogPjfg4"
+        "versionLogicalId": "GeneratePresignedUrlsLambdaVersion7WacYh6I6GtujVuQ9HxlLuOtyKFJA8RKLTGbTFK0"
       },
       "connect": {
         "handler": "dist/websocket/connectHandler.connectHandler",
@@ -5955,7 +6485,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "ConnectLambdaVersionZPK4FcpdWYaJDnkCCbynGhd7HdzbyyVpEsd73W9ZYk"
+        "versionLogicalId": "ConnectLambdaVersionhmqO8feM2f7b0k8ixIZWFQt6PK31FyKgzrpzHs0DLBU"
       },
       "disconnect": {
         "handler": "dist/websocket/disconnectHandler.disconnectHandler",
@@ -5972,7 +6502,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "DisconnectLambdaVersionLbfeAr8WzGW3msWkHybz5xToOCGmL7Wm9jgewDUo2k"
+        "versionLogicalId": "DisconnectLambdaVersiondunr5xcTfuig7Z0yECyZDsWinfJAA2AlAgpjUMdk"
       },
       "defaultHandler": {
         "handler": "dist/websocket/defaultHandler.defaultHandler",
@@ -5987,7 +6517,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "DefaultHandlerLambdaVersione6zP2RK0AH46dftlRqMwuqXgE3l9QJCtijIIRYeOCE"
+        "versionLogicalId": "DefaultHandlerLambdaVersionIDqhWkssTxTkO3Yr921wI9bRuJmMyfz2I2G7HDOXzE"
       },
       "sendMessage": {
         "handler": "dist/websocket/sendMessageHandler.sendMessageHandler",
@@ -6004,7 +6534,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "SendMessageLambdaVersionu5yCDOtFYmgTPx1fc8UXOtJToOgnOKmaqgsuWaTKUc"
+        "versionLogicalId": "SendMessageLambdaVersionhmQYaQGXKws4J2tmRaldboNfxlEaBSeRsM32M4Nk"
       },
       "refresh": {
         "handler": "src/websocket/refreshHandler.refreshHandler",
@@ -6028,7 +6558,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "RefreshLambdaVersion4quMB0I7QWxr7bGLZIY9j09t86WuXmVPaUvUy2XtFc"
+        "versionLogicalId": "RefreshLambdaVersiontgrdSB6wi26TDr2Hz8H1dD5bAwydKyyj9gJqLUu5A"
       },
       "sendTemporaryPassword": {
         "handler": "dist/controllers/controller.sendTemporaryPassword",
@@ -6048,7 +6578,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "SendTemporaryPasswordLambdaVersionpCyGyFpR3HPUYywWt9s18b3CMGbcrrvzy5cu7nJqlqQ"
+        "versionLogicalId": "SendTemporaryPasswordLambdaVersion6euT1OA86PS4GSS5nptl5eslUvdO8VcVR0OwiVbDvY"
       },
       "uploadFilesToS3": {
         "handler": "dist/controllers/imageController.uploadFilesToS3",
@@ -6068,7 +6598,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "UploadFilesToS3LambdaVersionTJluSfcC4vwjxtDaXnYk9EjqFYASahZrLTIm8ctQ4"
+        "versionLogicalId": "UploadFilesToS3LambdaVersionQuhPRGjPThg5sWFknZXS5Eer8kB0ysyvB4gWEKyRkI"
       },
       "createScreener": {
         "handler": "dist/controllers/screenerController.createScreener",
@@ -6088,7 +6618,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "CreateScreenerLambdaVersion755dCLudSLzTaOyRglwZXEI7X0s2Lsno7i0rfRLh0s"
+        "versionLogicalId": "CreateScreenerLambdaVersionWnZ1X2LNS91UUR2a5mDkThLMpJ6EctBuLQEbSsME"
       },
       "getScreenerByResearch": {
         "handler": "dist/controllers/screenerController.getScreenerByResearch",
@@ -6108,7 +6638,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetScreenerByResearchLambdaVersionaxalHAoagXIEvrvRbfIiGXSeHHNLpAmWXqwzn35NE"
+        "versionLogicalId": "GetScreenerByResearchLambdaVersionxjMFxBSXGsq8wNzYPWJdTntcvzbnd9YtPxYlshoZNMI"
       },
       "updateScreener": {
         "handler": "dist/controllers/screenerController.updateScreener",
@@ -6128,7 +6658,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "UpdateScreenerLambdaVersionWqagkkKTOydQsAd30aTt74U2DavqwrUXR2sZX68Zc"
+        "versionLogicalId": "UpdateScreenerLambdaVersionaFt7aIXoR1ko4Ium1JT5N18Akx4tCD9w6EvgAm30"
       },
       "deleteScreener": {
         "handler": "dist/controllers/screenerController.deleteScreener",
@@ -6148,7 +6678,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "DeleteScreenerLambdaVersionKvBTpChGSX7Y9UQH6B6LEnRe1j7ZPxfgazD8QkBX4dk"
+        "versionLogicalId": "DeleteScreenerLambdaVersionzHhzv792T3qmvMTjeytbfN90MkDuLSLPpZlaenVJjo"
       },
       "createWelcomeScreen": {
         "handler": "dist/controllers/welcomeScreenController.createWelcomeScreen",
@@ -6168,7 +6698,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "CreateWelcomeScreenLambdaVersionNQOQXOOD8gig8k0tZ9SFLuTcwF6BRKZ0YLm1yeUxoo"
+        "versionLogicalId": "CreateWelcomeScreenLambdaVersionT4HgyMIFAffTkmICOC4XDunPFqu95VvnwmZWlp8Bc"
       },
       "getWelcomeScreenByResearch": {
         "handler": "dist/controllers/welcomeScreenController.getWelcomeScreenByResearch",
@@ -6188,7 +6718,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetWelcomeScreenByResearchLambdaVersiont2VC9thN0HEsg7IUsKaWVDDbqJdMoyRIOWPuj4fx9m0"
+        "versionLogicalId": "GetWelcomeScreenByResearchLambdaVersionCna8MdrIwE9Fr6w4iK51ZbT38loabVIc2oi5y5Gxm4"
       },
       "updateWelcomeScreen": {
         "handler": "dist/controllers/welcomeScreenController.updateWelcomeScreen",
@@ -6208,7 +6738,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "UpdateWelcomeScreenLambdaVersionChReQEygCb91QQXDsJIwAJgzpJw8lQa6J8m8z2J8g64"
+        "versionLogicalId": "UpdateWelcomeScreenLambdaVersiontTCBHzVnCldkSbx0elaKu6s13XV2QDKsNMJsg0rd5l0"
       },
       "deleteWelcomeScreen": {
         "handler": "dist/controllers/welcomeScreenController.deleteWelcomeScreen",
@@ -6228,7 +6758,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "DeleteWelcomeScreenLambdaVersionFMjdaW3FmuY1j7NJTrElUFo8qa4n4WV7zfEJpQ5n0Bs"
+        "versionLogicalId": "DeleteWelcomeScreenLambdaVersionirf5hM6E0PEo9aT5SEWbh3v4Ks88diDsDyPeqs3AM"
       },
       "createImplicitAssociation": {
         "handler": "dist/controllers/implicitAssociationController.createImplicitAssociation",
@@ -6248,7 +6778,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "CreateImplicitAssociationLambdaVersionrtJ0pYPql0oMrPzK7zu2Siz2S7Z7Ymq1s2rAdQf79Y"
+        "versionLogicalId": "CreateImplicitAssociationLambdaVersionJSCWXc3Oib0ONxBeJEJi4YGOwpeSlb1OLNSEmpmI"
       },
       "getImplicitAssociationById": {
         "handler": "dist/controllers/implicitAssociationController.getImplicitAssociationById",
@@ -6268,7 +6798,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetImplicitAssociationByIdLambdaVersionb9wypozIcOVb5zNQSl733fJhLpNhEWc7jPMYqm8"
+        "versionLogicalId": "GetImplicitAssociationByIdLambdaVersionmkHzLhlKuMqVWeiTQFNS03Q22KeKuwvs3FpcLttAic"
       },
       "updateImplicitAssociation": {
         "handler": "dist/controllers/implicitAssociationController.updateImplicitAssociation",
@@ -6288,7 +6818,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "UpdateImplicitAssociationLambdaVersionatEyv42g8mQ2IPxt1OLDVdGNbhhNnUe2CiksOFKPrw"
+        "versionLogicalId": "UpdateImplicitAssociationLambdaVersionRl2dupDCs9gN8Gpt7UfMJYNB4zAOsFj4RVkhQn5eMds"
       },
       "deleteImplicitAssociation": {
         "handler": "dist/controllers/implicitAssociationController.deleteImplicitAssociation",
@@ -6308,7 +6838,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "DeleteImplicitAssociationLambdaVersionejy87ljf0F5x7BrCPBp7zgt6xU1Rb3csNlD4oSOYo"
+        "versionLogicalId": "DeleteImplicitAssociationLambdaVersion1MTqEcPnFZ91taJAWKbWS71UuCDfbBL5lKBbmbNcY"
       },
       "createCognitiveTask": {
         "handler": "dist/controllers/cognitiveTaskController.createCognitiveTask",
@@ -6328,7 +6858,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "CreateCognitiveTaskLambdaVersionVT6zzsFhc218bYK0kt8r2S4JByC28dt4xeFSOKJZE"
+        "versionLogicalId": "CreateCognitiveTaskLambdaVersiondQvxtSaD04wYLp7PRLIxL6tV5Lc5jf0WcFjqLcEt7Y"
       },
       "getCognitiveTaskById": {
         "handler": "dist/controllers/cognitiveTaskController.getCognitiveTaskById",
@@ -6348,7 +6878,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetCognitiveTaskByIdLambdaVersionAecMXe4TMoMqlKAb46lWfuyfvheA8M5LxVjd56HIo"
+        "versionLogicalId": "GetCognitiveTaskByIdLambdaVersionQGGsyZuRP0Bu42KMoVR8syhljqejhV6vw2S5FxitMg"
       },
       "updateCognitiveTask": {
         "handler": "dist/controllers/cognitiveTaskController.updateCognitiveTask",
@@ -6368,7 +6898,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "UpdateCognitiveTaskLambdaVersionvWeKqNrMxyERw8fnwXA0gm6MTuwKIBYKRFqZ27I00A"
+        "versionLogicalId": "UpdateCognitiveTaskLambdaVersion1HaPPMYHAQAT1SLfCuiEMMDMxdJAkTSbFDjoaxnZ0"
       },
       "deleteCognitiveTask": {
         "handler": "dist/controllers/cognitiveTaskController.deleteCognitiveTask",
@@ -6388,7 +6918,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "DeleteCognitiveTaskLambdaVersionhyHNwtBQ3WwvPlJh1oSsdI1XmVlUy7oATtYUfT4MHE"
+        "versionLogicalId": "DeleteCognitiveTaskLambdaVersionXcRkVKVCCuqWMaosLnUNWcUgJHCaQMDzC2pH8"
       },
       "createEyeTrackingTask": {
         "handler": "dist/controllers/eyeTrackingController.createEyeTrackingTask",
@@ -6408,7 +6938,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "CreateEyeTrackingTaskLambdaVersiondpjf1hfAurrqrQ0ptrrBLSbeHW8Tu6r5tzOA9QKdn60"
+        "versionLogicalId": "CreateEyeTrackingTaskLambdaVersiondBTLEKTHXPQSSVowhliANT1GzgjoMD0YC2gGx5aHY"
       },
       "getEyeTrackingTaskById": {
         "handler": "dist/controllers/eyeTrackingController.getEyeTrackingTaskById",
@@ -6428,7 +6958,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "GetEyeTrackingTaskByIdLambdaVersionVqBGfDOJ2kWPBg48c1FyuAxAyGgjtUqdvKRO5zM"
+        "versionLogicalId": "GetEyeTrackingTaskByIdLambdaVersionqusBlewJJcgGhKgmbl1RpHLlf4dGlS4doWBktmqbQ"
       },
       "updateEyeTrackingTask": {
         "handler": "dist/controllers/eyeTrackingController.updateEyeTrackingTask",
@@ -6448,7 +6978,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "UpdateEyeTrackingTaskLambdaVersionOkwJYIQ2dGMHNmC1jcFbsOs9b1B3bLAU1RqMlrrsHfo"
+        "versionLogicalId": "UpdateEyeTrackingTaskLambdaVersionc0FjssDwLIXnjnqhKdXJdO4vSV0ZpdtyBkj8MPmSI"
       },
       "deleteEyeTrackingTask": {
         "handler": "dist/controllers/eyeTrackingController.deleteEyeTrackingTask",
@@ -6468,7 +6998,87 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "DeleteEyeTrackingTaskLambdaVersionc8Hcv43xyQ3tIXQw2t3vFxn7qSax6Jxl9xQCg5JI"
+        "versionLogicalId": "DeleteEyeTrackingTaskLambdaVersion0FmTmTbZ0xuMMBwQQ5kvqdbHqkfAb9GXHcMj9f305Q"
+      },
+      "createThankYouScreen": {
+        "handler": "dist/controllers/thankYouScreenController.createThankYouScreen",
+        "events": [
+          {
+            "httpApi": {
+              "path": "/thank-you-screen",
+              "method": "post"
+            },
+            "resolvedMethod": "POST",
+            "resolvedPath": "/thank-you-screen"
+          }
+        ],
+        "name": "emotio-x-backend-dev-createThankYouScreen",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "CreateThankYouScreenLambdaVersione26IgBjndAFNrwaiPnKldGMKFF1fYI2eUFbRjcpWpw"
+      },
+      "getThankYouScreenById": {
+        "handler": "dist/controllers/thankYouScreenController.getThankYouScreenById",
+        "events": [
+          {
+            "httpApi": {
+              "path": "/thank-you-screen/{id}",
+              "method": "get"
+            },
+            "resolvedMethod": "GET",
+            "resolvedPath": "/thank-you-screen/{id}"
+          }
+        ],
+        "name": "emotio-x-backend-dev-getThankYouScreenById",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "GetThankYouScreenByIdLambdaVersionNsFrGGXjkM7hrzAzKwLJHQ2PtvpsRqcZtnlZIN8A"
+      },
+      "updateThankYouScreen": {
+        "handler": "dist/controllers/thankYouScreenController.updateThankYouScreen",
+        "events": [
+          {
+            "httpApi": {
+              "path": "/thank-you-screen/{id}",
+              "method": "put"
+            },
+            "resolvedMethod": "PUT",
+            "resolvedPath": "/thank-you-screen/{id}"
+          }
+        ],
+        "name": "emotio-x-backend-dev-updateThankYouScreen",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "UpdateThankYouScreenLambdaVersionMPeydIuFGsqvtrSf5R9d918dRs56H6TAjIFUzCiRQE"
+      },
+      "deleteThankYouScreen": {
+        "handler": "dist/controllers/thankYouScreenController.deleteThankYouScreen",
+        "events": [
+          {
+            "httpApi": {
+              "path": "/thank-you-screen/{id}",
+              "method": "delete"
+            },
+            "resolvedMethod": "DELETE",
+            "resolvedPath": "/thank-you-screen/{id}"
+          }
+        ],
+        "name": "emotio-x-backend-dev-deleteThankYouScreen",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "nodejs18.x",
+        "vpc": {},
+        "versionLogicalId": "DeleteThankYouScreenLambdaVersionaT7yHnzUudghuvWkusWNnjQcoZnQEwrfqBzy0IFmM"
       }
     },
     "resources": {
@@ -6633,6 +7243,12 @@
             "Fn::Sub": "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/eye-tracking-task"
           }
         },
+        "ThankYouScreenApiUrl": {
+          "Description": "URL para las rutas de Thank You Screen",
+          "Value": {
+            "Fn::Sub": "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/thank-you-screen"
+          }
+        },
         "WebSocketApiEndpoint": {
           "Description": "WebSocket API Endpoint",
           "Value": {
@@ -6672,7 +7288,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/emotio-x-backend/dev/1738113636078-2025-01-29T01:20:36.078Z",
+    "artifactDirectoryName": "serverless/emotio-x-backend/dev/1738114733023-2025-01-29T01:38:53.023Z",
     "artifact": "emotio-x-backend.zip"
   }
 }

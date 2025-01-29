@@ -238,9 +238,29 @@ export const submitEyeTrackingData = async (researchId: string): Promise<void> =
  * Función para enviar los datos de la Thank You Screen
  */
 export const submitThankYouScreenData = async (researchId: string): Promise<void> => {
-  const { thankYouScreen } = useWelcomeScreenStore.getState();
-  await api.post(`/thank-you-screen`, { ...thankYouScreen, researchId });
+  try {
+    // Obtener datos del store
+    const { thankYouScreen } = useWelcomeScreenStore.getState();
+
+    // Validar que `thankYouScreen` tenga los campos requeridos
+    if (!thankYouScreen) {
+      throw new Error("Thank You Screen data is missing.");
+    }
+
+    // Enviar datos al backend
+    const response = await api.post(`/thank-you-screen`, {
+      ...thankYouScreen,
+      researchId,
+    });
+
+    console.log("Thank You Screen data submitted successfully:", response.data);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unexpected error occurred.";
+    console.error("Error submitting Thank You Screen data:", errorMessage);
+    throw new Error(errorMessage);
+  }
 };
+
 
 export default {
   submitScreenerData,

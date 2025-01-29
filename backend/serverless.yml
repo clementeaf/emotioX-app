@@ -277,7 +277,7 @@ functions:
           path: /welcome-screen/{welcomeScreenId}
           method: delete
 
-  ### IMPLICIT ASSOCIATION ###
+  ### IMPLICIT ASSOCIATION SCREEN ROUTES ###
   # Crear un ImplicitAssociation
   createImplicitAssociation:
     handler: dist/controllers/implicitAssociationController.createImplicitAssociation
@@ -310,7 +310,7 @@ functions:
           path: /implicit-association/{id}
           method: delete
 
-  ### COGNITIVE TASK ###
+  ### COGNITIVE TASK SCREEN ROUTES ###
   # Crear una Cognitive Task
   createCognitiveTask:
     handler: dist/controllers/cognitiveTaskController.createCognitiveTask
@@ -343,7 +343,7 @@ functions:
           path: /cognitive-task/{id}
           method: delete
 
-  ### EYE TRACKING ###
+  ### EYE TRACKING SCREEN ROUTES ###
   # Crear un Eye Tracking Task
   createEyeTrackingTask:
     handler: dist/controllers/eyeTrackingController.createEyeTrackingTask
@@ -374,6 +374,39 @@ functions:
     events:
       - httpApi:
           path: /eye-tracking-task/{id}
+          method: delete
+
+  ### THANK YOU SCREEN ROUTES ###
+  # Crear una Thank You Screen
+  createThankYouScreen:
+    handler: dist/controllers/thankYouScreenController.createThankYouScreen
+    events:
+      - httpApi:
+          path: /thank-you-screen
+          method: post
+
+  # Obtener una Thank You Screen por su ID
+  getThankYouScreenById:
+    handler: dist/controllers/thankYouScreenController.getThankYouScreenById
+    events:
+      - httpApi:
+          path: /thank-you-screen/{id}
+          method: get
+
+  # Actualizar una Thank You Screen existente
+  updateThankYouScreen:
+    handler: dist/controllers/thankYouScreenController.updateThankYouScreen
+    events:
+      - httpApi:
+          path: /thank-you-screen/{id}
+          method: put
+
+  # Eliminar una Thank You Screen por su ID
+  deleteThankYouScreen:
+    handler: dist/controllers/thankYouScreenController.deleteThankYouScreen
+    events:
+      - httpApi:
+          path: /thank-you-screen/{id}
           method: delete
 
 
@@ -481,6 +514,9 @@ resources:
     EyeTrackingApiUrl:
       Description: "URL para las rutas de Eye Tracking Task"
       Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/eye-tracking-task"
+    ThankYouScreenApiUrl:
+      Description: "URL para las rutas de Thank You Screen"
+      Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/thank-you-screen"
     WebSocketApiEndpoint:
       Description: "WebSocket API Endpoint"
       Value: !Sub "wss://${WebSocketApi}.execute-api.${AWS::Region}.amazonaws.com/${self:provider.stage}"

@@ -6,12 +6,21 @@ export const apiConfig = {
                    "sendTemporaryPassword":  {
                                                  "POST":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/send-temporary-password"
                                              },
+                   "getThankYouScreenById":  {
+                                                 "GET":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/thank-you-screen/{{id}}"
+                                             },
+                   "deleteThankYouScreen":  {
+                                                "DELETE":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/thank-you-screen/{{id}}"
+                                            },
                    "getWelcomeScreenByResearch":  {
                                                       "GET":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/welcome-screen/{{researchId}}"
                                                   },
                    "logoutUser":  {
                                       "POST":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/logout"
                                   },
+                   "createThankYouScreen":  {
+                                                "POST":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/thank-you-screen"
+                                            },
                    "deleteCognitiveTask":  {
                                                "DELETE":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/cognitive-task/{{id}}"
                                            },
@@ -72,6 +81,9 @@ export const apiConfig = {
                    "updateScreener":  {
                                           "PUT":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/screener/{{researchId}}"
                                       },
+                   "updateThankYouScreen":  {
+                                                "PUT":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/thank-you-screen/{{id}}"
+                                            },
                    "updateImplicitAssociation":  {
                                                      "PUT":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/implicit-association/{{id}}"
                                                  },
