@@ -21,6 +21,9 @@ export const apiConfig = {
                    "deleteScreener":  {
                                           "DELETE":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/screener/{{screenerId}}"
                                       },
+                   "getEyeTrackingTaskById":  {
+                                                  "GET":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/eye-tracking-task/{{id}}"
+                                              },
                    "createScreener":  {
                                           "POST":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/screener"
                                       },
@@ -33,9 +36,15 @@ export const apiConfig = {
                    "updateWelcomeScreen":  {
                                                "PUT":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/welcome-screen/{{researchId}}"
                                            },
+                   "updateEyeTrackingTask":  {
+                                                 "PUT":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/eye-tracking-task/{{id}}"
+                                             },
                    "getUserById":  {
                                        "GET":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/get-user/{{id}}"
                                    },
+                   "createEyeTrackingTask":  {
+                                                 "POST":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/eye-tracking-task"
+                                             },
                    "createCognitiveTask":  {
                                                "POST":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/cognitive-task"
                                            },
@@ -80,6 +89,9 @@ export const apiConfig = {
                                     },
                    "generatePresignedUrls":  {
                                                  "POST":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/research/generate-presigned-urls"
+                                             },
+                   "deleteEyeTrackingTask":  {
+                                                 "DELETE":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/eye-tracking-task/{{id}}"
                                              },
                    "deleteImplicitAssociation":  {
                                                      "DELETE":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/implicit-association/{{id}}"

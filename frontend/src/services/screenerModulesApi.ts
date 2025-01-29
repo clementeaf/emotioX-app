@@ -183,9 +183,56 @@ export const submitCognitiveTaskData = async (researchId: string): Promise<void>
  * Función para enviar los datos del Eye Tracking
  */
 export const submitEyeTrackingData = async (researchId: string): Promise<void> => {
-  const eyeTrackingData = useEyeTrackingStore.getState();
-  await api.post(`/eye-tracking`, { ...eyeTrackingData, researchId });
+  try {
+    // Obtener datos del estado
+    const eyeTrackingData = useEyeTrackingStore.getState();
+
+    // Validación básica
+    const validateEyeTrackingData = (data: typeof eyeTrackingData) => {
+      if (!researchId) {
+        throw new Error("Research ID is required.");
+      }
+      if (!data.taskInstruction || data.taskInstruction.trim() === "") {
+        throw new Error("Task instruction is required.");
+      }
+      if (data.uploadedFiles.some(file => !file.fileName || file.fileSize === undefined)) {
+        throw new Error("Uploaded files must have a valid fileName and fileSize.");
+      }
+    };
+
+    validateEyeTrackingData(eyeTrackingData);
+
+    // Formatear datos para enviar al backend
+    const formattedData = {
+      researchId,
+      required: eyeTrackingData.required,
+      taskInstruction: eyeTrackingData.taskInstruction,
+      uploadedFiles: eyeTrackingData.uploadedFiles.map(file => ({
+        fileName: file.fileName || null, // Tolerancia a campos vacíos
+        fileSize: file.fileSize || null,
+      })),
+      randomize: eyeTrackingData.randomize,
+      isShelfTask: eyeTrackingData.isShelfTask,
+      resizeImage: eyeTrackingData.resizeImage,
+      useEyeTrackingDevice: eyeTrackingData.useEyeTrackingDevice,
+      useWebcamBasedTracking: eyeTrackingData.useWebcamBasedTracking,
+      enableClickMeasurement: eyeTrackingData.enableClickMeasurement,
+      finishOnAnyKey: eyeTrackingData.finishOnAnyKey,
+      holdDeviceVertical: eyeTrackingData.holdDeviceVertical,
+      holdDeviceHorizontal: eyeTrackingData.holdDeviceHorizontal,
+      displayTime: eyeTrackingData.displayTime,
+    };
+
+    // Enviar datos al backend
+    const response = await api.post(`/eye-tracking-task`, formattedData);
+    console.log("Eye Tracking data submitted successfully:", response.data);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error submitting Eye Tracking data:", errorMessage);
+    throw new Error(errorMessage || "Failed to submit Eye Tracking data. Please try again.");
+  }
 };
+
 
 /**
  * Función para enviar los datos de la Thank You Screen
