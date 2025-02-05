@@ -2,16 +2,17 @@ import { uploadFileToS3 } from "../services/uploadImageToS3";
 import { UploadedImage } from "../types/types";
 
 /**
- * Sube archivos a S3 y actualiza el estado con la URL obtenida.
+ * ✅ Función global para subir archivos a S3 y actualizar cualquier store dinámicamente.
  * @param filesToUpload - Lista de archivos a subir con sus IDs.
- * @param updateUploadedImage - Función para actualizar el estado con la URL del archivo subido.
+ * @param updateSingleImage - Función para actualizar una imagen única en el store.
+ * @param updateMultipleImages - Función para actualizar imágenes múltiples en el store.
+ * @param getStoreState - Función para obtener el estado actual del store.
  */
-/** ✅ Ahora distingue entre `singleImage` y `multipleImages` */
 export const findAndUploadFiles = async (
   filesToUpload: { id: number; file: File; isMultiple: boolean }[],
   updateSingleImage: (id: number, image: UploadedImage) => void,
   updateMultipleImages: (id: number, image: UploadedImage) => void,
-  getQuestions: () => any // ✅ Se pasa `get()` desde el store
+  getStoreState: () => any // ✅ Obtener estado dinámico sin hardcodear stores
 ) => {
   if (filesToUpload.length === 0) {
     console.log("✅ No files to upload.");
@@ -22,7 +23,14 @@ export const findAndUploadFiles = async (
     await Promise.all(
       filesToUpload.map(async ({ id, file, isMultiple }) => {
         try {
-          const uploadedUrl = await uploadFileToS3(file); // 🔄 Subida a S3
+          // 🔍 Inspeccionamos el archivo antes de subirlo
+          console.log(`📂 Archivo a subir (ID ${id}):`, {
+            fileName: file.name,
+            fileSize: file.size,
+            fileType: file.type,
+          });
+
+          const uploadedUrl = await uploadFileToS3(file);
           console.log(`✅ File uploaded for ID ${id}: ${uploadedUrl}`);
 
           const uploadedImage: UploadedImage = {
@@ -37,9 +45,9 @@ export const findAndUploadFiles = async (
 
           // ✅ **Actualizar el `store` según el tipo de imagen**
           if (isMultiple) {
-            console.log(`🔄 Antes de actualizar store para ID ${id}:`, getQuestions().questions);
+            console.log(`🔄 Antes de actualizar store para ID ${id}:`, getStoreState());
             updateMultipleImages(id, uploadedImage);
-            console.log(`✅ Después de actualizar store para ID ${id}:`, getQuestions().questions);
+            console.log(`✅ Después de actualizar store para ID ${id}:`, getStoreState());
           } else {
             updateSingleImage(id, uploadedImage);
           }
@@ -54,5 +62,3 @@ export const findAndUploadFiles = async (
     console.error("❌ Error uploading files:", error);
   }
 };
-
-

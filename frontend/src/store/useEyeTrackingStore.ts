@@ -3,6 +3,7 @@ import { create } from "zustand";
 export interface UploadedFile {
     fileName: string;
     fileSize: number;
+    url?: string;
 }
 
 interface EyeTrackingStore {
@@ -13,6 +14,7 @@ interface EyeTrackingStore {
     setTaskInstruction: (value: string) => void;
 
     uploadedFiles: UploadedFile[];
+    updateUploadedFile: (fileName: string, url: string) => void; // ✅ Nueva función
     addUploadedFiles: (files: UploadedFile[]) => void;
     removeUploadedFile: (fileName: string) => void;
 
@@ -48,7 +50,7 @@ interface EyeTrackingStore {
     setDisplayTime: (value: string) => void;
 }
 
-export const useEyeTrackingStore = create<EyeTrackingStore>((set) => ({
+export const useEyeTrackingStore = create<EyeTrackingStore>((set, get) => ({
     required: false,
     setRequired: (value) => set({ required: value }),
 
@@ -63,6 +65,13 @@ export const useEyeTrackingStore = create<EyeTrackingStore>((set) => ({
     removeUploadedFile: (fileName) =>
         set((state) => ({
             uploadedFiles: state.uploadedFiles.filter((file) => file.fileName !== fileName),
+        })),
+
+    updateUploadedFile: (fileName, url) =>
+        set((state) => ({
+            uploadedFiles: state.uploadedFiles.map((file) =>
+                file.fileName === fileName ? { ...file, url } : file
+            ),
         })),
 
     randomize: false,
@@ -94,4 +103,14 @@ export const useEyeTrackingStore = create<EyeTrackingStore>((set) => ({
 
     displayTime: "10 secs",
     setDisplayTime: (value) => set({ displayTime: value }),
+
+    // ✅ Agregar `getFilesToUpload`
+    getFilesToUpload: () => {
+        const state = get();
+        return state.uploadedFiles.map((file, index) => ({
+            id: index,
+            file: new File([""], file.fileName), // Placeholder file, ajustar según tu lógica real
+            isMultiple: true,
+        }));
+    },
 }));
