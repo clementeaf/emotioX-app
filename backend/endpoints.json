@@ -106,5 +106,17 @@
  },
  "deleteThankYouScreen": {
   "DELETE": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/thank-you-screen/{{id}}"
+ },
+ "createRecruitmentLink": {
+  "POST": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/recruitment-link"
+ },
+ "getAllRecruitmentLinks": {
+  "GET": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/recruitment-link"
+ },
+ "getRecruitmentLinkById": {
+  "GET": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/recruitment-link/{{id}}"
+ },
+ "updateRecruitmentLink": {
+  "PUT": "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/recruitment-link/{{id}}"
  }
 }

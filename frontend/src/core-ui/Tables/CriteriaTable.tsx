@@ -17,7 +17,7 @@ import { CriteriaTableProps } from '../../types/types';
 
 const TIMES: (300 | 400 | 500)[] = [300, 400, 500];
 
-export function CriteriaTable({
+export default function CriteriaTable({
   timeSelection,
   table,
   showResults,

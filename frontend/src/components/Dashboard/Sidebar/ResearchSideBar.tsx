@@ -5,7 +5,7 @@ import { researchStagesConfig } from '../../../config/researchConfig';
 import { useResultsStore } from '../../../store/useResultStore';
 import { findAndUploadFiles } from '../../../services/findAndUploadFiles';
 import { ResearchSidebarProps } from '../../../types/types';
-import { normalizeLabel, submitActions } from '../../../utils';
+import { normalizeLabel, stageIcons, submitActions } from '../../../utils';
 
 export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarProps) {
   const { setStageIndex } = useSelectedResearchStore();
@@ -19,34 +19,34 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
     checked?: boolean
   ) => {
     if (!checked) return;
-  
+
     try {
       const researchId = localStorage.getItem("currentResearchId");
       if (!researchId) {
         console.error("❌ Research ID not found in localStorage");
         return;
       }
-  
+
       const stageConfig = researchStagesConfig[frameworkType][stageType].find(
         (stage) => normalizeLabel(stage.label) === normalizeLabel(label)
       );
-  
+
       if (!stageConfig || !stageConfig.getStore) {
         console.warn(`⚠️ No store found for label: "${label}"`);
         return;
       }
-  
+
       const store = stageConfig.getStore();
-  
+
       if (!store || typeof store !== "object" || typeof store.getFilesToUpload !== "function") {
         console.error(`❌ Error: store no es válido o no tiene getFilesToUpload() para "${label}".`, store);
         return;
       }
-  
+
       // ✅ Obtener archivos a subir
       const filesToUpload = store.getFilesToUpload();
       console.log(`📂 Archivos a subir para "${label}":`, filesToUpload);
-  
+
       // ✅ Si hay archivos, subirlos a S3 y actualizar el store
       if (filesToUpload.length > 0) {
         await findAndUploadFiles(
@@ -70,11 +70,10 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
           },
           store.getState // ✅ Obtener el estado dinámicamente sin hardcodear stores
         );
-        
       } else {
         console.log(`✅ No hay archivos para subir en "${label}".`);
       }
-  
+
       // ✅ Enviar datos al backend si hay una acción definida
       const submitAction = submitActions[normalizeLabel(label)];
       if (submitAction) {
@@ -86,8 +85,6 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
       console.error(`❌ Error submitting data for label: "${label}"`, error);
     }
   };
-  
-
 
   return (
     <Box sx={{ width: '250px' }}>
@@ -113,17 +110,35 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
               cursor: 'pointer',
             }}
           >
-            <Checkbox
-              onChange={(event) => getStore && handleCheckboxChange(label, frameworkType, stageType, event.target.checked)}
-              sx={{ mr: 1 }}
-            />
+            {stageType === 'Build' && (
+              <Checkbox
+                onChange={(event) => getStore && handleCheckboxChange(label, frameworkType, stageType, event.target.checked)}
+                sx={{ mr: 1 }}
+              />
+            )}
+
+            {/* Cambiar Typography para que no genere un <p> */}
             <Typography
+              component="div" // Cambiar de <p> a <div>
               onClick={() => setSelectedSection(label)}
-              sx={{ color: 'black', cursor: 'pointer' }}
+              sx={{
+                color: 'black',
+                cursor: 'pointer',
+                display: 'flex',
+                width: '100%',
+                justifyContent: 'space-between',
+              }}
             >
               {label}
+
+              {stageType === "Recruit" && stageIcons[label] && (
+                <Box sx={{ display: "flex", alignItems: "center", mr: 1 }}>
+                  {stageIcons[label]}
+                </Box>
+              )}
             </Typography>
           </ListItem>
+
         ))}
         <Box p={2}>
           <Button variant="contained" color="primary" fullWidth>Save Modules</Button>

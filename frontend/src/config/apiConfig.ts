@@ -12,6 +12,9 @@ export const apiConfig = {
                    "deleteThankYouScreen":  {
                                                 "DELETE":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/thank-you-screen/{{id}}"
                                             },
+                   "getAllRecruitmentLinks":  {
+                                                  "GET":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/recruitment-link"
+                                              },
                    "getWelcomeScreenByResearch":  {
                                                       "GET":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/welcome-screen/{{researchId}}"
                                                   },
@@ -24,9 +27,15 @@ export const apiConfig = {
                    "deleteCognitiveTask":  {
                                                "DELETE":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/cognitive-task/{{id}}"
                                            },
+                   "updateRecruitmentLink":  {
+                                                 "PUT":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/recruitment-link/{{id}}"
+                                             },
                    "deleteWelcomeScreen":  {
                                                "DELETE":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/welcome-screen/{{welcomeScreenId}}"
                                            },
+                   "getRecruitmentLinkById":  {
+                                                  "GET":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/recruitment-link/{{id}}"
+                                              },
                    "deleteScreener":  {
                                           "DELETE":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/screener/{{screenerId}}"
                                       },
@@ -39,6 +48,9 @@ export const apiConfig = {
                    "loginUser":  {
                                      "POST":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/login"
                                  },
+                   "createRecruitmentLink":  {
+                                                 "POST":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/recruitment-link"
+                                             },
                    "createImplicitAssociation":  {
                                                      "POST":  "https://gmwvbhostj.execute-api.us-east-1.amazonaws.com/implicit-association"
                                                  },

@@ -3,6 +3,10 @@ import { FormDataState, UploadedImage } from "./types/types";
 import { Target } from "./store/useImplicitAssociationStore";
 import { submitCognitiveTaskData, submitEyeTrackingData, submitImplicitAssociationData, submitScreenerData, submitThankYouScreenData, submitWelcomeScreenData } from "./services/screenerModulesApi";
 import { uploadFileToS3 } from "./services/uploadImageToS3";
+import DescriptionIcon from "@mui/icons-material/Description";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import MemoryIcon from "@mui/icons-material/Memory";
+import PsychologyIcon from "@mui/icons-material/Psychology";
 
 export const steps = ['Name the Research', 'Kind of Research', 'Techniques for Research'];
 
@@ -174,4 +178,12 @@ export const processUploadedImage = async (image: UploadedImage): Promise<{ file
     throw new Error(`La imagen con ID ${image.id} no tiene un archivo ni URL válido.`);
 };
 
-  
+// Mapa de íconos para cada etapa
+export const stageIcons: Record<string, JSX.Element> = {
+  Screener: <DescriptionIcon color="action" />,
+  "Welcome screen": <DescriptionIcon color="action" />,
+  "Implicit Association": <PsychologyIcon color="action" />,
+  "Cognitive task": <MemoryIcon color="action" />,
+  "Eye Tracking": <VisibilityIcon color="action" />,
+  "Thank you screen": <DescriptionIcon color="action" />,
+};

@@ -109,7 +109,7 @@ export const useEyeTrackingStore = create<EyeTrackingStore>((set, get) => ({
         const state = get();
         return state.uploadedFiles.map((file, index) => ({
             id: index,
-            file: new File([""], file.fileName), // Placeholder file, ajustar según tu lógica real
+            file: new File([""], file.fileName),
             isMultiple: true,
         }));
     },

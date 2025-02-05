@@ -90,7 +90,7 @@ const componentsList = [
   { label: "ScatterPlot Component", component: <ScatterPlotComponent/> },
   { label: "Project Card", component: <ProjectCard/> },
   { label: "EmotionFlow Chart", component: <EmotionFlowChart/> },
-  { label: "Gradient Bar", component: <GradientBar/> },
+  { label: "Gradient Bar", component: <GradientBar maxWidth={0}/> },
   { label: "EmotionMaps Component", component: <EmotionMapsComponent/> },
 //   { label: "Heatmap Selector", component: <HeatmapSelector/> },
   { label: "Heatmap Overlay", component:  <HeatMapOverlay /> },

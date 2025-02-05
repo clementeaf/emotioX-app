@@ -409,6 +409,35 @@ functions:
           path: /thank-you-screen/{id}
           method: delete
 
+  ### Recruitment Link ###
+  createRecruitmentLink:
+    handler: dist/controllers/recruitmentLinkController.createRecruitmentLink
+    events:
+      - httpApi:
+          path: /recruitment-link
+          method: post
+
+  getAllRecruitmentLinks:
+    handler: dist/controllers/recruitmentLinkController.getAllRecruitmentLinks
+    events:
+      - httpApi:
+          path: /recruitment-link
+          method: get
+
+  getRecruitmentLinkById:
+    handler: dist/controllers/recruitmentLinkController.getRecruitmentLinkById
+    events:
+      - httpApi:
+          path: /recruitment-link/{id}
+          method: get
+
+  updateRecruitmentLink:
+    handler: dist/controllers/recruitmentLinkController.updateRecruitmentLink
+    events:
+      - httpApi:
+          path: /recruitment-link/{id}
+          method: put
+
 
 resources:
   Resources:
@@ -517,6 +546,9 @@ resources:
     ThankYouScreenApiUrl:
       Description: "URL para las rutas de Thank You Screen"
       Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/thank-you-screen"
+    RecruitmentLinkApiUrl:
+      Description: "URL base para las rutas de Recruitment Link"
+      Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/recruitment-link"
     WebSocketApiEndpoint:
       Description: "WebSocket API Endpoint"
       Value: !Sub "wss://${WebSocketApi}.execute-api.${AWS::Region}.amazonaws.com/${self:provider.stage}"

@@ -16,6 +16,7 @@ import { useScreenerStore } from '../store/useScreenerStore';
 import { useImplicitAssociationStore } from '../store/useImplicitAssociationStore';
 import { useCognitiveTaskStore } from '../store/useCognitiveTaskStore';
 import { useEyeTrackingStore } from '../store/useEyeTrackingStore';
+import RecruitEyeTrackingView from '../components/Dashboard/BehaviouralResearch/RecruitViewComponents/RecruitEyeTrackingView';
 
 type ResearchStage = {
   label: string;
@@ -64,7 +65,7 @@ export const researchStagesConfig: Record<'AIMFramework' | 'BehaviouralResearch'
       { label: 'Welcome screen', component: <WelcomeScreenContainer /> },
       { label: 'Implicit Association', component: <ImplicitAssociationView /> },
       { label: 'Cognitive task', component: <CognitiveTaskView /> },
-      { label: 'Eye Tracking', component: <EyeTrackingView /> },
+      { label: 'Eye Tracking', component: <RecruitEyeTrackingView /> },
       { label: 'Thank you screen', component: <ThankYouScreenContainer /> },
     ],
     Result: [

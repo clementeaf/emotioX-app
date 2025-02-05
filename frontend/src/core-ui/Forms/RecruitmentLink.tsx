@@ -1,14 +1,14 @@
 import { Box, Checkbox, FormControlLabel, FormGroup, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
 import { grey } from '@mui/material/colors'
 import { AntSwitch } from '../Switch'
-import { useState } from 'react';
+import { RecruitmentLinkState } from '../../store/useRecruitmentLinkStore';
 
 type Option = {
     label: string;
     value: string;
 };
 
-const options = [
+const demographicOptions: Option[] = [
     { label: "Age", value: "age" },
     { label: "Country", value: "country" },
     { label: "Gender", value: "gender" },
@@ -19,146 +19,156 @@ const options = [
     { label: "Technical proficiency", value: "technical_proficiency" },
 ];
 
-const linkConfigOptions = [
-    { label: "Allow respondents to take survey via mobile devices", value: "question1" },
-    { label: "Track respondents location", value: "question2" },
-    { label: "It can be taken multiple times within a single session", value: "question3" },
+const linkConfigOptions: Option[] = [
+    { label: "Allow respondents to take survey via mobile devices", value: "allow_mobile" },
+    { label: "Track respondents location", value: "track_location" },
+    { label: "Allow multiple responses in one session", value: "multiple_responses" },
 ];
 
-export default function RecruitmentLink() {
-    return (
-        <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            justifyContent: 'flex-start',
-            width: '556.5px',
-            height: '813px',
-            bgcolor: 'white',
-            borderRadius: '4px',
-            border: `1px solid ${grey[300]}`,
-        }}>
-            <Box sx={{
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                height: '54px',
-                borderBottom: `1px solid ${grey[300]}`,
-            }}>
-                <Typography fontWeight={500} fontSize={16} lineHeight='28px' color='#262626' p={2}>
-                    Recruitment link
-                </Typography>
-            </Box>
+interface RecruitmentLinkProps {
+    demographicQuestionsRequired: boolean;
+    demographicQuestions: string[];
+    linkConfiguration: string[];
+    participantLimit: number;
+    setDemographicQuestionsRequired: (value: boolean) => void;
+    toggleDemographicQuestion: (key: keyof RecruitmentLinkState["demographicQuestions"]) => void; // Cambiado
+    setLinkConfiguration: (key: keyof RecruitmentLinkState["linkConfiguration"], value: boolean) => void; // Cambiado
+    setParticipantLimit: (value: number) => void;
+}
 
-            {/** Demographic questions */}
-            <Box sx={{
+export default function RecruitmentLink({
+    demographicQuestionsRequired,
+    demographicQuestions,
+    linkConfiguration,
+    participantLimit,
+    setDemographicQuestionsRequired,
+    toggleDemographicQuestion,
+    setLinkConfiguration,
+    setParticipantLimit
+}: RecruitmentLinkProps) {
+    return (
+        <Box
+            sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'flex-start',
-                justifyContent: 'flex-start',
-                width: '516.5px',
-                height: 'auto',
+                width: '100%',
+                maxWidth: '556.5px',
+                bgcolor: 'white',
+                borderRadius: '4px',
+                border: `1px solid ${grey[300]}`,
+                p: 2,
+            }}
+        >
+            {/* Header */}
+            <Typography fontWeight={600} fontSize={16} color="#212121">
+                Recruitment link
+            </Typography>
+
+            {/* Demographic Questions */}
+            <SectionWrapper title="Demographic questions">
+                <FormControlLabel
+                    control={
+                        <AntSwitch
+                            checked={demographicQuestionsRequired}
+                            onChange={() => setDemographicQuestionsRequired(!demographicQuestionsRequired)}
+                        />
+                    }
+                    label={<Typography fontSize={14} color="#8C8C8C">Demographic questions</Typography>}
+                    labelPlacement="end"
+                />
+                {demographicQuestionsRequired && (
+                    <DynamicCheckboxGroup
+                        options={demographicOptions}
+                        selectedOptions={demographicQuestions}
+                        onChange={(selectedOptions) => {
+                            // Convertir cada clave seleccionada a keyof RecruitmentLinkState["demographicQuestions"]
+                            const addedKeys = selectedOptions.filter((key) => !demographicQuestions.includes(key)) as Array<
+                                keyof RecruitmentLinkState["demographicQuestions"]
+                            >;
+
+                            addedKeys.forEach((key) => toggleDemographicQuestion(key)); // Ahora compatible
+
+                            const removedKeys = demographicQuestions.filter((key) => !selectedOptions.includes(key)) as Array<
+                                keyof RecruitmentLinkState["demographicQuestions"]
+                            >;
+
+                            removedKeys.forEach((key) => toggleDemographicQuestion(key)); // Ahora compatible
+                        }}
+                    />
+
+                )}
+            </SectionWrapper>
+
+            {/* Link Configuration */}
+            <SectionWrapper title="Link configuration">
+                <DynamicCheckboxGroup
+                    options={linkConfigOptions}
+                    selectedOptions={linkConfiguration}
+                    onChange={(selectedOptions) => {
+                        linkConfigOptions.forEach((option) => {
+                            // Convertir option.value a keyof RecruitmentLinkState["linkConfiguration"]
+                            const key = option.value as keyof RecruitmentLinkState["linkConfiguration"];
+                            const newValue = selectedOptions.includes(option.value);
+
+                            if (newValue !== linkConfiguration.includes(option.value)) {
+                                setLinkConfiguration(key, newValue); // Ahora compatible
+                            }
+                        });
+                    }}
+                />
+
+            </SectionWrapper>
+
+            {/* Limit Number of Participants */}
+            <SectionWrapper title="Limit number of participants">
+                <ResponseCounter maxResponses={50} selectedValue={participantLimit} onChange={setParticipantLimit} />
+            </SectionWrapper>
+        </Box>
+    );
+}
+
+
+/** Componente de sección con estilo uniforme */
+function SectionWrapper({ title, children }: { title: string; children: React.ReactNode }) {
+    return (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
                 border: `1px solid ${grey[300]}`,
                 borderRadius: '4px',
                 mt: 2,
-                ml: 2,
-            }}>
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '516.5px',
-                    borderBottom: `1px solid ${grey[300]}`,
-                }}>
-                    <Box width='100%' display='flex' alignItems='center' justifyContent='space-between' p={2}>
-                        <FormControlLabel control={<AntSwitch />} label={<Typography fontSize='14px' fontWeight={400} color='#8C8C8C'>Demographic questions</Typography>} labelPlacement="end" />
-                        <Typography fontWeight={400} fontSize={14} lineHeight='22px' color='#8C8C8C'>Please select</Typography>
-                    </Box>
-                </Box>
-                <DynamicCheckboxGroup options={options} />
-            </Box>
-            
-            {/** Link configuration */}
+            }}
+        >
             <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'flex-start',
-                justifyContent: 'flex-start',
-                width: '516.5px',
-                height: 'auto',
-                border: `1px solid ${grey[300]}`,
-                borderRadius: '4px',
-                mt: 2,
-                ml: 2,
+                p: 2,
             }}>
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '516.5px',
-                    borderBottom: `1px solid ${grey[300]}`,
-                }}>
-                    <Box width='100%' display='flex' alignItems='center' justifyContent='space-between' p={2}>
-                        <FormControlLabel control={<AntSwitch />} label={<Typography fontSize='14px' fontWeight={400} color='#8C8C8C'>Link configuration</Typography>} labelPlacement="end" />
-                        <Typography fontWeight={400} fontSize={14} lineHeight='22px' color='#8C8C8C'>Please select</Typography>
-                    </Box>
-                </Box>
-                <DynamicCheckboxGroup options={linkConfigOptions} />
-            </Box>
-            
-            {/** Limit number of participants */}
-            <Box sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-                justifyContent: 'flex-start',
-                width: '516.5px',
-                height: 'auto',
-                border: `1px solid ${grey[300]}`,
-                borderRadius: '4px',
-                mt: 2,
-                ml: 2,
-            }}>
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    width: '516.5px',
-                    borderBottom: `1px solid ${grey[300]}`,
-                }}>
-                    <Box width='100%' display='flex' alignItems='center' justifyContent='space-between' p={2}>
-                        <FormControlLabel control={<AntSwitch />} label={<Typography fontSize='14px' fontWeight={400} color='#8C8C8C'>Limit number of participants</Typography>} labelPlacement="end" />
-                        <Typography fontWeight={400} fontSize={14} lineHeight='22px' color='#8C8C8C'>Please select</Typography>
-                    </Box>
-                </Box>
-                <ResponseCounter maxResponses={50} />
+                <Typography fontWeight={400} fontSize={14} color="#8C8C8C" pb={1}>
+                    {title}
+                </Typography>
+                {children}
             </Box>
         </Box>
-    )
+    );
 }
 
 interface DynamicCheckboxGroupProps {
     options: Option[];
-    onChange?: (selectedOptions: string[]) => void;
+    selectedOptions: string[];
+    onChange: (selectedOptions: string[]) => void;
 }
 
-const DynamicCheckboxGroup: React.FC<DynamicCheckboxGroupProps> = ({ options, onChange }) => {
-    const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-
-    // Maneja el cambio de los checkboxes
+export const DynamicCheckboxGroup: React.FC<DynamicCheckboxGroupProps> = ({ options, selectedOptions, onChange }) => {
     const handleCheckboxChange = (value: string) => {
         const newSelectedOptions = selectedOptions.includes(value)
             ? selectedOptions.filter((option) => option !== value)
             : [...selectedOptions, value];
 
-        setSelectedOptions(newSelectedOptions);
-        if (onChange) {
-            onChange(newSelectedOptions); // Llama al callback si está definido
-        }
+        onChange(newSelectedOptions);
     };
 
     return (
@@ -208,45 +218,43 @@ const DynamicCheckboxGroup: React.FC<DynamicCheckboxGroupProps> = ({ options, on
 };
 
 interface ResponseCounterProps {
-    maxResponses: number; // Número máximo de respuestas
-  }
+    maxResponses: number;
+    selectedValue: number;
+    onChange: (value: number) => void;
+}
 
-const ResponseCounter: React.FC<ResponseCounterProps> = ({ maxResponses }) => {
-    const [selectedValue, setSelectedValue] = useState<number>(50); // Valor inicial
-  
-    // Maneja el cambio en el select
+export const ResponseCounter: React.FC<ResponseCounterProps> = ({ maxResponses, selectedValue, onChange }) => {
     const handleChange = (event: SelectChangeEvent<number>) => {
-      const value = event.target.value as number;
-      setSelectedValue(value);
+        onChange(Number(event.target.value));
     };
-  
-    // Calcula las respuestas restantes
+
     const remainingResponses = maxResponses - selectedValue;
-  
+
     return (
-      <Box display="flex" flexDirection='column' alignItems="flex-start" gap={2} p={2} ml={1}>
-        <Typography fontSize={14} fontWeight={400} color='#262626' lineHeight='22px'>Stop accepting responses after this number of participants.</Typography>
-        <Box display='flex' alignItems='center' gap={2}>
-            <Select
-            value={selectedValue}
-            onChange={handleChange}
-            size="small"
-            sx={{
-                minWidth: 52,
-                height: 32,
-            }}
-            >
-            {[10, 20, 30, 40, 50].map((num) => (
-                <MenuItem key={num} value={num}>
-                {num}
-                </MenuItem>
-            ))}
-            </Select>
-            <Typography variant="body1">
-            You will receive {remainingResponses} more responses.
+        <Box display="flex" flexDirection='column' alignItems="flex-start" gap={2} p={2} ml={1}>
+            <Typography fontSize={14} fontWeight={400} color='#262626' lineHeight='22px'>
+                Stop accepting responses after this number of participants.
             </Typography>
+            <Box display='flex' alignItems='center' gap={2}>
+                <Select
+                    value={selectedValue}
+                    onChange={handleChange}
+                    size="small"
+                    sx={{
+                        minWidth: 52,
+                        height: 32,
+                    }}
+                >
+                    {[10, 20, 30, 40, 50].map((num) => (
+                        <MenuItem key={num} value={num}>
+                            {num}
+                        </MenuItem>
+                    ))}
+                </Select>
+                <Typography variant="body1">
+                    You will receive {remainingResponses} more responses.
+                </Typography>
+            </Box>
         </Box>
-      </Box>
     );
-  };
-  
+};

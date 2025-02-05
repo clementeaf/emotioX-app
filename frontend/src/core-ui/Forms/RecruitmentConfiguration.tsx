@@ -24,7 +24,7 @@ export function RecruitmentConfiguration() {
             alignItems: 'flex-start',
             justifyContent: 'flex-start',
             width: '556.5px',
-            height: '813px',
+            height: '100%',
             bgcolor: 'white',
             borderRadius: '4px',
             border: `1px solid ${grey[300]}`,
@@ -46,63 +46,68 @@ export function RecruitmentConfiguration() {
             <Box sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'flex-start',
-                justifyContent: 'flex-start',
-                width: '516.5px',
-                height: 'auto',
-                border: `1px solid ${grey[300]}`,
-                borderRadius: '4px',
-                mt: 2,
-                ml: 2,
+                p: 2,
             }}>
                 <Box sx={{
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'flex-start',
                     justifyContent: 'flex-start',
-                    p: 2,
+                    width: '516.5px',
+                    height: 'auto',
+                    border: `1px solid ${grey[300]}`,
+                    borderRadius: '4px',
+                    mt: 2,
                 }}>
-                    <Typography fontWeight={500} fontSize={16} lineHeight='28px' color='#262626'>
-                        A. Backlinks
-                    </Typography>
-                    <Typography fontWeight={400} fontSize={14} lineHeight='22px' color='#8C8C8C' mb={2}>
-                        Please use @id parameters to transmit respondents ID’s into your system
-                    </Typography>
-                    <LinkInput label="Link for disqualified interviews" defaultValue="www.useremotion.com/" />
-                    <LinkInput label="Link for overquota interviews" defaultValue="www.useremotion.com/" />
-                </Box>
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    justifyContent: 'flex-start',
-                    p: 2,
-                }}>
-                    <Typography fontWeight={500} fontSize={16} lineHeight='28px' color='#262626'>
-                        B. Research’s link to share
-                    </Typography>
-                    <Typography fontWeight={400} fontSize={14} lineHeight='22px' color='#8C8C8C' mb={2}>
-                        Third-party invitation system should substitude (your respondent id here) parameter with individual respondent ID.
-                    </Typography>
-                    <LinkInputQR label="Research URL" defaultValue="www.useremotion.com/" handleModalOpen={handleModalOpen} />
-                    {displayModal && <QRModalGeneration handleClose={handleModalClose} />}
-                </Box>
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        justifyContent: 'flex-start',
+                        p: 2,
+                    }}>
+                        <Typography fontWeight={500} fontSize={16} lineHeight='28px' color='#262626'>
+                            A. Backlinks
+                        </Typography>
+                        <Typography fontWeight={400} fontSize={14} lineHeight='22px' color='#8C8C8C' mb={2}>
+                            Please use @id parameters to transmit respondents ID’s into your system
+                        </Typography>
+                        <LinkInput label="Link for disqualified interviews" defaultValue="www.useremotion.com/" />
+                        <LinkInput label="Link for overquota interviews" defaultValue="www.useremotion.com/" />
+                    </Box>
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        justifyContent: 'flex-start',
+                        p: 2,
+                    }}>
+                        <Typography fontWeight={500} fontSize={16} lineHeight='28px' color='#262626'>
+                            B. Research’s link to share
+                        </Typography>
+                        <Typography fontWeight={400} fontSize={14} lineHeight='22px' color='#8C8C8C' mb={2}>
+                            Third-party invitation system should substitude (your respondent id here) parameter with individual respondent ID.
+                        </Typography>
+                        <LinkInputQR label="Research URL" defaultValue="www.useremotion.com/" handleModalOpen={handleModalOpen} />
+                        {displayModal && <QRModalGeneration handleClose={handleModalClose} />}
+                    </Box>
 
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    justifyContent: 'flex-start',
-                    pl: 2,
-                    pb: 2,
-                }}>
-                    <Typography fontWeight={500} fontSize={16} lineHeight='28px' color='#262626'>
-                        C. Research’s parameters to save
-                    </Typography>
-                    <Typography fontWeight={400} fontSize={14} lineHeight='22px' color='#8C8C8C' mb={2}>
-                        Please specify parameters that you want to save (comma separated keys)
-                    </Typography>
-                    <ChipInput />
+                    <Box sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        justifyContent: 'flex-start',
+                        pl: 2,
+                        pb: 2,
+                    }}>
+                        <Typography fontWeight={500} fontSize={16} lineHeight='28px' color='#262626'>
+                            C. Research’s parameters to save
+                        </Typography>
+                        <Typography fontWeight={400} fontSize={14} lineHeight='22px' color='#8C8C8C' mb={2}>
+                            Please specify parameters that you want to save (comma separated keys)
+                        </Typography>
+                        <ChipInput />
+                    </Box>
                 </Box>
             </Box>
         </Box>
@@ -325,7 +330,7 @@ const QRModalGeneration: React.FC<QRModalGenerationProps> = ({ handleClose }) =>
                         </Button>
                     </Box>
                 </Box>
-                
+
                 {/** QR Image */}
                 <Box sx={{
                     display: 'flex',
@@ -336,7 +341,7 @@ const QRModalGeneration: React.FC<QRModalGenerationProps> = ({ handleClose }) =>
                 }}>
                     <img src={qrExample} alt="qrExample" style={{ width: '273px', height: '275px' }} />
                 </Box>
-                
+
                 {/** Image Footer */}
                 <Box sx={{
                     display: 'flex',
@@ -352,11 +357,11 @@ const QRModalGeneration: React.FC<QRModalGenerationProps> = ({ handleClose }) =>
                         alignItems: 'flex-start',
                         pl: 3,
                     }}>
-                    <Typography fontSize={14} fontWeight={500} lineHeight='24px' color='#262626'>This is your Public QR Code</Typography>
-                    <Typography fontSize={12} fontWeight={400} lineHeight='24px' color='#8C8C8C'>Please, download and print in your documents to get responses</Typography>
+                        <Typography fontSize={14} fontWeight={500} lineHeight='24px' color='#262626'>This is your Public QR Code</Typography>
+                        <Typography fontSize={12} fontWeight={400} lineHeight='24px' color='#8C8C8C'>Please, download and print in your documents to get responses</Typography>
                     </Box>
                 </Box>
-                
+
                 {/** Download Button */}
                 <Box sx={{
                     display: 'flex',
