@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { UploadedImage } from "../types/types";
 
 export interface Choice {
   id: number;
@@ -6,14 +7,7 @@ export interface Choice {
   qualifier: "Qualify" | "Disqualify";
 }
 
-export interface UploadedImage {
-  fileName: string;
-  fileSizeMB: number;
-  error: boolean;
-  time: number;
-}
-
-export interface Question {
+export interface QuestionBase {
   id: number;
   question: string;
   isVisible: boolean;
@@ -22,8 +16,6 @@ export interface Question {
   fileUploadLabel?: string;
   deviceFrameOptions?: string[];
   selectedFrame?: string;
-  uploadedFile?: File | null;
-  uploadedImages?: UploadedImage[];
   inputText?: string;
   selectedOption?: string;
 
@@ -34,6 +26,22 @@ export interface Question {
   showOtherOption: boolean;
 }
 
+/** ✅ Caso 1: Para preguntas con UNA SOLA imagen */
+export interface SingleImageQuestion extends QuestionBase {
+  choiceType: "singleChoice" | "multipleChoice" | "linearScale";
+  uploadedFile?: File | null; // Archivo temporal antes de la subida a S3
+  uploadedImage?: UploadedImage | null; // Referencia en S3 después de la subida
+}
+
+/** ✅ Caso 2: Para preguntas con MULTIPLES imágenes */
+export interface MultipleImagesQuestion extends QuestionBase {
+  choiceType: "multipleImages";
+  uploadedImages: UploadedImage[]; // Lista de referencias en S3 después de la subida
+}
+
+/** ✅ La interfaz `Question` ahora puede ser de un solo tipo o de múltiples imágenes */
+export type Question = SingleImageQuestion | MultipleImagesQuestion;
+
 export interface CognitiveTaskStore {
   required: boolean;
   setRequired: (value: boolean) => void;
@@ -42,7 +50,17 @@ export interface CognitiveTaskStore {
   toggleVisibility: (id: number) => void;
   setQuestionRequired: (id: number, value: boolean) => void;
   updateQuestionText: (id: number, text: string) => void;
-  updateUploadedFile: (id: number, file: File | null) => void;
+
+  /** ✅ Para preguntas con UNA SOLA imagen */
+  updateSingleImageFile: (id: number, file: File | null) => void;
+  updateSingleImageReference: (id: number, image: UploadedImage | null) => void;
+
+  /** ✅ Para preguntas con MULTIPLES imágenes */
+  addUploadedImage: (id: number, newImage: UploadedImage) => void;
+  removeUploadedImage: (id: number, fileName: string) => void;
+  updateMultipleImageReference: (id: number, image: UploadedImage) => void;
+  updateImageTime: (id: number, fileName: string, time: number) => void;
+
   updateSelectedOption: (id: number, option: string) => void;
   updateSelectedFrame: (id: number, frame: string) => void;
 
@@ -54,12 +72,11 @@ export interface CognitiveTaskStore {
   toggleRandomizeChoices: (id: number) => void;
   toggleShowOtherOption: (id: number) => void;
 
-  addUploadedImage: (id: number, newImage: UploadedImage) => void;
-  removeUploadedImage: (id: number, fileName: string) => void;
-  updateImageTime: (id: number, fileName: string, time: number) => void;
+  /** ✅ Obtener archivos a subir para single y multiple images */
+  getFilesToUpload: () => Array<{ id: number; file: File | null }>;
 }
 
-export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
+export const useCognitiveTaskStore = create<CognitiveTaskStore>((set, get) => ({
   required: true,
 
   questions: [
@@ -75,7 +92,7 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
       selectedFrame: "No Frame",
       inputText: "",
       selectedOption: "Single choice",
-      uploadedFile: null,
+      uploadedImage: null, // ✅ Se almacena la referencia de S3
       showConditionality: false,
       choiceType: "singleChoice",
       choices: [
@@ -96,7 +113,7 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
       selectedFrame: "Device Frame",
       inputText: "",
       selectedOption: "Single choice",
-      uploadedFile: null,
+      uploadedImage: null, // ✅ Se almacena la referencia de S3
       showConditionality: false,
       choiceType: "singleChoice",
       choices: [
@@ -119,7 +136,7 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
       selectedFrame: "No Frame",
       inputText: "",
       selectedOption: "Multiple choice",
-      uploadedFile: null,
+      uploadedImage: null, // ✅ Se almacena la referencia de S3
       showConditionality: true,
       choiceType: "multipleChoice",
       choices: [
@@ -141,7 +158,7 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
       selectedFrame: "No Frame",
       inputText: "",
       selectedOption: "Multiple choice",
-      uploadedFile: null,
+      uploadedImage: null, // ✅ Se almacena la referencia de S3
       showConditionality: false,
       choiceType: "multipleChoice",
       choices: [
@@ -165,7 +182,7 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
       selectedFrame: "No Frame",
       inputText: "",
       selectedOption: "Linear scale",
-      uploadedFile: null,
+      uploadedImage: null, // ✅ Se almacena la referencia de S3
       showConditionality: false,
       choiceType: "linearScale",
       choices: [], // No aplica para linear scale
@@ -192,7 +209,7 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
       showOtherOption: false,
     },
 
-    // 1 Multiple Images
+    // 2 Multiple Images
     {
       id: 7,
       question: "6.7.- Question _italic_ **bold** - bullet list 1. ordered list",
@@ -202,20 +219,7 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
       fileUploadLabel: "Upload Images",
       deviceFrameOptions: ["No Frame", "Device Frame", "Custom Frame"],
       selectedFrame: "No Frame",
-      uploadedImages: [
-        {
-          fileName: "test-image-1.jpg",
-          fileSizeMB: 1.2,
-          error: false,
-          time: 5,
-        },
-        {
-          fileName: "test-image-2.jpg",
-          fileSizeMB: 2.5,
-          error: false,
-          time: 10,
-        },
-      ],
+      uploadedImages: [], // ✅ Inicializado vacío para esperar subida a S3
       inputText: "",
       selectedOption: "",
       showConditionality: false,
@@ -233,20 +237,7 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
       fileUploadLabel: "Upload Images",
       deviceFrameOptions: ["No Frame", "Device Frame", "Custom Frame"],
       selectedFrame: "No Frame",
-      uploadedImages: [
-        {
-          fileName: "test-image-1.jpg",
-          fileSizeMB: 1.2,
-          error: false,
-          time: 5,
-        },
-        {
-          fileName: "test-image-2.jpg",
-          fileSizeMB: 2.5,
-          error: false,
-          time: 10,
-        },
-      ],
+      uploadedImages: [], // ✅ Inicializado vacío para esperar subida a S3
       inputText: "",
       selectedOption: "",
       showConditionality: false,
@@ -262,15 +253,15 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
       required: value,
     })),
 
-    toggleVisibility: (id) =>
-      set((state) => ({
-        questions: state.questions.map((q) =>
-          q.id === id
-            ? { ...q, isVisible: !q.isVisible }
-            : q
-        ),
-      })),
-  
+  toggleVisibility: (id) =>
+    set((state) => ({
+      questions: state.questions.map((q) =>
+        q.id === id
+          ? { ...q, isVisible: !q.isVisible }
+          : q
+      ),
+    })),
+
 
   setQuestionRequired: (id, value) =>
     set((state) => ({
@@ -286,10 +277,30 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
       ),
     })),
 
-  updateUploadedFile: (id, file) =>
+  updateUploadedFile: (id: number, uploadedImage: any) =>
     set((state) => ({
       questions: state.questions.map((q) =>
-        q.id === id ? { ...q, uploadedFile: file } : q
+        q.id === id
+          ? { ...q, uploadedImage: uploadedImage } // Asigna directamente el objeto `UploadedImage`
+          : q
+      ),
+    })),
+
+  updateSingleImageFile: (id, file) =>
+    set((state) => ({
+      questions: state.questions.map((q) =>
+        q.id === id && q.choiceType !== "multipleImages"
+          ? { ...q, uploadedFile: file }
+          : q
+      ),
+    })),
+
+  updateSingleImageReference: (id, image) =>
+    set((state) => ({
+      questions: state.questions.map((q) =>
+        q.id === id && q.choiceType !== "multipleImages"
+          ? { ...q, uploadedImage: image, uploadedFile: null } // Limpia el archivo local
+          : q
       ),
     })),
 
@@ -317,24 +328,40 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
   setChoiceType: (id, type) =>
     set((state) => ({
       questions: state.questions.map((q) => {
-        if (q.id === id) {
-          const updatedChoices =
-            type === "singleChoice"
-              ? [{ id: 1, textInput: "", qualifier: "Qualify" as "Qualify" }]
-              : type === "multipleChoice"
-                ? Array.from({ length: 3 }, (_, index) => ({
-                  id: index + 1,
-                  textInput: `Option ${index + 1}`,
-                  qualifier: "Qualify" as "Qualify",
-                }))
-                : [];
-          return { ...q, choiceType: type, choices: updatedChoices };
+        if (q.id !== id) return q;
+
+        const updatedChoices =
+          type === "singleChoice"
+            ? [{ id: 1, textInput: "", qualifier: "Qualify" as "Qualify" }]
+            : type === "multipleChoice"
+              ? Array.from({ length: 3 }, (_, index) => ({
+                id: index + 1,
+                textInput: `Option ${index + 1}`,
+                qualifier: "Qualify" as "Qualify",
+              }))
+              : [];
+
+        if (type === "multipleImages") {
+          return {
+            ...q,
+            choiceType: type,
+            choices: updatedChoices,
+            uploadedImages: q.choiceType === "multipleImages" ? q.uploadedImages : [],
+            uploadedFile: undefined,
+            uploadedImage: undefined,
+          } as unknown as MultipleImagesQuestion;
         }
-        return q;
+
+        return {
+          ...q,
+          choiceType: type,
+          choices: updatedChoices,
+          uploadedFile: q.choiceType !== "multipleImages" ? q.uploadedFile ?? null : null,
+          uploadedImage: q.choiceType !== "multipleImages" ? q.uploadedImage ?? null : null,
+          uploadedImages: undefined,
+        } as unknown as SingleImageQuestion;
       }),
     })),
-
-
 
   addChoice: (id) =>
     set((state) => ({
@@ -405,16 +432,12 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
       ),
     })),
 
+  /** ✅ Agrega una imagen a `uploadedImages` */
   addUploadedImage: (id, newImage) =>
     set((state) => ({
       questions: state.questions.map((q) =>
         q.id === id && q.choiceType === "multipleImages"
-          ? {
-            ...q,
-            uploadedImages: q.uploadedImages
-              ? [...q.uploadedImages, newImage]
-              : [newImage],
-          }
+          ? { ...q, uploadedImages: [...q.uploadedImages, newImage] }
           : q
       ),
     })),
@@ -425,11 +448,32 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
         q.id === id && q.choiceType === "multipleImages"
           ? {
             ...q,
-            uploadedImages: q.uploadedImages?.filter(
+            uploadedImages: q.uploadedImages.filter(
               (img) => img.fileName !== fileName
             ),
           }
           : q
+      ),
+    })),
+
+    updateMultipleImageReference: (id, image) =>
+      set((state) => ({
+        questions: state.questions.map((q) =>
+          q.id === id && q.choiceType === "multipleImages"
+            ? {
+                ...q,
+                uploadedImages: [...q.uploadedImages, image], // ⬅ Aquí puede estar el problema
+              }
+            : q
+        ),
+      })),
+    
+
+  /** ✅ Actualiza la imagen única de una pregunta */
+  updateUploadedImage: (id: number, image: any) =>
+    set((state) => ({
+      questions: state.questions.map((q) =>
+        q.id === id ? { ...q, uploadedImage: image } : q
       ),
     })),
 
@@ -439,11 +483,51 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set) => ({
         q.id === id && q.choiceType === "multipleImages"
           ? {
             ...q,
-            uploadedImages: q.uploadedImages?.map((img) =>
+            uploadedImages: q.uploadedImages.map((img) =>
               img.fileName === fileName ? { ...img, time } : img
             ),
           }
           : q
       ),
     })),
+
+  /** ✅ Actualiza los datos de una imagen en `uploadedImages` */
+  updateUploadedImageData: (id: number, image: { id: string; }) =>
+    set((state) => ({
+      questions: state.questions.map((q) =>
+        q.id === id && q.choiceType === "multipleImages"
+          ? {
+            ...q,
+            uploadedImages: q.uploadedImages?.map((img) =>
+              img.id === image.id ? image : img
+            ),
+          }
+          : q
+      ),
+    })),
+
+  /** ✅ Obtiene los archivos a subir */
+  getFilesToUpload: () => {
+    const state = get();
+    const filesToUpload: { id: number; file: File | null; isMultiple: boolean }[] = [];
+
+    state.questions.forEach((q) => {
+      // 📌 **Para preguntas con una sola imagen**
+      if (q.choiceType !== "multipleImages" && q.uploadedFile) {
+        filesToUpload.push({ id: q.id, file: q.uploadedFile, isMultiple: false });
+      }
+
+      // 📌 **Para preguntas con múltiples imágenes**
+      if (q.choiceType === "multipleImages") {
+        q.uploadedImages.forEach((img) => {
+          if (img.file) {
+            filesToUpload.push({ id: q.id, file: img.file, isMultiple: true });
+          }
+        });
+      }
+    });
+
+    return filesToUpload.filter((f) => f.file !== null);
+  },
+
 }));

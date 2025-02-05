@@ -21,27 +21,26 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { AntSwitch } from "../Switch";
-import { useCognitiveTaskStore, Choice } from "../../store/useCognitiveTaskStore";
+import { useCognitiveTaskStore, Choice, SingleImageQuestion } from "../../store/useCognitiveTaskStore";
 import { ImageUploadV2 } from "../FIleUpload/ImageUpload";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { DeviceFrameProps, LinearScaleProps, SingleFormProps } from "../../types/types";
+import { DeviceFrameProps, LinearScaleProps, SingleFormProps, UploadedImage } from "../../types/types";
 
 /** Componente Principal */
 export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
-    const {
-        questions,
-        toggleVisibility,
-        setQuestionRequired,
-        updateQuestionText,
-        updateUploadedFile,
-        updateSelectedFrame,
-        setChoiceType,
-    } = useCognitiveTaskStore((state) => state);
+    // Obtener la pregunta específica del store
+    const question = useCognitiveTaskStore((state) =>
+        state.questions.find((q) => q.id === questionId)
+    );
 
-    const question = questions.find((q) => q.id === questionId);
-    if (!question) return null;
+    // Validar si no se encontró la pregunta
+    if (!question) {
+        console.error(`❌ Question with ID ${questionId} not found.`);
+        return null;
+    }
 
+    // Extraer propiedades generales de la pregunta
     const {
         question: questionText,
         isVisible,
@@ -51,19 +50,52 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
         fileUploadLabel,
         deviceFrameOptions,
         selectedFrame,
-        uploadedFile,
     } = question;
 
+    // Determinar si la pregunta maneja una sola imagen o múltiples imágenes
+    const isMultipleImages = choiceType === "multipleImages";
+
+    // Extraer propiedades específicas según el tipo de pregunta
+    // const uploadedFile = !isMultipleImages ? (question as SingleImageQuestion).uploadedFile : null;
+    // const uploadedImage = !isMultipleImages ? (question as SingleImageQuestion).uploadedImage : null;
+    // const uploadedImages = isMultipleImages ? (question as MultipleImagesQuestion).uploadedImages : [];
+
+    // Seleccionar las funciones necesarias del store
+    const toggleVisibility = useCognitiveTaskStore((state) => state.toggleVisibility);
+    const setQuestionRequired = useCognitiveTaskStore((state) => state.setQuestionRequired);
+    const updateQuestionText = useCognitiveTaskStore((state) => state.updateQuestionText);
+    const updateSingleImageFile = useCognitiveTaskStore((state) => state.updateSingleImageFile);
+    // const updateSingleImageReference = useCognitiveTaskStore((state) => state.updateSingleImageReference);
+    const addUploadedImage = useCognitiveTaskStore((state) => state.addUploadedImage);
+    const updateSelectedFrame = useCognitiveTaskStore((state) => state.updateSelectedFrame);
+    const setChoiceType = useCognitiveTaskStore((state) => state.setChoiceType);
+
+    // Handlers
     const handleOptionChange = (event: SelectChangeEvent) => {
         setChoiceType(questionId, event.target.value as any);
     };
 
+    /** ✅ Manejo de subida de archivos (Single o Multiple) */
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            updateUploadedFile(questionId, e.target.files[0]);
+        if (!e.target.files || !e.target.files[0]) return;
+
+        const file = e.target.files[0];
+
+        if (isMultipleImages) {
+            addUploadedImage(questionId, {
+                id: `${Date.now()}-${file.name}`,
+                file,
+                fileName: file.name,
+                size: file.size,
+                format: file.type,
+                uploadedAt: new Date(),
+            });
+        } else {
+            updateSingleImageFile(questionId, file); // ✅ Aseguramos que se actualice en Zustand
         }
     };
 
+    /** ✅ Manejo del cambio de frame */
     const handleFrameChange = (event: SelectChangeEvent) => {
         const value = event.target.value;
         if (deviceFrameOptions?.includes(value)) {
@@ -98,7 +130,7 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
             {fileUploadLabel && choiceType !== "multipleImages" && (
                 <UploadSection
                     fileUploadLabel={fileUploadLabel}
-                    uploadedFile={uploadedFile}
+                    uploadedFile={!isMultipleImages ? (question as SingleImageQuestion).uploadedFile : undefined} // ✅ Se obtiene del estado
                     handleFileUpload={handleFileUpload}
                     selectedFrame={selectedFrame}
                     deviceFrameOptions={deviceFrameOptions}
@@ -112,7 +144,7 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
                 backgroundColor: 'lightgray',
                 marginTop: 30,
                 marginBottom: 30
-            }}/>
+            }} />
         </Box>
     );
 };
@@ -144,6 +176,13 @@ const MainInputSection: React.FC<{
     setQuestionRequired: (value: boolean) => void;
     disabled: boolean;
 }> = ({ placeholder, inputText, updateQuestionText, choiceType, handleOptionChange, required, setQuestionRequired, disabled }) => {
+    const [localInputText, setLocalInputText] = useState(inputText);
+
+    const handleBlur = () => {
+        if (localInputText !== inputText) {
+            updateQuestionText(localInputText); // Actualizar el store solo al desenfocar
+        }
+    };
     const options = [
         { value: "singleChoice", label: "Single Choice" },
         { value: "multipleChoice", label: "Multiple Choice" },
@@ -156,8 +195,9 @@ const MainInputSection: React.FC<{
                 fullWidth
                 variant="outlined"
                 placeholder={placeholder}
-                value={inputText}
-                onChange={(e) => updateQuestionText(e.target.value)}
+                value={localInputText}
+                onChange={(e) => setLocalInputText(e.target.value)} // Actualizar solo el estado local
+                onBlur={handleBlur} // Actualizar el store al desenfocar
                 disabled={disabled}
             />
             <Select
@@ -166,7 +206,7 @@ const MainInputSection: React.FC<{
                 sx={{ minWidth: 180 }}
                 disabled={disabled}
             >
-                {options.map(({value, label}) => (
+                {options.map(({ value, label }) => (
                     <MenuItem key={value} value={value}>
                         {label}
                     </MenuItem>
@@ -188,7 +228,7 @@ const MainInputSection: React.FC<{
 
 const UploadSection: React.FC<{
     fileUploadLabel: string;
-    uploadedFile?: File | null;
+    uploadedFile?: File | UploadedImage | null;
     handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
     selectedFrame?: string;
     deviceFrameOptions?: string[];
@@ -229,7 +269,10 @@ const UploadSection: React.FC<{
             }}>Recommended resolution is 1000*1000px with file size</span>
             {uploadedFile && (
                 <Typography variant="body2" sx={{ color: "green", mt: 1 }}>
-                    File uploaded: {uploadedFile.name}
+                    File uploaded:
+                    {uploadedFile instanceof File
+                        ? uploadedFile.name
+                        : uploadedFile?.fileName ?? "Unnamed file"}
                 </Typography>
             )}
         </Box>

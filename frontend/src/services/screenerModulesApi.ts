@@ -4,7 +4,7 @@ import { useImplicitAssociationStore } from '../store/useImplicitAssociationStor
 import { useCognitiveTaskStore } from '../store/useCognitiveTaskStore';
 import { useEyeTrackingStore } from '../store/useEyeTrackingStore';
 import { api } from './axiosConfig';
-import { fileToBase64, validateTargets } from '../utils';
+import { ImplicitAssociationSchema } from '../types/types';
 
 /**
  * Función para enviar los datos del Screener
@@ -61,35 +61,18 @@ export const submitImplicitAssociationData = async (researchId: string): Promise
   try {
     const { required, targets, textAreas, testConfigurations } = useImplicitAssociationStore.getState();
 
-    // Filtrar targets vacíos (sin nameOfObject ni imageUploaded)
-    const validTargets = targets.filter(
-      (target) => target.nameOfObject?.trim() || target.imageUploaded
-    );
+    console.log("🔍 Implicit Association Store Data:", useImplicitAssociationStore.getState());
 
-    // Validar los targets restantes
-    validateTargets(validTargets);
+    // ✅ Convertimos `targets` asegurando que `imageUploaded` contenga la URL de S3
+    const formattedTargets = targets.map((target) => ({
+      id: target.id,
+      nameOfObject: target.nameOfObject || undefined,
+      imageUploaded: target.uploadedImage?.url || undefined, // ✅ Ahora es `string | undefined`
+      imageFormat: target.imageFormat || undefined,
+    }));
 
-    // Formatear los targets, convirtiendo las imágenes a Base64
-    const formattedTargets = await Promise.all(
-      validTargets.map(async (target) => {
-        let imageBase64 = null;
-
-        if (target.imageUploaded) {
-          // Convertir archivo a Base64
-          imageBase64 = await fileToBase64(target.imageUploaded);
-        }
-
-        return {
-          id: target.id,
-          nameOfObject: target.nameOfObject || null,
-          imageUploaded: imageBase64, // Base64 de la imagen o null
-          imageFormat: target.imageFormat || null,
-        };
-      })
-    );
-
-    // Crear el payload
-    const payload = {
+    // ✅ Creamos el payload final con la estructura correcta
+    const payload: ImplicitAssociationSchema = {
       researchId,
       required,
       targets: formattedTargets,
@@ -97,84 +80,88 @@ export const submitImplicitAssociationData = async (researchId: string): Promise
       testConfigurations,
     };
 
-    // Enviar datos al backend
+    console.log("🚀 Payload to be sent:", payload);
+
+    // ✅ Enviamos los datos al backend
     const response = await api.post("/implicit-association", payload);
-    console.log("Implicit Association data submitted successfully:", response.data);
+    console.log("✅ Implicit Association data submitted successfully:", response.data);
   } catch (error) {
-    if (error instanceof Error) {
-      console.error("Error submitting Implicit Association data:", error.message);
-      throw new Error(error.message || "Failed to submit Implicit Association data. Please try again.");
-    }
-    throw new Error("Unexpected error occurred.");
+    console.error("❌ Error submitting Implicit Association data:", error);
+    throw new Error("Failed to submit Implicit Association data. Please try again.");
   }
 };
+
 
 /**
  * Función para enviar los datos de la Cognitive Task
  */
 export const submitCognitiveTaskData = async (researchId: string): Promise<void> => {
   try {
-    // Obtener datos del store
-    const cognitiveTaskData = useCognitiveTaskStore.getState();
+    const { required, questions } = useCognitiveTaskStore.getState();
 
-    const validateCognitiveTaskData = (data: typeof cognitiveTaskData) => {
-      if (!data.questions || !Array.isArray(data.questions) || data.questions.length === 0) {
-        throw new Error("Questions array is required and must not be empty.");
-      }
-
-      data.questions.forEach((q, index) => {
-        if (!q.id || !q.question || !q.choiceType) {
-          throw new Error(
-            `Question at index ${index} is missing required fields: 'id', 'question', or 'choiceType'.`
-          );
-        }
-      });
-    };
-
-    // Validar los datos
-    validateCognitiveTaskData(cognitiveTaskData);
-
-    const formatQuestions = (questions: typeof cognitiveTaskData.questions) => {
-      return questions.map((q) => ({
+    // ✅ Formatear correctamente las preguntas antes de enviarlas
+    const formattedQuestions = questions.map((q) => {
+      const baseData = {
         id: q.id,
         question: q.question,
+        isVisible: q.isVisible,
+        required: q.required,
+        placeholder: q.placeholder,
+        fileUploadLabel: q.fileUploadLabel,
+        deviceFrameOptions: q.deviceFrameOptions,
+        selectedFrame: q.selectedFrame,
+        inputText: q.inputText,
+        selectedOption: q.selectedOption,
+        showConditionality: q.showConditionality,
         choiceType: q.choiceType,
-        isVisible: q.isVisible ?? true,
-        required: q.required ?? false,
-        placeholder: q.placeholder ?? "",
-        fileUploadLabel: q.fileUploadLabel ?? "",
-        deviceFrameOptions: q.deviceFrameOptions || [],
-        selectedFrame: q.selectedFrame || "No Frame",
-        inputText: q.inputText || "",
-        selectedOption: q.selectedOption || "",
-        // Eliminar lógica de Buffer
-        uploadedFile: q.uploadedFile || null,
-        uploadedImages: q.uploadedImages || [],
-        showConditionality: q.showConditionality ?? false,
-        choices: q.choices || [],
-        randomizeChoices: q.randomizeChoices ?? false,
-        showOtherOption: q.showOtherOption ?? false,
-      }));
-    };
+        choices: q.choices,
+        randomizeChoices: q.randomizeChoices,
+        showOtherOption: q.showOtherOption,
+      };
 
+      // ✅ Si es una pregunta con una sola imagen
+      if ("uploadedImage" in q) {
+        return {
+          ...baseData,
+          uploadedImage: q.uploadedImage
+            ? {
+                fileName: q.uploadedImage.fileName,
+                url: q.uploadedImage.url,
+                format: q.uploadedImage.format,
+                size: q.uploadedImage.size,
+                uploadedAt: q.uploadedImage.uploadedAt,
+              }
+            : null,
+        };
+      }
 
-    // Formatear las preguntas antes de enviarlas
-    const formattedQuestions = formatQuestions(cognitiveTaskData.questions);
+      // ✅ Si es una pregunta con múltiples imágenes
+      if ("uploadedImages" in q) {
+        return {
+          ...baseData,
+          uploadedImages: q.uploadedImages.map((img) => ({
+            fileName: img.fileName,
+            url: img.url,
+            format: img.format,
+            size: img.size,
+            uploadedAt: img.uploadedAt,
+          })),
+        };
+      }
 
-    // Enviar datos al backend
-    const response = await api.post(`/cognitive-task`, {
-      ...cognitiveTaskData,
-      questions: formattedQuestions,
-      researchId,
+      return baseData;
     });
 
-    console.log("Cognitive Task data submitted successfully:", response.data);
+    const payload = { researchId, required, questions: formattedQuestions };
+
+    console.log("🚀 Payload to backend:", payload);
+
+    // ✅ Enviar datos al backend
+    const response = await api.post("/cognitive-task", payload);
+    console.log("✅ Cognitive Task data submitted successfully:", response.data);
   } catch (error) {
-    if (error instanceof Error) {
-      console.error("Error submitting Cognitive task data:", error.message);
-      throw new Error(error.message || "Failed to submit Cognitive task data. Please try again.");
-    }
-    throw new Error("Unexpected error occurred.");
+    console.error("❌ Error submitting Cognitive Task data:", error);
+    throw error;
   }
 };
 

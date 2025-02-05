@@ -3,26 +3,9 @@ import { grey } from '@mui/material/colors';
 import { useSelectedResearchStore } from '../../../store/useSelectedResearchStore';
 import { researchStagesConfig } from '../../../config/researchConfig';
 import { useResultsStore } from '../../../store/useResultStore';
-import { submitCognitiveTaskData, submitEyeTrackingData, submitImplicitAssociationData, submitScreenerData, submitThankYouScreenData, submitWelcomeScreenData } from '../../../services/screenerModulesApi';
-import { uploadFileToS3 } from '../../../services/uploadImageToS3';
-
-type StageType = 'Build' | 'Recruit' | 'Result';
-
-type ResearchSidebarProps = {
-  frameworkType: 'BehaviouralResearch' | 'AIMFramework';
-  stageType: StageType;
-};
-
-const normalizeLabel = (label: string): string => label.trim().toLowerCase();
-
-const submitActions: Record<string, (researchId: string) => Promise<void>> = {
-  [normalizeLabel("Screener")]: submitScreenerData,
-  [normalizeLabel("Welcome Screen")]: submitWelcomeScreenData,
-  [normalizeLabel("Thank You Screen")]: submitThankYouScreenData,
-  [normalizeLabel("Implicit Association")]: submitImplicitAssociationData,
-  [normalizeLabel("Cognitive Task")]: submitCognitiveTaskData,
-  [normalizeLabel("Eye Tracking")]: submitEyeTrackingData,
-};
+import { findAndUploadFiles } from '../../../services/findAndUploadFiles';
+import { ResearchSidebarProps } from '../../../types/types';
+import { normalizeLabel, submitActions } from '../../../utils';
 
 export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarProps) {
   const { setStageIndex } = useSelectedResearchStore();
@@ -31,71 +14,59 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
 
   const handleCheckboxChange = async (
     label: string,
-    getStore?: () => any,
+    frameworkType: "AIMFramework" | "BehaviouralResearch",
+    stageType: "Build" | "Recruit" | "Result",
     checked?: boolean
   ) => {
-
-    if (!checked) {
-      console.log("Checkbox is unchecked, skipping submission.");
-      return;
-    }
-
+    if (!checked) return;
+  
     try {
       const researchId = localStorage.getItem("currentResearchId");
       if (!researchId) {
-        console.error("Research ID not found in localStorage");
+        console.error("❌ Research ID not found in localStorage");
         return;
       }
-
-      if (!getStore) {
-        console.warn(`getStore not defined for label: ${label}`);
+  
+      const stageConfig = researchStagesConfig[frameworkType][stageType].find(
+        (stage) => normalizeLabel(stage.label) === normalizeLabel(label)
+      );
+  
+      if (!stageConfig || !stageConfig.getStore) {
+        console.warn(`⚠️ No store found for label: "${label}"`);
         return;
       }
-
-      // Buscar recursivamente valores del tipo `File`
-      const filesToUpload: { file: File; path: string }[] = [];
-      const findFiles = (obj: any, path = "") => {
-        for (const [key, value] of Object.entries(obj)) {
-          const currentPath = path ? `${path}.${key}` : key; // Ruta actual para depuración
-          if (value instanceof File) {
-            filesToUpload.push({ file: value, path: currentPath });
-          } else if (typeof value === "object" && value !== null) {
-            findFiles(value, currentPath); // Explorar recursivamente
-          }
-        }
-      };
-
-      const normalizedLabel = normalizeLabel(label);
-      const store = getStore();
-      findFiles(store);
-
+  
+      const store = stageConfig.getStore();
+  
+      if (!store || typeof store !== "object" || typeof store.getFilesToUpload !== "function") {
+        console.error(`❌ Error: store no es válido o no tiene getFilesToUpload() para "${label}".`, store);
+        return;
+      }
+  
+      const filesToUpload = store.getFilesToUpload();
+      console.log(`📂 Files to upload for label "${label}":`, filesToUpload);
+  
       if (filesToUpload.length > 0) {
-        console.log(`🔄 Found ${filesToUpload.length} files to upload for label: ${label}.`);
-  
-        // Subir los archivos encontrados a S3
-        await Promise.all(
-          filesToUpload.map(async ({ file, path }) => {
-            const uploadedUrl = await uploadFileToS3(file);
-            console.log(`✅ File uploaded from path '${path}': ${uploadedUrl}`);
-          })
-        );
-  
-        console.log("✅ All files uploaded successfully.");
-      } else {
-        console.log(`✅ No files to upload for label: ${label}.`);
+        await findAndUploadFiles(
+          filesToUpload,
+          (id, image) => store.updateUploadedImage(id, image), // ✅ Para `singleImage`
+          (id, image) => store.updateMultipleImageReference(id, image) // ✅ Para `multipleImages`
+        );        
       }
-
-      const submitAction = submitActions[normalizedLabel];
-
+  
+      console.log(`🚀 Data to be sent for label "${label}":`, store);
+  
+      const submitAction = submitActions[normalizeLabel(label)];
       if (submitAction) {
         await submitAction(researchId);
       } else {
-        console.warn(`No associated action for label: ${label}`);
+        console.warn(`⚠️ No associated action for label: "${label}"`);
       }
     } catch (error) {
-      console.error(`Error submitting data for label: ${label}`, error);
+      console.error(`❌ Error submitting data for label: "${label}"`, error);
     }
   };
+  
 
   return (
     <Box sx={{ width: '250px' }}>
@@ -122,7 +93,7 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
             }}
           >
             <Checkbox
-              onChange={(event) => handleCheckboxChange(label, getStore, event.target.checked)}
+              onChange={(event) => getStore && handleCheckboxChange(label, frameworkType, stageType, event.target.checked)}
               sx={{ mr: 1 }}
             />
             <Typography

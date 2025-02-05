@@ -1,6 +1,8 @@
 import { createTheme } from "@mui/material";
-import { FormDataState } from "./types/types";
+import { FormDataState, UploadedImage } from "./types/types";
 import { Target } from "./store/useImplicitAssociationStore";
+import { submitCognitiveTaskData, submitEyeTrackingData, submitImplicitAssociationData, submitScreenerData, submitThankYouScreenData, submitWelcomeScreenData } from "./services/screenerModulesApi";
+import { uploadFileToS3 } from "./services/uploadImageToS3";
 
 export const steps = ['Name the Research', 'Kind of Research', 'Techniques for Research'];
 
@@ -138,3 +140,38 @@ export const formContainerStyles = {
     flexDirection: 'column',
     pb: 2,
 };
+
+export const normalizeLabel = (label: string): string => label.trim().toLowerCase();
+
+export const submitActions: Record<string, (researchId: string) => Promise<void>> = {
+  [normalizeLabel("Screener")]: submitScreenerData,
+  [normalizeLabel("Welcome Screen")]: submitWelcomeScreenData,
+  [normalizeLabel("Thank You Screen")]: submitThankYouScreenData,
+  [normalizeLabel("Implicit Association")]: submitImplicitAssociationData,
+  [normalizeLabel("Cognitive Task")]: submitCognitiveTaskData,
+  [normalizeLabel("Eye Tracking")]: submitEyeTrackingData,
+};
+
+export const processUploadedImage = async (image: UploadedImage): Promise<{ fileUrl: string; fileName: string; fileSizeMB: number }> => {
+    if (image.url) {
+      console.log(`✅ La imagen con ID ${image.id} ya tiene una URL firmada, no se subirá de nuevo.`);
+      return {
+        fileUrl: image.url,
+        fileName: image.fileName || "",
+        fileSizeMB: image.size ? image.size / (1024 * 1024) : 0, 
+      };
+    }
+
+    if (image.file) {
+      const fileUrl = await uploadFileToS3(image.file);
+      return {
+        fileUrl,
+        fileName: image.file.name,
+        fileSizeMB: image.file.size / (1024 * 1024), 
+      };
+    }
+
+    throw new Error(`La imagen con ID ${image.id} no tiene un archivo ni URL válido.`);
+};
+
+  

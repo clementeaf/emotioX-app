@@ -1,10 +1,12 @@
 import { create } from "zustand";
+import { UploadedImage } from "../types/types";
 
 export interface Target {
   id: number;
   nameOfObject: string;
   imageUploaded: File | null;
   imageFormat: string | null;
+  uploadedImage?: UploadedImage | null; // ✅ Agregar `uploadedImage` a cada Target
 }
 
 interface TextArea {
@@ -29,29 +31,23 @@ interface ImplicitAssociationStore {
   setRequired: (value: boolean) => void;
   updateTargetName: (id: number, name: string) => void;
   updateTargetImage: (id: number, file: File) => void;
+  updateUploadedImage: (id: number, image: UploadedImage) => void; // ✅ Ahora actualiza un `Target`
   updateTextArea: (id: number, value: string) => void;
   resetTextAreas: () => void;
   toggleTestConfiguration: (id: number) => void;
+  getFilesToUpload: () => Array<{ id: number; file: File | null }>;
 }
 
 export const useImplicitAssociationStore = create<ImplicitAssociationStore>(
-  (set) => ({
+  (set, get) => ({
     required: true,
     targets: [
-      { id: 1, nameOfObject: "", imageUploaded: null, imageFormat: null },
-      { id: 2, nameOfObject: "", imageUploaded: null, imageFormat: null },
+      { id: 1, nameOfObject: "", imageUploaded: null, imageFormat: null, uploadedImage: null },
+      { id: 2, nameOfObject: "", imageUploaded: null, imageFormat: null, uploadedImage: null },
     ],
     textAreas: [
-      {
-        id: 1,
-        label: "Exercise instructions",
-        value: "",
-      },
-      {
-        id: 2,
-        label: "Test instructions",
-        value: "",
-      },
+      { id: 1, label: "Exercise instructions", value: "" },
+      { id: 2, label: "Test instructions", value: "" },
     ],
     testConfigurations: [
       { id: 1, label: "Shuffle Keys", checked: false },
@@ -78,6 +74,13 @@ export const useImplicitAssociationStore = create<ImplicitAssociationStore>(
         ),
       })),
 
+    updateUploadedImage: (id, image) =>
+      set((state) => ({
+        targets: state.targets.map((target) =>
+          target.id === id ? { ...target, uploadedImage: image } : target
+        ),
+      })),
+
     updateTextArea: (id, value) =>
       set((state) => ({
         textAreas: state.textAreas.map((textArea) =>
@@ -99,5 +102,8 @@ export const useImplicitAssociationStore = create<ImplicitAssociationStore>(
           config.id === id ? { ...config, checked: !config.checked } : config
         ),
       })),
+
+    getFilesToUpload: () =>
+      get().targets.map(({ id, imageUploaded }) => ({ id, file: imageUploaded })),
   })
 );

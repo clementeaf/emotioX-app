@@ -246,3 +246,75 @@ export interface TaskConfigurationProps {
   displayTime: string;
   setDisplayTime: (value: string) => void;
 }
+
+/**
+ * Representación estándar de una imagen subida a S3 en los stores.
+ */
+export interface UploadedImage {
+  id: string;          // Identificador único para la imagen
+  fileName?: string;    // ✅ Nombre del archivo
+  file?: File;         // Archivo original (opcional, solo en frontend antes de subir)
+  url?: string;        // URL de la imagen en S3 (se envía al backend)
+  format?: string;     // Tipo MIME del archivo (image/jpeg, image/png, etc.)
+  size?: number;       // Tamaño del archivo en bytes
+  error?: boolean;
+  uploadedAt?: Date;   // Fecha de subida (opcional)
+}
+
+export type StageType = 'Build' | 'Recruit' | 'Result';
+
+export type ResearchSidebarProps = {
+  frameworkType: 'BehaviouralResearch' | 'AIMFramework';
+  stageType: StageType;
+};
+
+export interface Target {
+  id: number;
+  nameOfObject?: string;
+  imageUploaded?: string; // URL de la imagen en S3
+  imageFormat?: string;
+}
+
+export interface TextArea {
+  id: number;
+  label: string;
+  value: string;
+}
+
+export interface TestConfiguration {
+  id: number;
+  label: string;
+  checked: boolean;
+}
+
+export interface ImplicitAssociationSchema {
+  researchId: string;
+  required: boolean;
+  targets: Target[];
+  textAreas: TextArea[];
+  testConfigurations: TestConfiguration[];
+}
+
+export interface CognitiveQuestion {
+  id: number;
+  question: string;
+  choiceType: "singleChoice" | "multipleChoice" | "linearScale" | "multipleImages";
+  isVisible?: boolean;
+  required?: boolean;
+  placeholder?: string;
+  fileUploadLabel?: string;
+  deviceFrameOptions?: string[];
+  selectedFrame?: string;
+  inputText?: string;
+  selectedOption?: string;
+  uploadedFile?: File | null;
+  uploadedImages?: UploadedImage[]; // ✅ Ahora usa `UploadedImage` con URL de S3
+  showConditionality?: boolean;
+  choices?: {
+    id: number;
+    textInput: string;
+    qualifier: "Qualify" | "Disqualify";
+  }[];
+  randomizeChoices?: boolean;
+  showOtherOption?: boolean;
+}
