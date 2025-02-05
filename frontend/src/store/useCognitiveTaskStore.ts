@@ -456,18 +456,17 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set, get) => ({
       ),
     })),
 
-    updateMultipleImageReference: (id, image) =>
-      set((state) => ({
-        questions: state.questions.map((q) =>
-          q.id === id && q.choiceType === "multipleImages"
-            ? {
-                ...q,
-                uploadedImages: [...q.uploadedImages, image], // ⬅ Aquí puede estar el problema
-              }
-            : q
-        ),
-      })),
-    
+  updateMultipleImageReference: (id, image) =>
+    set((state) => ({
+      questions: state.questions.map((q) =>
+        q.id === id && q.choiceType === "multipleImages"
+          ? {
+            ...q,
+            uploadedImages: [...(q.uploadedImages || []), image], // ✅ Ahora garantizamos que es un array
+          }
+          : q
+      ),
+    })),
 
   /** ✅ Actualiza la imagen única de una pregunta */
   updateUploadedImage: (id: number, image: any) =>
@@ -492,14 +491,16 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set, get) => ({
     })),
 
   /** ✅ Actualiza los datos de una imagen en `uploadedImages` */
-  updateUploadedImageData: (id: number, image: { id: string; }) =>
+  updateUploadedImageData: (id: number, updatedImage: Partial<UploadedImage>) =>
     set((state) => ({
       questions: state.questions.map((q) =>
         q.id === id && q.choiceType === "multipleImages"
           ? {
             ...q,
-            uploadedImages: q.uploadedImages?.map((img) =>
-              img.id === image.id ? image : img
+            uploadedImages: q.uploadedImages.map((img) =>
+              img.id === updatedImage.id
+                ? { ...img, ...updatedImage } // ✅ Extiende el objeto existente con las nuevas propiedades
+                : img
             ),
           }
           : q
@@ -509,25 +510,28 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set, get) => ({
   /** ✅ Obtiene los archivos a subir */
   getFilesToUpload: () => {
     const state = get();
+    console.log("🔍 Estado actual del store antes de obtener archivos:", state.questions);
+
     const filesToUpload: { id: number; file: File | null; isMultiple: boolean }[] = [];
 
     state.questions.forEach((q) => {
-      // 📌 **Para preguntas con una sola imagen**
-      if (q.choiceType !== "multipleImages" && q.uploadedFile) {
+      if ("uploadedFile" in q && q.uploadedFile) {
+        console.log(`📂 Single Image en pregunta ${q.id}:`, q.uploadedFile);
         filesToUpload.push({ id: q.id, file: q.uploadedFile, isMultiple: false });
       }
 
-      // 📌 **Para preguntas con múltiples imágenes**
-      if (q.choiceType === "multipleImages") {
+      if ("uploadedImages" in q) {
+        console.log(`🔍 Revisando uploadedImages en pregunta ${q.id}:`, q.uploadedImages);
         q.uploadedImages.forEach((img) => {
           if (img.file) {
+            console.log(`📂 Agregando Multiple Image en pregunta ${q.id}:`, img.file);
             filesToUpload.push({ id: q.id, file: img.file, isMultiple: true });
           }
         });
       }
     });
 
+    console.log("📂 Archivos listos para subir después de revisión:", filesToUpload);
     return filesToUpload.filter((f) => f.file !== null);
   },
-
 }));

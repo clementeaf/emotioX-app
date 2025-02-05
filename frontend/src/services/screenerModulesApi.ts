@@ -99,7 +99,6 @@ export const submitCognitiveTaskData = async (researchId: string): Promise<void>
   try {
     const { required, questions } = useCognitiveTaskStore.getState();
 
-    // ✅ Formatear correctamente las preguntas antes de enviarlas
     const formattedQuestions = questions.map((q) => {
       const baseData = {
         id: q.id,
@@ -128,7 +127,9 @@ export const submitCognitiveTaskData = async (researchId: string): Promise<void>
                 fileName: q.uploadedImage.fileName,
                 url: q.uploadedImage.url,
                 format: q.uploadedImage.format,
-                size: q.uploadedImage.size,
+                size: q.uploadedImage.size
+                  ? (q.uploadedImage.size / (1024 * 1024)).toFixed(2)
+                  : 0,
                 uploadedAt: q.uploadedImage.uploadedAt,
               }
             : null,
@@ -141,10 +142,12 @@ export const submitCognitiveTaskData = async (researchId: string): Promise<void>
           ...baseData,
           uploadedImages: q.uploadedImages.map((img) => ({
             fileName: img.fileName,
-            url: img.url,
-            format: img.format,
-            size: img.size,
-            uploadedAt: img.uploadedAt,
+            fileUrl: img.url,
+            fileSizeMB: img.size
+              ? (img.size / (1024 * 1024)).toFixed(2)
+              : 0,
+            error: img.error || false,
+            time: img.time || 0,
           })),
         };
       }
@@ -156,7 +159,6 @@ export const submitCognitiveTaskData = async (researchId: string): Promise<void>
 
     console.log("🚀 Payload to backend:", payload);
 
-    // ✅ Enviar datos al backend
     const response = await api.post("/cognitive-task", payload);
     console.log("✅ Cognitive Task data submitted successfully:", response.data);
   } catch (error) {

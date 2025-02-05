@@ -9,11 +9,13 @@ const choiceSchema = new mongoose.Schema({
 
 // Subesquema para las imágenes subidas (`uploadedImages`)
 const uploadedImageSchema = new mongoose.Schema({
-    fileName: { type: String, required: true },
-    fileSizeMB: { type: Number, required: true },
-    error: { type: Boolean, required: true },
-    time: { type: Number, required: true },
+    fileName: { type: String, required: true }, // Mantener requerido
+    fileSizeMB: { type: Number, required: false }, // Ahora opcional
+    fileUrl: { type: String, required: false }, // Ahora opcional
+    error: { type: Boolean, default: false }, // Proporcionar un valor por defecto
+    time: { type: Number, default: 0 }, // Valor por defecto si no se proporciona
 });
+
 
 // Subesquema para las preguntas (`questions`)
 const questionSchema = new mongoose.Schema({
@@ -42,12 +44,13 @@ const questionSchema = new mongoose.Schema({
             return null;
         },
     },
-    uploadedImages: [uploadedImageSchema],
+    uploadedImages: { type: [uploadedImageSchema], default: [] }, // Lista vacía por defecto
     showConditionality: { type: Boolean, default: false },
     choices: { type: [choiceSchema], default: [] },
     randomizeChoices: { type: Boolean, default: false },
     showOtherOption: { type: Boolean, default: false },
 });
+
 
 
 // Esquema principal para Cognitive Task (`questions` dentro de una tarea)

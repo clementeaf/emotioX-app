@@ -1,4 +1,5 @@
 import { SelectChangeEvent } from "@mui/material";
+import { ReactNode } from "react";
 
 export interface ResearchState {
   // Estado general del formulario
@@ -251,6 +252,7 @@ export interface TaskConfigurationProps {
  * Representación estándar de una imagen subida a S3 en los stores.
  */
 export interface UploadedImage {
+  time: ReactNode;
   id: string;          // Identificador único para la imagen
   fileName?: string;    // ✅ Nombre del archivo
   file?: File;         // Archivo original (opcional, solo en frontend antes de subir)

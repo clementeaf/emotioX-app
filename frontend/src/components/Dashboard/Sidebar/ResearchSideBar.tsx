@@ -6,6 +6,7 @@ import { useResultsStore } from '../../../store/useResultStore';
 import { findAndUploadFiles } from '../../../services/findAndUploadFiles';
 import { ResearchSidebarProps } from '../../../types/types';
 import { normalizeLabel, submitActions } from '../../../utils';
+import { useCognitiveTaskStore } from '../../../store/useCognitiveTaskStore';
 
 export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarProps) {
   const { setStageIndex } = useSelectedResearchStore();
@@ -19,43 +20,39 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
     checked?: boolean
   ) => {
     if (!checked) return;
-  
+
     try {
       const researchId = localStorage.getItem("currentResearchId");
       if (!researchId) {
         console.error("❌ Research ID not found in localStorage");
         return;
       }
-  
+
       const stageConfig = researchStagesConfig[frameworkType][stageType].find(
         (stage) => normalizeLabel(stage.label) === normalizeLabel(label)
       );
-  
+
       if (!stageConfig || !stageConfig.getStore) {
         console.warn(`⚠️ No store found for label: "${label}"`);
         return;
       }
-  
+
       const store = stageConfig.getStore();
-  
+
       if (!store || typeof store !== "object" || typeof store.getFilesToUpload !== "function") {
         console.error(`❌ Error: store no es válido o no tiene getFilesToUpload() para "${label}".`, store);
         return;
       }
-  
+
       const filesToUpload = store.getFilesToUpload();
-      console.log(`📂 Files to upload for label "${label}":`, filesToUpload);
-  
-      if (filesToUpload.length > 0) {
-        await findAndUploadFiles(
-          filesToUpload,
-          (id, image) => store.updateUploadedImage(id, image), // ✅ Para `singleImage`
-          (id, image) => store.updateMultipleImageReference(id, image) // ✅ Para `multipleImages`
-        );        
-      }
-  
-      console.log(`🚀 Data to be sent for label "${label}":`, store);
-  
+
+      await findAndUploadFiles(
+        filesToUpload,
+        (id, image) => store.updateUploadedImage(id, image),
+        (id, image) => store.updateMultipleImageReference(id, image),
+        useCognitiveTaskStore.getState
+      );
+
       const submitAction = submitActions[normalizeLabel(label)];
       if (submitAction) {
         await submitAction(researchId);
@@ -66,7 +63,7 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
       console.error(`❌ Error submitting data for label: "${label}"`, error);
     }
   };
-  
+
 
   return (
     <Box sx={{ width: '250px' }}>

@@ -10,7 +10,8 @@ import { UploadedImage } from "../types/types";
 export const findAndUploadFiles = async (
   filesToUpload: { id: number; file: File; isMultiple: boolean }[],
   updateSingleImage: (id: number, image: UploadedImage) => void,
-  updateMultipleImages: (id: number, image: UploadedImage) => void
+  updateMultipleImages: (id: number, image: UploadedImage) => void,
+  getQuestions: () => any // ✅ Se pasa `get()` desde el store
 ) => {
   if (filesToUpload.length === 0) {
     console.log("✅ No files to upload.");
@@ -31,13 +32,16 @@ export const findAndUploadFiles = async (
             size: file.size,
             format: file.type,
             uploadedAt: new Date(),
+            time: undefined
           };
 
           // ✅ **Actualizar el `store` según el tipo de imagen**
           if (isMultiple) {
-            updateMultipleImages(id, uploadedImage); // ✅ `multipleImages`
+            console.log(`🔄 Antes de actualizar store para ID ${id}:`, getQuestions().questions);
+            updateMultipleImages(id, uploadedImage);
+            console.log(`✅ Después de actualizar store para ID ${id}:`, getQuestions().questions);
           } else {
-            updateSingleImage(id, uploadedImage); // ✅ `singleImage`
+            updateSingleImage(id, uploadedImage);
           }
 
           console.log(`✅ Imagen con ID ${id} actualizada en el store con URL: ${uploadedUrl}`);
@@ -50,4 +54,5 @@ export const findAndUploadFiles = async (
     console.error("❌ Error uploading files:", error);
   }
 };
+
 
