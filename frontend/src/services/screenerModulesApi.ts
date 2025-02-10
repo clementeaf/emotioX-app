@@ -4,7 +4,6 @@ import { useImplicitAssociationStore } from '../store/useImplicitAssociationStor
 import { useCognitiveTaskStore } from '../store/useCognitiveTaskStore';
 import { useEyeTrackingStore } from '../store/useEyeTrackingStore';
 import { api } from './axiosConfig';
-import { ImplicitAssociationSchema } from '../types/types';
 
 /**
  * Función para enviar los datos del Screener
@@ -25,7 +24,6 @@ export const submitScreenerData = async (researchId: string): Promise<void> => {
     throw new Error('Failed to submit screener. Please try again.');
   }
 };
-
 
 /**
  * Función para enviar los datos de la Welcome Screen
@@ -59,35 +57,33 @@ export const submitWelcomeScreenData = async (researchId: string): Promise<void>
  */
 export const submitImplicitAssociationData = async (researchId: string): Promise<void> => {
   try {
-    const { required, targets, textAreas, testConfigurations } = useImplicitAssociationStore.getState();
+    const store = useImplicitAssociationStore.getState();
 
-    console.log("🔍 Implicit Association Store Data:", useImplicitAssociationStore.getState());
+    // Solo enviar si todas las imágenes están en S3
+    if (store.targets.some(t => t.tempFile instanceof File)) {
+      throw new Error('Please wait for S3 upload to complete');
+    }
 
-    // ✅ Convertimos `targets` asegurando que `imageUploaded` contenga la URL de S3
-    const formattedTargets = targets.map((target) => ({
+    const formattedTargets = store.targets.map(target => ({
       id: target.id,
       nameOfObject: target.nameOfObject || undefined,
-      imageUploaded: target.uploadedImage?.url || undefined, // ✅ Ahora es `string | undefined`
-      imageFormat: target.imageFormat || undefined,
+      imageUploaded: target.imageUploaded,  // ✅ URL de S3
+      imageFormat: target.imageFormat
     }));
 
-    // ✅ Creamos el payload final con la estructura correcta
-    const payload: ImplicitAssociationSchema = {
+    const payload = {
       researchId,
-      required,
+      required: store.required,
       targets: formattedTargets,
-      textAreas,
-      testConfigurations,
+      textAreas: store.textAreas,
+      testConfigurations: store.testConfigurations,
     };
+    console.log("🚀 Payload to backend:", payload);
 
-    console.log("🚀 Payload to be sent:", payload);
-
-    // ✅ Enviamos los datos al backend
-    const response = await api.post("/implicit-association", payload);
-    console.log("✅ Implicit Association data submitted successfully:", response.data);
+    await api.post("/implicit-association", payload);
   } catch (error) {
-    console.error("❌ Error submitting Implicit Association data:", error);
-    throw new Error("Failed to submit Implicit Association data. Please try again.");
+    console.error("❌ Error submitting data:", error);
+    throw error;
   }
 };
 

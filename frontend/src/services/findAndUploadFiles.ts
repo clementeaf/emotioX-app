@@ -30,35 +30,30 @@ export const findAndUploadFiles = async (
             fileType: file.type,
           });
 
-          const uploadedUrl = await uploadFileToS3(file);
-          console.log(`✅ File uploaded for ID ${id}: ${uploadedUrl}`);
+          const s3Url = await uploadFileToS3(file);
+          console.log(`✅ File uploaded for ID ${id}: ${s3Url}`);
 
-          const uploadedImage: UploadedImage = {
+          // Actualizar el store con la URL de S3
+          updateSingleImage(id, {
             id: `${Date.now()}-${file.name}`,
+            url: s3Url,
             fileName: file.name,
-            url: uploadedUrl,
-            size: file.size,
             format: file.type,
-            uploadedAt: new Date(),
             time: undefined
-          };
+          });
 
-          // ✅ **Actualizar el `store` según el tipo de imagen**
-          if (isMultiple) {
-            console.log(`🔄 Antes de actualizar store para ID ${id}:`, getStoreState());
-            updateMultipleImages(id, uploadedImage);
-            console.log(`✅ Después de actualizar store para ID ${id}:`, getStoreState());
-          } else {
-            updateSingleImage(id, uploadedImage);
-          }
+          // Limpiar el archivo temporal
+          await new Promise(resolve => setTimeout(resolve, 500));
 
-          console.log(`✅ Imagen con ID ${id} actualizada en el store con URL: ${uploadedUrl}`);
+          console.log(`✅ Imagen con ID ${id} actualizada en el store con URL: ${s3Url}`);
         } catch (err) {
           console.error(`❌ Error uploading file for ID ${id}:`, err);
+          throw err;
         }
       })
     );
   } catch (error) {
     console.error("❌ Error uploading files:", error);
+    throw error;
   }
 };

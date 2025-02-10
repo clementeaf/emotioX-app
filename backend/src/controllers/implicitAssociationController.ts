@@ -11,6 +11,7 @@ export const createImplicitAssociation = async (event: APIGatewayProxyEvent): Pr
     await connectDB();
 
     const { required, targets, textAreas, testConfigurations } = JSON.parse(event.body || '{}');
+    console.log("🚀 Targets antes de crear:", JSON.stringify(targets, null, 2));
 
     // Validar campos requeridos
     const { isValid, errorMessage } = validateImplicitAssociationFields(required, targets, textAreas, testConfigurations);
@@ -20,6 +21,8 @@ export const createImplicitAssociation = async (event: APIGatewayProxyEvent): Pr
 
     // Crear el ImplicitAssociation
     const implicitAssociation = await ImplicitAssociation.create({ required, targets, textAreas, testConfigurations });
+    console.log("📝 Documento creado:", JSON.stringify(implicitAssociation, null, 2));
+
     return successResponse(201, implicitAssociation);
   } catch (error) {
     console.error('Error creating ImplicitAssociation:', error);

@@ -72,8 +72,8 @@ export interface CognitiveTaskStore {
   toggleRandomizeChoices: (id: number) => void;
   toggleShowOtherOption: (id: number) => void;
 
-  /** ✅ Obtener archivos a subir para single y multiple images */
-  getFilesToUpload: () => Array<{ id: number; file: File | null }>;
+  /** ✅ Obtener archivos a subir */
+  getFilesToUpload: () => { id: number; file: File | null }[];
 }
 
 export const useCognitiveTaskStore = create<CognitiveTaskStore>((set, get) => ({
@@ -507,31 +507,33 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set, get) => ({
       ),
     })),
 
-  /** ✅ Obtiene los archivos a subir */
+  /** ✅ Obtener archivos a subir */
   getFilesToUpload: () => {
     const state = get();
-    console.log("🔍 Estado actual del store antes de obtener archivos:", state.questions);
-
-    const filesToUpload: { id: number; file: File | null; isMultiple: boolean }[] = [];
+    const filesToUpload: { id: number; file: File | null }[] = [];
 
     state.questions.forEach((q) => {
+      // Recolectar imágenes de preguntas con imagen única
       if ("uploadedFile" in q && q.uploadedFile) {
-        console.log(`📂 Single Image en pregunta ${q.id}:`, q.uploadedFile);
-        filesToUpload.push({ id: q.id, file: q.uploadedFile, isMultiple: false });
+        filesToUpload.push({ 
+          id: q.id, 
+          file: q.uploadedFile 
+        });
       }
 
-      if ("uploadedImages" in q) {
-        console.log(`🔍 Revisando uploadedImages en pregunta ${q.id}:`, q.uploadedImages);
+      // Recolectar imágenes de preguntas con múltiples imágenes
+      if ("uploadedImages" in q && q.uploadedImages) {
         q.uploadedImages.forEach((img) => {
-          if (img.file) {
-            console.log(`📂 Agregando Multiple Image en pregunta ${q.id}:`, img.file);
-            filesToUpload.push({ id: q.id, file: img.file, isMultiple: true });
+          if ("file" in img && img.file) {
+            filesToUpload.push({ 
+              id: q.id, 
+              file: img.file 
+            });
           }
         });
       }
     });
 
-    console.log("📂 Archivos listos para subir después de revisión:", filesToUpload);
-    return filesToUpload.filter((f) => f.file !== null);
+    return filesToUpload;
   },
 }));

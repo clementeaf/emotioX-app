@@ -4,9 +4,9 @@ import { UploadedImage } from "../types/types";
 export interface Target {
   id: number;
   nameOfObject: string;
-  imageUploaded: File | null;
+  imageUploaded: string | null;
   imageFormat: string | null;
-  uploadedImage?: UploadedImage | null; // ✅ Agregar `uploadedImage` a cada Target
+  tempFile?: File | null;
 }
 
 interface TextArea {
@@ -31,7 +31,7 @@ interface ImplicitAssociationStore {
   setRequired: (value: boolean) => void;
   updateTargetName: (id: number, name: string) => void;
   updateTargetImage: (id: number, file: File) => void;
-  updateUploadedImage: (id: number, image: UploadedImage) => void; // ✅ Ahora actualiza un `Target`
+  updateUploadedImage: (id: number, image: UploadedImage) => void;
   updateTextArea: (id: number, value: string) => void;
   resetTextAreas: () => void;
   toggleTestConfiguration: (id: number) => void;
@@ -42,8 +42,8 @@ export const useImplicitAssociationStore = create<ImplicitAssociationStore>(
   (set, get) => ({
     required: true,
     targets: [
-      { id: 1, nameOfObject: "", imageUploaded: null, imageFormat: null, uploadedImage: null },
-      { id: 2, nameOfObject: "", imageUploaded: null, imageFormat: null, uploadedImage: null },
+      { id: 1, nameOfObject: "", imageUploaded: null, imageFormat: null },
+      { id: 2, nameOfObject: "", imageUploaded: null, imageFormat: null },
     ],
     textAreas: [
       { id: 1, label: "Exercise instructions", value: "" },
@@ -69,7 +69,7 @@ export const useImplicitAssociationStore = create<ImplicitAssociationStore>(
       set((state) => ({
         targets: state.targets.map((target) =>
           target.id === id
-            ? { ...target, imageUploaded: file, imageFormat: file.type.split("/")[1] }
+            ? { ...target, tempFile: file, imageFormat: file.type.split("/")[1] }
             : target
         ),
       })),
@@ -77,7 +77,14 @@ export const useImplicitAssociationStore = create<ImplicitAssociationStore>(
     updateUploadedImage: (id, image) =>
       set((state) => ({
         targets: state.targets.map((target) =>
-          target.id === id ? { ...target, uploadedImage: image } : target
+          target.id === id 
+            ? { 
+                ...target, 
+                imageUploaded: image.url || null,
+                imageFormat: image.format || null,
+                tempFile: null
+              } 
+            : target
         ),
       })),
 
@@ -103,7 +110,16 @@ export const useImplicitAssociationStore = create<ImplicitAssociationStore>(
         ),
       })),
 
-    getFilesToUpload: () =>
-      get().targets.map(({ id, imageUploaded }) => ({ id, file: imageUploaded })),
+    getFilesToUpload: () => {
+      const state = get();
+      return state.targets
+        .filter((target): target is Target & { tempFile: File } => 
+          target.tempFile instanceof File
+        )
+        .map(target => ({
+          id: target.id,
+          file: target.tempFile
+        }));
+    },
   })
 );

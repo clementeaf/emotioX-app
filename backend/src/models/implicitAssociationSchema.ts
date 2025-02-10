@@ -4,7 +4,17 @@ import mongoose, { Schema } from "mongoose";
 const targetSchema = new mongoose.Schema({
   id: { type: Number, required: true },
   nameOfObject: { type: String, required: false }, // Cambiado a no requerido
-  imageUploaded: { type: Buffer, default: null },
+  imageUploaded: { 
+    type: String, 
+    validate: {
+      validator: function(v: string | null) {
+        if (v === null) return true;
+        return v.startsWith('https://') && v.includes('.s3.');
+      },
+      message: (props: { value: string }) => `${props.value} is not a valid S3 URL`
+    },
+    default: null 
+  },
   imageFormat: { type: String, default: null },
 });
 

@@ -120,10 +120,10 @@ export interface ImageUploadV2Props {
 export interface TargetCardProps {
   id: number;
   nameOfObject: string;
-  imageUploaded: File | null;
+  imageUploaded: File | string | null;  // Puede ser File o URL string
   imageFormat: string | null;
   onNameChange: (name: string) => void;
-  onImageUpload: (id: number, file: File, format: string) => void;
+  onImageUpload: (id: number, file: File) => void;
 }
 
 

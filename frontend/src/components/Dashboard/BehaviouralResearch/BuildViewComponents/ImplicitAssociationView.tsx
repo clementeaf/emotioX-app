@@ -25,11 +25,14 @@ export default function ImplicitAssociationView() {
     const validateData = (): boolean => {
         if (!required) {
             setError(null);
-            return true; // Si no es requerido, no hay validaciones adicionales.
+            return true;
         }
 
         if (
-            !targets.every((target) => target.nameOfObject.trim() && target.imageUploaded) ||
+            !targets.every((target) => 
+              target.nameOfObject.trim() && 
+              (target.imageUploaded || target.tempFile)
+            ) ||
             !textAreas.every((area) => area.value.trim())
         ) {
             setError("All targets must have a name and an uploaded image. All text areas must be filled.");
@@ -48,7 +51,7 @@ export default function ImplicitAssociationView() {
                 targets: targets.map((target) => ({
                     id: target.id,
                     nameOfObject: target.nameOfObject,
-                    imageUploaded: target.imageUploaded?.name ?? null,
+                    imageUploaded: target.imageUploaded,
                     imageFormat: target.imageFormat,
                 })),
                 textAreas: textAreas.map((area) => ({
@@ -103,12 +106,11 @@ export default function ImplicitAssociationView() {
                             key={target.id}
                             id={target.id}
                             nameOfObject={target.nameOfObject}
-                            imageUploaded={target.imageUploaded}
+                            imageUploaded={target.tempFile || target.imageUploaded}
                             imageFormat={target.imageFormat}
                             onNameChange={(name) => updateTargetName(target.id, name)}
                             onImageUpload={(id, file) => updateTargetImage(id, file)}
                         />
-
                     ))}
                 </Box>
 
@@ -124,7 +126,6 @@ export default function ImplicitAssociationView() {
                             onChange: (value) => updateTextArea(area.id, value),
                         }))}
                     />
-
                 </Box>
 
                 {/* Test Configurations */}

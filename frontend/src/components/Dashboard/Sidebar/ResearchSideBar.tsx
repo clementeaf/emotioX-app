@@ -7,6 +7,11 @@ import { findAndUploadFiles } from '../../../services/findAndUploadFiles';
 import { ResearchSidebarProps } from '../../../types/types';
 import { normalizeLabel, stageIcons, submitActions } from '../../../utils';
 
+interface FileToUpload {
+  id: number;
+  file: File | null;
+}
+
 export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarProps) {
   const { setStageIndex } = useSelectedResearchStore();
   const { setSelectedSection } = useResultsStore();
@@ -23,66 +28,49 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
     try {
       const researchId = localStorage.getItem("currentResearchId");
       if (!researchId) {
-        console.error("❌ Research ID not found in localStorage");
-        return;
+        throw new Error("Research ID not found in localStorage");
       }
 
+      // 1. Obtener la configuración del stage
       const stageConfig = researchStagesConfig[frameworkType][stageType].find(
         (stage) => normalizeLabel(stage.label) === normalizeLabel(label)
       );
 
-      if (!stageConfig || !stageConfig.getStore) {
-        console.warn(`⚠️ No store found for label: "${label}"`);
-        return;
+      if (!stageConfig?.getStore) {
+        throw new Error(`No store configuration found for "${label}"`);
       }
 
+      // 2. Obtener el store y validar su estructura
       const store = stageConfig.getStore();
-
-      if (!store || typeof store !== "object" || typeof store.getFilesToUpload !== "function") {
-        console.error(`❌ Error: store no es válido o no tiene getFilesToUpload() para "${label}".`, store);
-        return;
+      if (!store?.getFilesToUpload || typeof store.getFilesToUpload !== 'function') {
+        throw new Error(`Invalid store configuration for "${label}"`);
       }
 
-      // ✅ Obtener archivos a subir
+      // 3. Obtener archivos a subir
       const filesToUpload = store.getFilesToUpload();
-      console.log(`📂 Archivos a subir para "${label}":`, filesToUpload);
 
-      // ✅ Si hay archivos, subirlos a S3 y actualizar el store
+      // 4. Subir archivos si existen
       if (filesToUpload.length > 0) {
         await findAndUploadFiles(
-          filesToUpload,
-          (id, image) => {
-            if ("updateUploadedImage" in store) {
-              store.updateUploadedImage(id, image);
-            } else {
-              console.warn(`⚠️ updateUploadedImage no está definido en el store para "${label}".`);
-            }
-          },
-          (id, image) => {
-            if ("updateMultipleImageReference" in store) {
-              store.updateMultipleImageReference(id, image);
-            } else if ("addUploadedFiles" in store) {
-              // ✅ Caso especial para `EyeTrackingStore`
-              store.addUploadedFiles([{ fileName: image.fileName, fileSize: image.size }]);
-            } else {
-              console.warn(`⚠️ No se encontró un método para actualizar imágenes en "${label}".`);
-            }
-          },
-          store.getState // ✅ Obtener el estado dinámicamente sin hardcodear stores
+          filesToUpload.map((file: FileToUpload) => ({
+            ...file,
+            isMultiple: false
+          })),
+          (id, image) => store.updateUploadedImage(id, image),
+          () => {}, // No necesitamos esto para ImplicitAssociation
+          () => ({})
         );
-      } else {
-        console.log(`✅ No hay archivos para subir en "${label}".`);
       }
 
-      // ✅ Enviar datos al backend si hay una acción definida
+      // 5. Ejecutar acción de submit
       const submitAction = submitActions[normalizeLabel(label)];
       if (submitAction) {
         await submitAction(researchId);
-      } else {
-        console.warn(`⚠️ No associated action for label: "${label}"`);
       }
+
     } catch (error) {
-      console.error(`❌ Error submitting data for label: "${label}"`, error);
+      console.error('Error uploading files:', error);
+      throw error;
     }
   };
 
