@@ -52,13 +52,10 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
       // 4. Subir archivos si existen
       if (filesToUpload.length > 0) {
         await findAndUploadFiles(
-          filesToUpload.map((file: FileToUpload) => ({
-            ...file,
-            isMultiple: false
-          })),
-          (id, image) => store.updateUploadedImage(id, image),
-          () => {}, // No necesitamos esto para ImplicitAssociation
-          () => ({})
+          filesToUpload,
+          (id, image) => store.updateSingleImageReference(id, image),
+          (id, images) => store.updateMultipleImageReference(id, images),
+          () => ({ questions: store.questions || [] })
         );
       }
 

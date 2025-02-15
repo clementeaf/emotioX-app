@@ -252,15 +252,15 @@ export interface TaskConfigurationProps {
  * Representación estándar de una imagen subida a S3 en los stores.
  */
 export interface UploadedImage {
-  time: ReactNode;
-  id: string;          // Identificador único para la imagen
-  fileName?: string;    // ✅ Nombre del archivo
-  file?: File;         // Archivo original (opcional, solo en frontend antes de subir)
-  url?: string;        // URL de la imagen en S3 (se envía al backend)
-  format?: string;     // Tipo MIME del archivo (image/jpeg, image/png, etc.)
-  size?: number;       // Tamaño del archivo en bytes
-  error?: boolean;
-  uploadedAt?: Date;   // Fecha de subida (opcional)
+  id: string;          // ID único para la imagen
+  fileName: string;    // Nombre del archivo
+  file?: File;         // Archivo temporal antes de subir a S3
+  url?: string;        // URL de S3 después de subir
+  format: string;      // Tipo MIME del archivo
+  size?: number;       // Tamaño en bytes
+  uploadedAt?: Date;   // Fecha de subida
+  time?: number;       // Tiempo en segundos (para multipleImages)
+  error?: boolean;     // Indicador de error en la subida
 }
 
 export type StageType = 'Build' | 'Recruit' | 'Result';

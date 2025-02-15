@@ -115,40 +115,42 @@ export const submitCognitiveTaskData = async (researchId: string): Promise<void>
       };
 
       // ✅ Si es una pregunta con una sola imagen
-      if ("uploadedImage" in q) {
+      if (q.choiceType !== "multipleImages") {
+        const singleImageQuestion = q;
         return {
           ...baseData,
-          uploadedImage: q.uploadedImage
+          uploadedImage: singleImageQuestion.uploadedImage
             ? {
-                fileName: q.uploadedImage.fileName,
-                url: q.uploadedImage.url,
-                format: q.uploadedImage.format,
-                size: q.uploadedImage.size
-                  ? (q.uploadedImage.size / (1024 * 1024)).toFixed(2)
+                id: singleImageQuestion.uploadedImage.id,
+                fileName: singleImageQuestion.uploadedImage.fileName,
+                url: singleImageQuestion.uploadedImage.url,
+                format: singleImageQuestion.uploadedImage.format,
+                size: singleImageQuestion.uploadedImage.size
+                  ? (singleImageQuestion.uploadedImage.size / (1024 * 1024)).toFixed(2)
                   : 0,
-                uploadedAt: q.uploadedImage.uploadedAt,
+                uploadedAt: singleImageQuestion.uploadedImage.uploadedAt,
               }
             : null,
         };
       }
 
       // ✅ Si es una pregunta con múltiples imágenes
-      if ("uploadedImages" in q) {
-        return {
-          ...baseData,
-          uploadedImages: q.uploadedImages.map((img) => ({
+      const multipleImagesQuestion = q;
+      return {
+        ...baseData,
+        uploadedImages: multipleImagesQuestion.uploadedImages
+          .filter(img => img.url) // Solo incluimos imágenes que ya tienen URL de S3
+          .map((img) => ({
+            id: img.id,
             fileName: img.fileName,
-            fileUrl: img.url,
-            fileSizeMB: img.size
-              ? (img.size / (1024 * 1024)).toFixed(2)
-              : 0,
-            error: img.error || false,
+            url: img.url,
+            format: img.format,
+            size: img.size ? (img.size / (1024 * 1024)).toFixed(2) : 0,
+            uploadedAt: img.uploadedAt,
             time: img.time || 0,
+            error: img.error || false,
           })),
-        };
-      }
-
-      return baseData;
+      };
     });
 
     const payload = { researchId, required, questions: formattedQuestions };
