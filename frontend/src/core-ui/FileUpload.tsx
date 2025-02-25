@@ -4,7 +4,12 @@ import { grey } from '@mui/material/colors';
 import inbox from '../assets/researchForm3/Inbox.png';
 import PaperClip from '../assets/researchForm3/PaperClip.png';
 import DeleteOutlined from '../assets/researchForm3/DeleteOutlined.png';
-import { UploadedFile } from '../store/useEyeTrackingStore';
+
+interface UploadedFile {
+    fileName: string;
+    fileSize: number;
+    file: File | null;
+}
 
 interface FileUploadProps {
     accept: { [key: string]: string[] };
@@ -66,7 +71,7 @@ export default function FileUpload({ accept, maxSize, onUpload, uploadedFiles, r
                 </Box>
             </Box>
 
-            {uploadedFiles.length > 0 && (
+            {uploadedFiles && uploadedFiles.length > 0 && (
                 <List sx={{ width: "100%", maxWidth: "395px", bgcolor: "background.paper" }}>
                     {uploadedFiles.map((file) => (
                         <ListItem
@@ -74,13 +79,18 @@ export default function FileUpload({ accept, maxSize, onUpload, uploadedFiles, r
                             sx={{
                                 display: "flex",
                                 justifyContent: "space-between",
+                                py: 1,
+                                px: 2,
+                                borderBottom: `1px solid ${grey[200]}`,
                             }}
                         >
                             <Stack direction="row" alignItems="center" gap={1}>
                                 <img src={PaperClip} alt="PaperClip" />
-                                <Typography color={file.fileSize > 5 * 1024 * 1024 ? "red" : "black"}>{file.fileName}</Typography>
+                                <Typography color={file.fileSize > 30 * 1024 * 1024 ? "error" : "inherit"}>
+                                    {file.fileName}
+                                </Typography>
                             </Stack>
-                            <IconButton edge="end" onClick={() => removeFile(file.fileName)}>
+                            <IconButton edge="end" onClick={() => removeFile(file.fileName)} size="small">
                                 <img src={DeleteOutlined} alt="Delete Icon" />
                             </IconButton>
                         </ListItem>

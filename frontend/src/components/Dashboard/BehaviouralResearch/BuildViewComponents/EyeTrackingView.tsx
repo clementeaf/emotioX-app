@@ -13,9 +13,9 @@ export default function EyeTrackingView() {
     setRequired,
     taskInstruction,
     setTaskInstruction,
-    uploadedFiles,
-    addUploadedFiles,
-    removeUploadedFile,
+    uploadedImages,
+    addTempImage,
+    removeImage,
     randomize,
     setRandomize,
     isShelfTask,
@@ -41,6 +41,24 @@ export default function EyeTrackingView() {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRandomize(event.target.checked);
   };
+
+  // Convertir uploadedImages al formato que espera FileUpload
+  const formattedUploadedFiles = uploadedImages.map(img => ({
+    fileName: img.fileName,
+    fileSize: img.fileSize,
+    file: img.tempFile || null
+  }));
+
+  const handleUpload = (files: File[]) => {
+    files.forEach(file => {
+      addTempImage(file);
+    });
+  };
+
+  const handleRemoveFile = (fileName: string) => {
+    removeImage(fileName);
+  };
+
   return (
     <Box sx={{
       display: 'flex',
@@ -63,7 +81,7 @@ export default function EyeTrackingView() {
           pl: 3
         }}>
           <Typography fontSize={14} fontWeight={400}>Eye Tracking is a biometric method to map humans interactions and map the movement of eyes.</Typography>
-          <Typography color='gray' fontSize={14} fontWeight={400}>A response will be qualified as “skipped by logic” if the respondent can’t answer/proceed.</Typography>
+          <Typography color='gray' fontSize={14} fontWeight={400}>A response will be qualified as "skipped by logic" if the respondent can't answer/proceed.</Typography>
 
           <Box sx={{
             display: 'flex',
@@ -122,16 +140,9 @@ export default function EyeTrackingView() {
               <FileUpload
                 accept={{ "image/*": [".jpg", ".jpeg", ".png", ".gif"], "video/*": [".mp4"] }}
                 maxSize={30 * 1024 * 1024}
-                onUpload={(files) =>
-                  addUploadedFiles(
-                    files.map((file) => ({
-                      fileName: file.name,
-                      fileSize: file.size,
-                    }))
-                  )
-                }
-                uploadedFiles={uploadedFiles}
-                removeFile={removeUploadedFile}
+                onUpload={handleUpload}
+                uploadedFiles={formattedUploadedFiles}
+                removeFile={handleRemoveFile}
               />
             </Box>
             <Box sx={{

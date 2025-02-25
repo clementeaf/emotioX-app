@@ -1,5 +1,5 @@
 import { SelectChangeEvent } from "@mui/material";
-import { ReactNode } from "react";
+import type { Choice } from "../store/useCognitiveTaskStore";
 
 export interface ResearchState {
   // Estado general del formulario
@@ -53,9 +53,22 @@ export interface FormDataState {
 }
 
 export interface Question {
-  questionText: string; // Texto de la pregunta
-  questionType: string; // Tipo de la pregunta (e.g., "Single choice", "Multiple choice")
-  required: boolean; // Indica si la pregunta es obligatoria
+  id: number;
+  question: string;
+  isVisible: boolean;
+  required: boolean;
+  placeholder: string;
+  inputText: string;
+  selectedOption: string;
+  showConditionality: boolean;
+  choiceType: "singleChoice" | "multipleChoice" | "linearScale" | "multipleImages";
+  choices: Choice[];
+  randomizeChoices: boolean;
+  showOtherOption: boolean;
+  images: UploadedImage[];
+  deviceFrameOptions?: string[];
+  selectedFrame?: string;
+  fileUploadLabel?: string;
 }
 
 export interface PublicStudyStepperStore {
@@ -108,7 +121,7 @@ export interface InstructionFieldProps {
 };
 
 export interface ImageUploadProps {
-  id: number;
+  id?: number;
   handleImageUpload: (file: File, format: string) => void;
 }
 
@@ -120,7 +133,7 @@ export interface ImageUploadV2Props {
 export interface TargetCardProps {
   id: number;
   nameOfObject: string;
-  imageUploaded: File | string | null;  // Puede ser File o URL string
+  imageUploaded: File | string | null;
   imageFormat: string | null;
   onNameChange: (name: string) => void;
   onImageUpload: (id: number, file: File) => void;
@@ -252,15 +265,17 @@ export interface TaskConfigurationProps {
  * Representación estándar de una imagen subida a S3 en los stores.
  */
 export interface UploadedImage {
-  id: string;          // ID único para la imagen
+  id?: string;         // ID único opcional
   fileName: string;    // Nombre del archivo
-  file?: File;         // Archivo temporal antes de subir a S3
   url?: string;        // URL de S3 después de subir
   format: string;      // Tipo MIME del archivo
   size?: number;       // Tamaño en bytes
   uploadedAt?: Date;   // Fecha de subida
   time?: number;       // Tiempo en segundos (para multipleImages)
   error?: boolean;     // Indicador de error en la subida
+  tempFile?: File;     // Archivo temporal antes de subir a S3
+  fileSizeMB?: number; // Tamaño en MB (calculado)
+  file?: File;         // Archivo para compatibilidad con componentes antiguos
 }
 
 export type StageType = 'Build' | 'Recruit' | 'Result';
@@ -272,7 +287,8 @@ export type ResearchSidebarProps = {
 
 export interface Target {
   id: number;
-  nameOfObject?: string;
+  nameOfObject: string;
+  image: UploadedImage | null;
   imageUploaded?: string; // URL de la imagen en S3
   imageFormat?: string;
 }

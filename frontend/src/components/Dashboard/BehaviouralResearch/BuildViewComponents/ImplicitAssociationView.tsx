@@ -30,8 +30,8 @@ export default function ImplicitAssociationView() {
 
         if (
             !targets.every((target) => 
-              target.nameOfObject.trim() && 
-              (target.imageUploaded || target.tempFile)
+                target.nameOfObject.trim() && 
+                (target.image?.url || target.image?.tempFile)
             ) ||
             !textAreas.every((area) => area.value.trim())
         ) {
@@ -46,21 +46,40 @@ export default function ImplicitAssociationView() {
     const handleSubmit = () => {
         if (!validateData()) return;
 
-        const preparedData = required
-            ? {
-                targets: targets.map((target) => ({
-                    id: target.id,
-                    nameOfObject: target.nameOfObject,
-                    imageUploaded: target.imageUploaded,
-                    imageFormat: target.imageFormat,
-                })),
-                textAreas: textAreas.map((area) => ({
-                    id: area.id,
-                    value: area.value,
-                })),
-                testConfigurations: testConfigurations.filter((config) => config.checked),
-            }
-            : {};
+        const researchId = localStorage.getItem("currentResearchId");
+        if (!researchId) {
+            setError("Research ID not found");
+            return;
+        }
+
+        const preparedData = {
+            researchId,
+            required,
+            targets: targets.map((target) => ({
+                id: target.id,
+                nameOfObject: target.nameOfObject || "",
+                imageUploaded: target.image?.url || "",
+                imageFormat: target.image?.format || "",
+                image: target.image ? {
+                    fileName: target.image.fileName,
+                    url: target.image.url || "",
+                    format: target.image.format,
+                    size: target.image.size,
+                    uploadedAt: target.image.uploadedAt,
+                    error: target.image.error
+                } : null
+            })),
+            textAreas: textAreas.map((area) => ({
+                id: area.id,
+                label: area.label,
+                value: area.value,
+            })),
+            testConfigurations: testConfigurations.filter(config => config.checked).map(config => ({
+                id: config.id,
+                label: config.label,
+                checked: config.checked
+            }))
+        };
 
         console.log("Datos enviados al backend:", preparedData);
     };
@@ -106,8 +125,8 @@ export default function ImplicitAssociationView() {
                             key={target.id}
                             id={target.id}
                             nameOfObject={target.nameOfObject}
-                            imageUploaded={target.tempFile || target.imageUploaded}
-                            imageFormat={target.imageFormat}
+                            imageUploaded={target.image?.tempFile || target.image?.url || null}
+                            imageFormat={target.image?.format || null}
                             onNameChange={(name) => updateTargetName(target.id, name)}
                             onImageUpload={(id, file) => updateTargetImage(id, file)}
                         />

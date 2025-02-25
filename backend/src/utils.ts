@@ -47,20 +47,91 @@ export const validateImplicitAssociationFields = (
   textAreas: any[],
   testConfigurations: any[]
 ) => {
+  // Validar el campo required
   if (typeof required !== 'boolean') {
     return { isValid: false, errorMessage: 'The "required" field must be a boolean.' };
   }
 
+  // Validar targets
   if (!Array.isArray(targets) || !targets.length) {
     return { isValid: false, errorMessage: 'The "targets" field must be a non-empty array.' };
   }
 
+  // Validar la estructura de cada target
+  for (const target of targets) {
+    if (!target.id || typeof target.id !== 'number') {
+      return { isValid: false, errorMessage: 'Each target must have a numeric id.' };
+    }
+
+    if (target.nameOfObject && typeof target.nameOfObject !== 'string') {
+      return { isValid: false, errorMessage: 'Target nameOfObject must be a string.' };
+    }
+
+    if (target.imageUploaded && typeof target.imageUploaded !== 'string') {
+      return { isValid: false, errorMessage: 'Target imageUploaded must be a string.' };
+    }
+
+    if (target.image) {
+      if (typeof target.image !== 'object') {
+        return { isValid: false, errorMessage: 'Target image must be an object.' };
+      }
+
+      if (target.image.fileName && typeof target.image.fileName !== 'string') {
+        return { isValid: false, errorMessage: 'Target image fileName must be a string.' };
+      }
+
+      if (target.image.url && typeof target.image.url !== 'string') {
+        return { isValid: false, errorMessage: 'Target image url must be a string.' };
+      }
+
+      if (target.image.format && typeof target.image.format !== 'string') {
+        return { isValid: false, errorMessage: 'Target image format must be a string.' };
+      }
+
+      if (target.image.size && typeof target.image.size !== 'number') {
+        return { isValid: false, errorMessage: 'Target image size must be a number.' };
+      }
+    }
+  }
+
+  // Validar textAreas
   if (!Array.isArray(textAreas) || !textAreas.length) {
     return { isValid: false, errorMessage: 'The "textAreas" field must be a non-empty array.' };
   }
 
+  // Validar la estructura de cada textArea
+  for (const textArea of textAreas) {
+    if (!textArea.id || typeof textArea.id !== 'number') {
+      return { isValid: false, errorMessage: 'Each textArea must have a numeric id.' };
+    }
+
+    if (!textArea.label || typeof textArea.label !== 'string') {
+      return { isValid: false, errorMessage: 'Each textArea must have a string label.' };
+    }
+
+    if (textArea.value && typeof textArea.value !== 'string') {
+      return { isValid: false, errorMessage: 'TextArea value must be a string.' };
+    }
+  }
+
+  // Validar testConfigurations
   if (!Array.isArray(testConfigurations) || !testConfigurations.length) {
     return { isValid: false, errorMessage: 'The "testConfigurations" field must be a non-empty array.' };
+  }
+
+  // Validar la estructura de cada testConfiguration
+  for (const config of testConfigurations) {
+    if (!config.id || typeof config.id !== 'number') {
+      return { isValid: false, errorMessage: 'Each testConfiguration must have a numeric id.' };
+    }
+
+    if (!config.label || typeof config.label !== 'string') {
+      return { isValid: false, errorMessage: 'Each testConfiguration must have a string label.' };
+    }
+
+    if (typeof config.checked !== 'boolean') {
+      return { isValid: false, errorMessage: 'Each testConfiguration must have a boolean checked field.' };
+    }
   }
 
   return { isValid: true };

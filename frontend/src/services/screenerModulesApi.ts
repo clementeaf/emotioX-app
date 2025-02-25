@@ -2,7 +2,7 @@ import { useScreenerStore } from '../store/useScreenerStore';
 import { useWelcomeScreenStore } from '../store/useWelcomeScreenStore';
 import { useImplicitAssociationStore } from '../store/useImplicitAssociationStore';
 import { useCognitiveTaskStore } from '../store/useCognitiveTaskStore';
-import { useEyeTrackingStore } from '../store/useEyeTrackingStore';
+import { useEyeTrackingStore, EyeTrackingImage } from '../store/useEyeTrackingStore';
 import { api } from './axiosConfig';
 
 /**
@@ -60,16 +60,29 @@ export const submitImplicitAssociationData = async (researchId: string): Promise
     const store = useImplicitAssociationStore.getState();
 
     // Solo enviar si todas las imágenes están en S3
-    if (store.targets.some(t => t.tempFile instanceof File)) {
+    if (store.targets.some(t => t.image?.tempFile instanceof File)) {
       throw new Error('Please wait for S3 upload to complete');
     }
 
-    const formattedTargets = store.targets.map(target => ({
-      id: target.id,
-      nameOfObject: target.nameOfObject || undefined,
-      imageUploaded: target.imageUploaded,  // ✅ URL de S3
-      imageFormat: target.imageFormat
-    }));
+    const formattedTargets = store.targets.map(target => {
+      // Extraer solo la extensión del formato MIME
+      const format = target.image?.format?.split('/')[1] || "";
+      
+      return {
+        id: target.id,
+        nameOfObject: target.nameOfObject || "",
+        imageUploaded: target.image?.url || "",
+        imageFormat: format,
+        image: target.image ? {
+          fileName: target.image.fileName,
+          url: target.image.url || "",
+          format: format,
+          size: target.image.size,
+          uploadedAt: target.image.uploadedAt,
+          error: target.image.error
+        } : null
+      };
+    });
 
     const payload = {
       researchId,
@@ -94,6 +107,16 @@ export const submitImplicitAssociationData = async (researchId: string): Promise
 export const submitCognitiveTaskData = async (researchId: string): Promise<void> => {
   try {
     const { required, questions } = useCognitiveTaskStore.getState();
+    console.log("🔍 Estado actual del store:", 
+      questions.map(q => ({
+        id: q.id,
+        images: q.images.map(img => ({
+          fileName: img.fileName,
+          url: img.url,
+          tempFile: img.tempFile ? 'present' : 'none'
+        }))
+      }))
+    );
 
     const formattedQuestions = questions.map((q) => {
       const baseData = {
@@ -114,48 +137,46 @@ export const submitCognitiveTaskData = async (researchId: string): Promise<void>
         showOtherOption: q.showOtherOption,
       };
 
-      // ✅ Si es una pregunta con una sola imagen
+      // Procesar imágenes
+      const images = q.images
+        .filter(img => img.url) // Solo incluimos imágenes que ya tienen URL de S3
+        .map((img) => ({
+          id: img.id,
+          fileName: img.fileName,
+          url: img.url,
+          format: img.format,
+          size: img.size ? (img.size / (1024 * 1024)).toFixed(2) : 0,
+          uploadedAt: img.uploadedAt,
+          time: img.time || 0,
+          error: img.error || false,
+        }));
+
+      console.log(`🔍 Imágenes procesadas para pregunta ${q.id}:`, images);
+
+      // Si es una pregunta con una sola imagen, incluimos la primera como image
       if (q.choiceType !== "multipleImages") {
-        const singleImageQuestion = q;
-        return {
+        const result = {
           ...baseData,
-          uploadedImage: singleImageQuestion.uploadedImage
-            ? {
-                id: singleImageQuestion.uploadedImage.id,
-                fileName: singleImageQuestion.uploadedImage.fileName,
-                url: singleImageQuestion.uploadedImage.url,
-                format: singleImageQuestion.uploadedImage.format,
-                size: singleImageQuestion.uploadedImage.size
-                  ? (singleImageQuestion.uploadedImage.size / (1024 * 1024)).toFixed(2)
-                  : 0,
-                uploadedAt: singleImageQuestion.uploadedImage.uploadedAt,
-              }
-            : null,
+          image: images[0] || null,
+          images: [] // Aseguramos que no haya conflicto
         };
+        console.log(`🔍 Pregunta ${q.id} (single):`, { image: result.image });
+        return result;
       }
 
-      // ✅ Si es una pregunta con múltiples imágenes
-      const multipleImagesQuestion = q;
-      return {
+      // Si es una pregunta con múltiples imágenes
+      const result = {
         ...baseData,
-        uploadedImages: multipleImagesQuestion.uploadedImages
-          .filter(img => img.url) // Solo incluimos imágenes que ya tienen URL de S3
-          .map((img) => ({
-            id: img.id,
-            fileName: img.fileName,
-            url: img.url,
-            format: img.format,
-            size: img.size ? (img.size / (1024 * 1024)).toFixed(2) : 0,
-            uploadedAt: img.uploadedAt,
-            time: img.time || 0,
-            error: img.error || false,
-          })),
+        images,
+        image: null // Aseguramos que no haya conflicto
       };
+      console.log(`🔍 Pregunta ${q.id} (multiple):`, { images: result.images });
+      return result;
     });
 
     const payload = { researchId, required, questions: formattedQuestions };
 
-    console.log("🚀 Payload to backend:", payload);
+    console.log("🚀 Payload final a enviar:", JSON.stringify(payload, null, 2));
 
     const response = await api.post("/cognitive-task", payload);
     console.log("✅ Cognitive Task data submitted successfully:", response.data);
@@ -182,7 +203,7 @@ export const submitEyeTrackingData = async (researchId: string): Promise<void> =
       if (!data.taskInstruction || data.taskInstruction.trim() === "") {
         throw new Error("Task instruction is required.");
       }
-      if (data.uploadedFiles.some(file => !file.fileName || file.fileSize === undefined)) {
+      if (data.uploadedImages.some((file: EyeTrackingImage) => !file.fileName || file.fileSize === undefined)) {
         throw new Error("Uploaded files must have a valid fileName and fileSize.");
       }
     };
@@ -194,10 +215,17 @@ export const submitEyeTrackingData = async (researchId: string): Promise<void> =
       researchId,
       required: eyeTrackingData.required,
       taskInstruction: eyeTrackingData.taskInstruction,
-      uploadedFiles: eyeTrackingData.uploadedFiles.map(file => ({
-        fileName: file.fileName || null, // Tolerancia a campos vacíos
-        fileSize: file.fileSize || null,
-      })),
+      uploadedFiles: eyeTrackingData.uploadedImages
+        .filter((file: EyeTrackingImage) => file.fileName && file.fileSize !== undefined)
+        .map((file: EyeTrackingImage) => ({
+          fileName: file.fileName,
+          fileSize: file.fileSize,
+          url: file.uploadedImage?.url || null,
+          format: file.uploadedImage?.format || null,
+          uploadedAt: file.uploadedImage?.uploadedAt || null,
+          time: file.time || 0,
+          error: file.error || false
+        })),
       randomize: eyeTrackingData.randomize,
       isShelfTask: eyeTrackingData.isShelfTask,
       resizeImage: eyeTrackingData.resizeImage,

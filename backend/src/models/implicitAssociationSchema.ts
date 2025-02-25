@@ -8,7 +8,7 @@ const targetSchema = new mongoose.Schema({
     type: String, 
     validate: {
       validator: function(v: string | null) {
-        if (v === null) return true;
+        if (v === null || v === '') return true;
         return v.startsWith('https://') && v.includes('.s3.');
       },
       message: (props: { value: string }) => `${props.value} is not a valid S3 URL`
@@ -16,6 +16,14 @@ const targetSchema = new mongoose.Schema({
     default: null 
   },
   imageFormat: { type: String, default: null },
+  image: {
+    fileName: { type: String },
+    url: { type: String },
+    format: { type: String },
+    size: { type: Number },
+    uploadedAt: { type: Date },
+    error: { type: Boolean, default: false }
+  }
 });
 
 // Subesquema para los objetos en `textAreas`
@@ -32,6 +40,7 @@ const testConfigurationSchema = new mongoose.Schema({
 });
 
 const implicitAssociationSchema = new mongoose.Schema({
+  researchId: { type: String, required: true },
   required: { type: Boolean, default: true },
   targets: [targetSchema],
   textAreas: [textAreaSchema],

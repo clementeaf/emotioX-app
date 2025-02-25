@@ -10,22 +10,18 @@ import {
     IconButton,
     Stack,
     FormControl,
-    TableContainer,
-    Table,
-    TableHead,
-    TableRow,
-    TableCell,
-    TableBody,
     SelectChangeEvent,
     Checkbox,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { AntSwitch } from "../Switch";
-import { useCognitiveTaskStore, Choice, SingleImageQuestion, MultipleImagesQuestion } from "../../store/useCognitiveTaskStore";
+import { useCognitiveTaskStore } from "../../store/useCognitiveTaskStore";
 import { ImageUploadV2 } from "../FIleUpload/ImageUpload";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { DeviceFrameProps, LinearScaleProps, SingleFormProps, UploadedImage } from "../../types/types";
+import { DeviceFrameProps, SingleFormProps, UploadedImage } from "../../types/types";
+import { findAndUploadFiles } from "../../services/findAndUploadFiles";
+import type { Choice } from "../../store/useCognitiveTaskStore";
 
 /** Componente Principal */
 export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
@@ -55,20 +51,48 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
     // Determinar si la pregunta maneja una sola imagen o múltiples imágenes
     const isMultipleImages = choiceType === "multipleImages";
 
-    // Extraer propiedades específicas según el tipo de pregunta
-    // const uploadedFile = !isMultipleImages ? (question as SingleImageQuestion).uploadedFile : null;
-    // const uploadedImage = !isMultipleImages ? (question as SingleImageQuestion).uploadedImage : null;
-    // const uploadedImages = isMultipleImages ? (question as MultipleImagesQuestion).uploadedImages : [];
+    // Obtener las imágenes del modelo unificado o del modelo anterior
+    const getImages = () => {
+        // Si tenemos imágenes en el nuevo formato unificado
+        if (question.images && question.images.length > 0) {
+            return question.images;
+        }
+        
+        // Compatibilidad con formatos anteriores
+        if (isMultipleImages && (question as any).uploadedImages) {
+            return (question as any).uploadedImages;
+        }
+        
+        // Para imágenes únicas en formato anterior
+        const uploadedFile = (question as any).uploadedFile;
+        const uploadedImage = (question as any).uploadedImage;
+        
+        if (uploadedFile || uploadedImage) {
+            const image = {
+                id: `${Date.now()}`,
+                fileName: uploadedFile?.name || uploadedImage?.fileName || '',
+                tempFile: uploadedFile || null,
+                url: uploadedImage?.url || null,
+                format: uploadedFile?.type || uploadedImage?.format || '',
+                size: uploadedFile?.size || uploadedImage?.size || 0,
+                fileSizeMB: uploadedFile?.size ? uploadedFile.size / (1024 * 1024) : uploadedImage?.size,
+                error: false,
+                time: 0
+            };
+            return [image];
+        }
+        
+        return [];
+    };
 
     // Seleccionar las funciones necesarias del store
     const toggleVisibility = useCognitiveTaskStore((state) => state.toggleVisibility);
     const setQuestionRequired = useCognitiveTaskStore((state) => state.setQuestionRequired);
     const updateQuestionText = useCognitiveTaskStore((state) => state.updateQuestionText);
-    const updateSingleImageFile = useCognitiveTaskStore((state) => state.updateSingleImageFile);
-    const removeUploadedImage = useCognitiveTaskStore((state) => state.removeUploadedImage);
+    const updateImageFile = useCognitiveTaskStore((state) => state.updateImageFile);
+    const updateUploadedImage = useCognitiveTaskStore((state) => state.updateUploadedImage);
+    const removeImage = useCognitiveTaskStore((state) => state.removeImage);
     const updateImageTime = useCognitiveTaskStore((state) => state.updateImageTime);
-    // const updateSingleImageReference = useCognitiveTaskStore((state) => state.updateSingleImageReference);
-    const addUploadedImage = useCognitiveTaskStore((state) => state.addUploadedImage);
     const updateSelectedFrame = useCognitiveTaskStore((state) => state.updateSelectedFrame);
     const setChoiceType = useCognitiveTaskStore((state) => state.setChoiceType);
 
@@ -78,29 +102,45 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
     };
 
     /** ✅ Manejo de subida de archivos (Single o Multiple) */
-    const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || !e.target.files[0]) return;
 
         const file = e.target.files[0];
-        const uploadedImage: UploadedImage = {
-            id: `${Date.now()}-${file.name}`,
-            file,
-            fileName: file.name,
-            size: file.size,
-            format: file.type,
-            uploadedAt: new Date(),
-            time: undefined
-        };
+        
+        try {
+            if (updateImageFile) {
+                // Nuevo modelo unificado
+                updateImageFile(questionId, file, isMultipleImages);
+            } else {
+                // Compatibilidad con ImplicitAssociation
+                if (isMultipleImages) {
+                    const uploadedImage = createUploadedImage(file);
+                    (question as any).addUploadedImage?.(questionId, uploadedImage);
+                } else {
+                    (question as any).updateSingleImageFile?.(questionId, file);
+                }
+            }
 
-        if (isMultipleImages) {
-            console.log(`🖼️ Agregando imagen múltiple en ID ${questionId}:`, uploadedImage);
-            addUploadedImage(questionId, uploadedImage);
-        } else {
-            console.log(`📸 Agregando imagen única en ID ${questionId}:`, uploadedImage);
-            updateSingleImageFile(questionId, file);
+            // Subir a S3 usando findAndUploadFiles
+            await findAndUploadFiles(
+                [{ id: questionId, file, isMultiple: isMultipleImages }],
+                (id, image) => {
+                    if (updateUploadedImage) {
+                        updateUploadedImage(Number(id), image);
+                    } else {
+                        // Compatibilidad con ImplicitAssociation
+                        if (isMultipleImages) {
+                            (question as any).addUploadedImage?.(Number(id), image);
+                        } else {
+                            (question as any).updateSingleImageReference?.(Number(id), image);
+                        }
+                    }
+                }
+            );
+        } catch (error) {
+            console.error('Error uploading file:', error);
         }
     };
-
 
     /** ✅ Manejo del cambio de frame */
     const handleFrameChange = (event: SelectChangeEvent) => {
@@ -141,12 +181,22 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
 
             {choiceType === "multipleImages" ? (
                 <ImageUploadManager
-                    uploadedImages={(question as MultipleImagesQuestion).uploadedImages}
+                    uploadedImages={getImages()}
                     onUpload={(file) => {
-                        console.log("📤 Subiendo imagen:", file); // ✅ Confirmar que el flujo llega aquí
-                        addUploadedImage(questionId, createUploadedImage(file)); // Crear objeto UploadedImage y persistir
+                        const uploadedImage = createUploadedImage(file);
+                        if (updateImageFile) {
+                            updateImageFile(questionId, file, true);
+                        } else {
+                            (question as any).addUploadedImage?.(questionId, uploadedImage);
+                        }
                     }}
-                    onDelete={(fileName) => removeUploadedImage(questionId, fileName)}
+                    onDelete={(fileName) => {
+                        if (removeImage) {
+                            removeImage(questionId, fileName);
+                        } else {
+                            (question as any).removeUploadedImage?.(questionId, fileName);
+                        }
+                    }}
                     onIncreaseTime={(fileName) => updateImageTime(questionId, fileName, 1)}
                     onDecreaseTime={(fileName) => updateImageTime(questionId, fileName, -1)}
                     disabled={!isVisible}
@@ -158,7 +208,7 @@ export const SingleForm: React.FC<SingleFormProps> = ({ questionId }) => {
             {fileUploadLabel && choiceType !== "multipleImages" && (
                 <UploadSection
                     fileUploadLabel={fileUploadLabel}
-                    uploadedFile={!isMultipleImages ? (question as SingleImageQuestion).uploadedFile : undefined} // ✅ Se obtiene del estado
+                    uploadedFile={getImages()[0]?.tempFile || getImages()[0]}
                     handleFileUpload={handleFileUpload}
                     selectedFrame={selectedFrame}
                     deviceFrameOptions={deviceFrameOptions}
@@ -204,11 +254,15 @@ const MainInputSection: React.FC<{
     setQuestionRequired: (value: boolean) => void;
     disabled: boolean;
 }> = ({ placeholder, inputText, updateQuestionText, choiceType, handleOptionChange, required, setQuestionRequired, disabled }) => {
-    const [localInputText, setLocalInputText] = useState(inputText);
+    const [localInputText, setLocalInputText] = useState<string>(inputText || "");
+
+    React.useEffect(() => {
+        setLocalInputText(inputText || "");
+    }, [inputText]);
 
     const handleBlur = () => {
         if (localInputText !== inputText) {
-            updateQuestionText(localInputText); // Actualizar el store solo al desenfocar
+            updateQuestionText(localInputText);
         }
     };
     const options = [
@@ -349,60 +403,6 @@ const DeviceFrame: React.FC<DeviceFrameProps> = ({
     );
 };
 
-const ImageTable: React.FC<{
-    uploadedImages: UploadedImage[]; // Se espera que `uploadedImages` provenga del store
-    onDelete: (fileName: string) => void;
-    onIncreaseTime: (fileName: string) => void;
-    onDecreaseTime: (fileName: string) => void;
-    disabled?: boolean;
-}> = ({ uploadedImages, onDelete, onIncreaseTime, onDecreaseTime, disabled }) => (
-    <TableContainer
-        sx={{
-            width: 500,
-        }}
-    >
-        <Table>
-            <TableHead>
-                <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell align="center">Time</TableCell>
-                    <TableCell align="center">Actions</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {uploadedImages.map((img) => (
-                    <TableRow key={img.id}>
-                        <TableCell>{img.fileName}</TableCell>
-                        <TableCell align="center">
-                            <Stack direction="row" spacing={1} alignItems="center">
-                                <IconButton
-                                    disabled={disabled}
-                                    onClick={() => onDecreaseTime(img.fileName!)}
-                                    size="small"
-                                >
-                                    <RemoveIcon />
-                                </IconButton>
-                                {img.time}s
-                                <IconButton
-                                    disabled={disabled}
-                                    onClick={() => onIncreaseTime(img.fileName!)}
-                                    size="small"
-                                >
-                                    <AddIcon />
-                                </IconButton>
-                            </Stack>
-                        </TableCell>
-                        <TableCell align="center">
-                            <Button onClick={() => onDelete(img.fileName!)}>Delete</Button>
-                        </TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
-    </TableContainer>
-);
-
-
 const QuestionForm: React.FC<{ choiceType: string; questionId: number, disabled: boolean }> = ({ choiceType, questionId, disabled }) => {
     const { questions, addChoice, removeChoice, updateChoice } = useCognitiveTaskStore((state) => state);
     const question = questions.find((q) => q.id === questionId);
@@ -434,10 +434,6 @@ const QuestionForm: React.FC<{ choiceType: string; questionId: number, disabled:
         return (
             <Box sx={{ mt: 3 }}>
                 <LinearScaleForm
-                    question={question.question}
-                    isRequired={question.required}
-                    fileUploadLabel={question.fileUploadLabel}
-                    deviceFrameOptions={question.deviceFrameOptions}
                     disabled={disabled}
                 />
             </Box>
@@ -450,7 +446,7 @@ const QuestionForm: React.FC<{ choiceType: string; questionId: number, disabled:
 export const SimpleItem: React.FC<{
     item: Choice;
     onDelete: (id: number) => void;
-    onChange: (id: number, key: keyof Choice, value: string) => void;
+    onChange: (id: number, key: "textInput" | "qualifier", value: string) => void;
     disabled: boolean;
 }> = ({ item, onDelete, onChange, disabled }) => (
     <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
@@ -475,7 +471,7 @@ export const SimpleItem: React.FC<{
     </Stack>
 );
 
-const LinearScaleForm: React.FC<LinearScaleProps> = ({ disabled }) => {
+const LinearScaleForm: React.FC<{ disabled?: boolean }> = ({ disabled }) => {
     const [startValue, setStartValue] = useState(1);
 
     return (
@@ -549,7 +545,7 @@ const LinearScaleForm: React.FC<LinearScaleProps> = ({ disabled }) => {
                 <FormControlLabel
                     disabled={disabled}
                     control={<Checkbox />}
-                    label={<Typography fontSize="14px">Show “Other” option</Typography>}
+                    label={<Typography fontSize="14px">Show "Other" option</Typography>}
                 />
                 <FormControlLabel
                     disabled={disabled}
@@ -579,22 +575,82 @@ const ImageUploadManager: React.FC<{
     <Stack
         sx={{
             display: "flex",
-            flexDirection: "row",
+            flexDirection: "column",
             width: "100%",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
+            gap: 2,
         }}
     >
         {/* Subida de imágenes */}
         <ImageUploadV2 disabled={disabled} handleImageUpload={onUpload} />
 
-        {/* Tabla de imágenes subidas */}
-        <ImageTable
-            uploadedImages={uploadedImages}
-            disabled={disabled}
-            onDelete={(fileName) => onDelete(fileName)}
-            onIncreaseTime={(fileName) => onIncreaseTime(fileName)}
-            onDecreaseTime={(fileName) => onDecreaseTime(fileName)}
-        />
+        {/* Lista de imágenes */}
+        {uploadedImages.length > 0 && (
+            <Box sx={{ width: '100%', maxWidth: 800 }}>
+                {uploadedImages.map((image) => (
+                    <Stack
+                        key={image.fileName}
+                        direction="row"
+                        alignItems="center"
+                        spacing={2}
+                        sx={{
+                            p: 1,
+                            border: '1px solid #e0e0e0',
+                            borderRadius: 1,
+                            mb: 1
+                        }}
+                    >
+                        {/* Vista previa de la imagen */}
+                        {(image.url || image.tempFile) && (
+                            <Box
+                                component="img"
+                                src={image.url || (image.tempFile ? URL.createObjectURL(image.tempFile) : '')}
+                                alt={image.fileName}
+                                sx={{
+                                    width: 50,
+                                    height: 50,
+                                    objectFit: 'cover',
+                                    borderRadius: 1
+                                }}
+                            />
+                        )}
+                        
+                        {/* Información de la imagen */}
+                        <Box sx={{ flexGrow: 1 }}>
+                            <Typography>{image.fileName}</Typography>
+                            <Typography variant="caption" color="textSecondary">
+                                {image.fileSizeMB ? `${image.fileSizeMB.toFixed(2)} MB` : ''}
+                            </Typography>
+                        </Box>
+
+                        {/* Controles de tiempo */}
+                        <Stack direction="row" spacing={1} alignItems="center">
+                            <IconButton
+                                size="small"
+                                onClick={() => onDecreaseTime(image.fileName)}
+                                disabled={!image.time || image.time <= 0}
+                            >
+                                <RemoveIcon />
+                            </IconButton>
+                            <Typography>{image.time || 0}s</Typography>
+                            <IconButton
+                                size="small"
+                                onClick={() => onIncreaseTime(image.fileName)}
+                            >
+                                <AddIcon />
+                            </IconButton>
+                        </Stack>
+
+                        {/* Botón de eliminar */}
+                        <IconButton
+                            onClick={() => onDelete(image.fileName)}
+                            color="error"
+                            size="small"
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    </Stack>
+                ))}
+            </Box>
+        )}
     </Stack>
 );

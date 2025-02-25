@@ -12,7 +12,12 @@ export const createCognitiveTask = async (
   try {
     await connectDB();
 
-    const { required, questions } = JSON.parse(event.body || "{}");
+    const { researchId, required, questions } = JSON.parse(event.body || "{}");
+
+    // Validar que el researchId esté presente
+    if (!researchId) {
+      return errorResponse(400, "Research ID is required.");
+    }
 
     // Validar que las preguntas sean válidas
     if (!questions || !Array.isArray(questions) || questions.length === 0) {
@@ -27,7 +32,7 @@ export const createCognitiveTask = async (
         );
       }
 
-      return {
+      const baseQuestion = {
         id: q.id,
         question: q.question,
         choiceType: q.choiceType,
@@ -39,16 +44,28 @@ export const createCognitiveTask = async (
         selectedFrame: q.selectedFrame || "No Frame",
         inputText: q.inputText || "",
         selectedOption: q.selectedOption || "",
-        uploadedFile: q.uploadedFile || null,
-        uploadedImages: q.uploadedImages || [],
         showConditionality: q.showConditionality ?? false,
         choices: q.choices || [],
         randomizeChoices: q.randomizeChoices ?? false,
         showOtherOption: q.showOtherOption ?? false,
       };
+
+      // Procesar imágenes según el tipo de pregunta
+      if (q.choiceType === "multipleImages") {
+        return {
+          ...baseQuestion,
+          images: Array.isArray(q.images) ? q.images : [],
+        };
+      } else {
+        // Para preguntas que no son multipleImages
+        return {
+          ...baseQuestion,
+          images: q.image ? [q.image] : [], // Si hay una imagen única, la convertimos en array
+        };
+      }
     });
 
-    const cognitiveTask = await CognitiveTask.create({ required, questions: formattedQuestions });
+    const cognitiveTask = await CognitiveTask.create({ researchId, required, questions: formattedQuestions });
     return successResponse(201, cognitiveTask);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -95,10 +112,14 @@ export const updateCognitiveTask = async (
     await connectDB();
 
     const id = event.pathParameters?.id;
-    const { required, questions } = JSON.parse(event.body || "{}");
+    const { researchId, required, questions } = JSON.parse(event.body || "{}");
 
     if (!id) {
       return errorResponse(400, "Cognitive Task ID is required.");
+    }
+
+    if (!researchId) {
+      return errorResponse(400, "Research ID is required.");
     }
 
     if (!questions || !Array.isArray(questions) || questions.length === 0) {
@@ -107,7 +128,7 @@ export const updateCognitiveTask = async (
 
     const updatedCognitiveTask = await CognitiveTask.findByIdAndUpdate(
       id,
-      { required, questions },
+      { researchId, required, questions },
       { new: true, runValidators: true }
     );
 

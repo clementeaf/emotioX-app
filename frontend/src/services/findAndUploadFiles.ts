@@ -1,19 +1,18 @@
 import { uploadFileToS3 } from "./uploadImageToS3";
 import { UploadedImage } from "../types/types";
-import { Question } from "../store/useCognitiveTaskStore";
+
+type UpdateImageFunction = (idOrFileName: number | string, image: UploadedImage) => void;
 
 /**
  * ✅ Función global para subir archivos a S3 y actualizar cualquier store dinámicamente.
  * @param filesToUpload - Lista de archivos a subir con sus IDs.
- * @param updateSingleImage - Función para actualizar una imagen única en el store.
- * @param updateMultipleImages - Función para actualizar imágenes múltiples en el store.
- * @param getStoreState - Función para obtener el estado actual del store.
+ * @param updateImage - Función para actualizar una imagen en el store (single o multiple).
+ * @param updateMultipleImages - Función opcional para actualizar múltiples imágenes.
  */
 export const findAndUploadFiles = async (
   filesToUpload: { id: number; file: File; isMultiple: boolean }[],
-  updateSingleImage: (id: number, image: UploadedImage) => void,
-  updateMultipleImages: (id: number, images: UploadedImage[]) => void,
-  getStoreState: () => { questions: Question[] }
+  updateImage: UpdateImageFunction,
+  updateMultipleImages?: (id: number, images: UploadedImage[]) => void
 ) => {
   if (filesToUpload.length === 0) {
     console.log("✅ No files to upload.");
@@ -21,13 +20,7 @@ export const findAndUploadFiles = async (
   }
 
   try {
-    const state = getStoreState();
-    if (!state || !Array.isArray(state.questions)) {
-      console.error("❌ Invalid store state or questions array");
-      return;
-    }
-
-    // Agrupamos los archivos por ID de pregunta
+    // Agrupamos los archivos por ID
     const filesByQuestionId = filesToUpload.reduce((acc, { id, file, isMultiple }) => {
       if (!acc[id]) {
         acc[id] = { files: [], isMultiple };
@@ -38,19 +31,9 @@ export const findAndUploadFiles = async (
 
     // Procesamos cada grupo de archivos
     await Promise.all(
-      Object.entries(filesByQuestionId).map(async ([questionId, { files, isMultiple }]) => {
+      Object.entries(filesByQuestionId).map(async ([id, { files, isMultiple }]) => {
         try {
-          const question = state.questions.find(q => q.id === parseInt(questionId));
-          
-          if (!question) {
-            console.error(`❌ Question with ID ${questionId} not found in store`);
-            return;
-          }
-
-          if (isMultiple && question.choiceType === "multipleImages") {
-            // Obtenemos las imágenes existentes que ya tienen URL de S3
-            const existingImages = question.uploadedImages?.filter((img: UploadedImage) => img.url) || [];
-            
+          if (isMultiple && updateMultipleImages) {
             // Subimos las nuevas imágenes
             const newUploadedImages = await Promise.all(
               files.map(async (file) => {
@@ -77,11 +60,9 @@ export const findAndUploadFiles = async (
             // Filtramos las imágenes que se subieron correctamente
             const validNewImages = newUploadedImages.filter((img): img is UploadedImage => img !== null);
             
-            // Combinamos las imágenes existentes con las nuevas
-            const allImages = [...existingImages, ...validNewImages];
-            console.log(`✅ Multiple files uploaded for question ID ${questionId}:`, allImages);
-            updateMultipleImages(parseInt(questionId), allImages);
-          } else if (!isMultiple) {
+            console.log(`✅ Multiple files uploaded for ID ${id}:`, validNewImages);
+            updateMultipleImages(parseInt(id), validNewImages);
+          } else {
             // Para imagen única, subimos solo el primer archivo
             const file = files[0];
             try {
@@ -96,15 +77,16 @@ export const findAndUploadFiles = async (
                 uploadedAt: new Date()
               };
               
-              console.log(`✅ Single file uploaded for question ID ${questionId}:`, uploadedImage);
-              updateSingleImage(parseInt(questionId), uploadedImage);
+              console.log(`✅ Single file uploaded for ID ${id}:`, uploadedImage);
+              // Usamos la función genérica de actualización
+              updateImage(parseInt(id), uploadedImage);
             } catch (error) {
-              console.error(`❌ Error uploading single file for question ${questionId}:`, error);
+              console.error(`❌ Error uploading single file for ID ${id}:`, error);
               throw error;
             }
           }
         } catch (err) {
-          console.error(`❌ Error processing files for question ID ${questionId}:`, err);
+          console.error(`❌ Error processing files for ID ${id}:`, err);
           throw err;
         }
       })

@@ -1,22 +1,28 @@
 import { create } from "zustand";
+import { UploadedImage } from "../types/types";
 
-export interface UploadedFile {
+export interface EyeTrackingImage {
+    id: number;
     fileName: string;
     fileSize: number;
-    url?: string;
+    tempFile?: File | null;
+    uploadedImage?: UploadedImage | null;
+    time?: number;
+    error?: boolean;
 }
 
-interface EyeTrackingStore {
+export interface EyeTrackingStore {
     required: boolean;
     setRequired: (value: boolean) => void;
 
     taskInstruction: string;
     setTaskInstruction: (value: string) => void;
 
-    uploadedFiles: UploadedFile[];
-    updateUploadedFile: (fileName: string, url: string) => void; // ✅ Nueva función
-    addUploadedFiles: (files: UploadedFile[]) => void;
-    removeUploadedFile: (fileName: string) => void;
+    uploadedImages: EyeTrackingImage[];
+    addTempImage: (file: File) => void;
+    updateUploadedImage: (fileName: string, image: UploadedImage) => void;
+    removeImage: (fileName: string) => void;
+    updateImageTime: (fileName: string, time: number) => void;
 
     randomize: boolean;
     setRandomize: (value: boolean) => void;
@@ -48,6 +54,9 @@ interface EyeTrackingStore {
 
     displayTime: string;
     setDisplayTime: (value: string) => void;
+
+    // Obtener archivos pendientes de subir
+    getFilesToUpload: () => Array<{ id: number; file: File; isMultiple: boolean }>;
 }
 
 export const useEyeTrackingStore = create<EyeTrackingStore>((set, get) => ({
@@ -57,20 +66,49 @@ export const useEyeTrackingStore = create<EyeTrackingStore>((set, get) => ({
     taskInstruction: "",
     setTaskInstruction: (value) => set({ taskInstruction: value }),
 
-    uploadedFiles: [],
-    addUploadedFiles: (files) =>
+    uploadedImages: [],
+    addTempImage: (file: File) =>
         set((state) => ({
-            uploadedFiles: [...state.uploadedFiles, ...files],
-        })),
-    removeUploadedFile: (fileName) =>
-        set((state) => ({
-            uploadedFiles: state.uploadedFiles.filter((file) => file.fileName !== fileName),
+            uploadedImages: [
+                ...state.uploadedImages,
+                {
+                    id: Date.now(),
+                    fileName: file.name,
+                    fileSize: file.size,
+                    tempFile: file,
+                    uploadedImage: null,
+                    time: 0,
+                    error: false
+                }
+            ],
         })),
 
-    updateUploadedFile: (fileName, url) =>
+    updateUploadedImage: (fileName, image) =>
         set((state) => ({
-            uploadedFiles: state.uploadedFiles.map((file) =>
-                file.fileName === fileName ? { ...file, url } : file
+            uploadedImages: state.uploadedImages.map((img) =>
+                img.fileName === fileName
+                    ? {
+                        ...img,
+                        uploadedImage: image,
+                        tempFile: null // Limpiamos el archivo temporal una vez subido
+                    }
+                    : img
+            ),
+        })),
+
+    removeImage: (fileName) =>
+        set((state) => ({
+            uploadedImages: state.uploadedImages.filter(
+                (img) => img.fileName !== fileName
+            ),
+        })),
+
+    updateImageTime: (fileName, time) =>
+        set((state) => ({
+            uploadedImages: state.uploadedImages.map((img) =>
+                img.fileName === fileName
+                    ? { ...img, time: Math.max(0, time) }
+                    : img
             ),
         })),
 
@@ -104,13 +142,16 @@ export const useEyeTrackingStore = create<EyeTrackingStore>((set, get) => ({
     displayTime: "10 secs",
     setDisplayTime: (value) => set({ displayTime: value }),
 
-    // ✅ Agregar `getFilesToUpload`
     getFilesToUpload: () => {
         const state = get();
-        return state.uploadedFiles.map((file, index) => ({
-            id: index,
-            file: new File([""], file.fileName),
-            isMultiple: true,
-        }));
+        return state.uploadedImages
+            .filter((img): img is EyeTrackingImage & { tempFile: File } => 
+                img.tempFile instanceof File
+            )
+            .map(img => ({
+                id: img.id,
+                file: img.tempFile,
+                isMultiple: true
+            }));
     },
 }));

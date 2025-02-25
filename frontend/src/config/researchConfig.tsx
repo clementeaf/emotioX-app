@@ -58,7 +58,7 @@ export const researchStagesConfig: Record<'AIMFramework' | 'BehaviouralResearch'
       { label: 'Implicit Association', component: <ImplicitAssociationView />, getStore: () => useImplicitAssociationStore.getState() },
       { label: 'Cognitive task', component: <CognitiveTaskView />,  getStore: () => useCognitiveTaskStore.getState()},
       { label: 'Eye Tracking', component: <EyeTrackingView />, getStore: () => useEyeTrackingStore.getState() },
-      { label: 'Thank you screen', component: <ThankYouScreenContainer />, getStore: () => () => useWelcomeScreenStore.getState().thankYouScreen },
+      { label: 'Thank you screen', component: <ThankYouScreenContainer />, getStore: () => useWelcomeScreenStore.getState().thankYouScreen },
     ],
     Recruit: [
       { label: 'Screener', component: <ScreenerScreenContainer /> },

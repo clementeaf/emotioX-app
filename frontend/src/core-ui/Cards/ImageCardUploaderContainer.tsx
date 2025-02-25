@@ -8,6 +8,7 @@ export function ImageCardUploaderContainer({
   id,
   nameOfObject,
   imageUploaded,
+  imageFormat,
   onNameChange,
   onImageUpload,
 }: TargetCardProps) {
@@ -35,7 +36,6 @@ export function ImageCardUploaderContainer({
         onChange={(e) => onNameChange(e.target.value)}
       />
 
-      {/* Pasamos solo el archivo a `onImageUpload` */}
       <ImageUpload
         handleImageUpload={(file) => onImageUpload(id, file)}
       />
@@ -46,12 +46,15 @@ export function ImageCardUploaderContainer({
             display: "flex",
             alignItems: "center",
             gap: 1,
+            fontSize: "0.875rem",
+            color: grey[700],
           }}
         >
           <img src={clip} alt="clip" style={{ width: 20 }} />
           {typeof imageUploaded === 'string' 
             ? imageUploaded.split('/').pop() 
             : imageUploaded.name}
+          {imageFormat && ` (${imageFormat})`}
         </Typography>
       )}
     </Box>

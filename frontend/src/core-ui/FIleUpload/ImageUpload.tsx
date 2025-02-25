@@ -53,7 +53,7 @@ export function ImageUpload({ handleImageUpload }: Omit<ImageUploadProps, "id">)
   }
 
   export function ImageUploadV2({ handleImageUpload, disabled }: ImageUploadV2Props) {
-    const { getRootProps, getInputProps } = useDropzone({
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
         accept: {
             'image/jpeg': [],
             'image/png': [],
@@ -61,10 +61,12 @@ export function ImageUpload({ handleImageUpload }: Omit<ImageUploadProps, "id">)
         },
         maxFiles: 1,
         maxSize: 5 * 1024 * 1024,
+        disabled,
         onDrop: (acceptedFiles) => {
             if (acceptedFiles.length > 0) {
                 const file = acceptedFiles[0];
-                handleImageUpload(file); // Llamar la función pasada como prop
+                console.log('Archivo subido:', file); // Para debug
+                handleImageUpload(file);
             }
         },
     });
@@ -82,11 +84,14 @@ export function ImageUpload({ handleImageUpload }: Omit<ImageUploadProps, "id">)
                 cursor: disabled ? "not-allowed" : "pointer",
                 backgroundColor: disabled ? "#f5f5f5" : "transparent",
                 "&:hover": { borderColor: !disabled ? grey[500] : "#E0E0E0" },
+                position: 'relative',
+                overflow: 'hidden'
             }}
         >
             <input
                 {...getInputProps()}
-                disabled={disabled} // Asegurarse de que esto esté correctamente configurado
+                disabled={disabled}
+                accept="image/jpeg,image/png,image/gif"
             />
             <Icon
                 sx={{
@@ -103,7 +108,7 @@ export function ImageUpload({ handleImageUpload }: Omit<ImageUploadProps, "id">)
                 lineHeight="18.3px"
                 color={disabled ? grey[400] : "inherit"}
             >
-                Click or drag file to this area to upload
+                {isDragActive ? "Drop the image here..." : "Click or drag file to this area to upload"}
             </Typography>
             <Typography
                 fontWeight={400}

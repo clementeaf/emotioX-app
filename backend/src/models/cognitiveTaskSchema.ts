@@ -7,17 +7,28 @@ const choiceSchema = new mongoose.Schema({
     qualifier: { type: String, enum: ["Qualify", "Disqualify"], required: true },
 });
 
-// Subesquema para las imágenes subidas (`uploadedImages`)
+// Subesquema para las imágenes subidas
 const uploadedImageSchema = new mongoose.Schema({
-    fileName: { type: String, required: true }, // Mantener requerido
-    fileSizeMB: { type: Number, required: false }, // Ahora opcional
-    fileUrl: { type: String, required: false }, // Ahora opcional
-    error: { type: Boolean, default: false }, // Proporcionar un valor por defecto
-    time: { type: Number, default: 0 }, // Valor por defecto si no se proporciona
+    fileName: { type: String, required: true },
+    url: { 
+        type: String, 
+        required: true,
+        validate: {
+            validator: function(v: string) {
+                return v.startsWith('https://') && v.includes('.s3.');
+            },
+            message: (props: { value: string }) => `${props.value} is not a valid S3 URL`
+        }
+    },
+    format: { type: String, required: true },
+    size: { type: Number, required: false },
+    fileSizeMB: { type: Number, required: false },
+    error: { type: Boolean, default: false },
+    time: { type: Number, default: 0 },
+    uploadedAt: { type: Date, default: Date.now }
 });
 
-
-// Subesquema para las preguntas (`questions`)
+// Subesquema para las preguntas
 const questionSchema = new mongoose.Schema({
     id: { type: Number, required: true },
     question: { type: String, required: true },
@@ -34,27 +45,32 @@ const questionSchema = new mongoose.Schema({
     selectedFrame: { type: String, default: "No Frame" },
     inputText: { type: String, default: "" },
     selectedOption: { type: String, default: "" },
-    uploadedFile: {
-        type: Buffer,
-        default: null,
-        set: (value: any) => {
-            if (value && value instanceof ArrayBuffer) {
-                return Buffer.from(value);
-            }
-            return null;
-        },
+    
+    // Campo unificado para imágenes
+    images: {
+        type: [uploadedImageSchema],
+        default: [],
+        validate: [{
+            validator: function(this: any, images: any[]) {
+                // Para tipos que no son multipleImages, solo permitir una imagen
+                if (this.choiceType !== "multipleImages" && images.length > 1) {
+                    return false;
+                }
+                return true;
+            },
+            message: 'Single choice questions can only have one image'
+        }]
     },
-    uploadedImages: { type: [uploadedImageSchema], default: [] }, // Lista vacía por defecto
+    
     showConditionality: { type: Boolean, default: false },
     choices: { type: [choiceSchema], default: [] },
     randomizeChoices: { type: Boolean, default: false },
     showOtherOption: { type: Boolean, default: false },
 });
 
-
-
-// Esquema principal para Cognitive Task (`questions` dentro de una tarea)
+// Esquema principal
 const cognitiveTaskSchema = new mongoose.Schema({
+    researchId: { type: String, required: true },
     required: { type: Boolean, default: true },
     questions: [questionSchema],
 });

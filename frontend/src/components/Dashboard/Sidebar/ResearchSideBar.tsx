@@ -53,9 +53,18 @@ export function ResearchSidebar({ frameworkType, stageType }: ResearchSidebarPro
       if (filesToUpload.length > 0) {
         await findAndUploadFiles(
           filesToUpload,
-          (id, image) => store.updateSingleImageReference(id, image),
-          (id, images) => store.updateMultipleImageReference(id, images),
-          () => ({ questions: store.questions || [] })
+          (id, image) => {
+            if (typeof store.updateUploadedImage === 'function') {
+              store.updateUploadedImage(Number(id), image);
+            } else if (typeof store.updateSingleImageReference === 'function') {
+              store.updateSingleImageReference(Number(id), image);
+            } else {
+              console.error('No valid update function found in store');
+            }
+          },
+          store.updateMultipleImageReference ? 
+            (id, images) => store.updateMultipleImageReference(id, images) : 
+            undefined
         );
       }
 
