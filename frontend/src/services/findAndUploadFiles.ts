@@ -1,5 +1,6 @@
-import { uploadFileToS3 } from "./uploadImageToS3";
+import { uploadFileToS3, uploadMultipleFilesToS3 } from "./uploadImageToS3";
 import { UploadedImage } from "../types/types";
+import { useCognitiveTaskStore } from "../store/useCognitiveTaskStore";
 
 type UpdateImageFunction = (idOrFileName: number | string, image: UploadedImage) => void;
 
@@ -19,7 +20,13 @@ export const findAndUploadFiles = async (
     return;
   }
 
+  // Set uploading state to true at start
+  const store = useCognitiveTaskStore.getState();
+  store.setIsUploading(true);
+
   try {
+    console.log("🚀 Starting upload process for files:", filesToUpload.map(f => f.file.name));
+
     // Agrupamos los archivos por ID
     const filesByQuestionId = filesToUpload.reduce((acc, { id, file, isMultiple }) => {
       if (!acc[id]) {
@@ -30,69 +37,75 @@ export const findAndUploadFiles = async (
     }, {} as Record<number, { files: File[], isMultiple: boolean }>);
 
     // Procesamos cada grupo de archivos
-    await Promise.all(
-      Object.entries(filesByQuestionId).map(async ([id, { files, isMultiple }]) => {
-        try {
-          if (isMultiple && updateMultipleImages) {
-            // Subimos las nuevas imágenes
-            const newUploadedImages = await Promise.all(
-              files.map(async (file) => {
-                try {
-                  const s3Url = await uploadFileToS3(file);
-                  console.log(`✅ File uploaded to S3: ${file.name} -> ${s3Url}`);
-                  return {
-                    id: `${Date.now()}-${file.name}`,
-                    fileName: file.name,
-                    url: s3Url,
-                    format: file.type,
-                    size: file.size,
-                    uploadedAt: new Date(),
-                    time: 0,
-                    error: false
-                  } as UploadedImage;
-                } catch (error) {
-                  console.error(`❌ Error uploading file ${file.name}:`, error);
-                  return null;
-                }
-              })
-            );
-            
-            // Filtramos las imágenes que se subieron correctamente
-            const validNewImages = newUploadedImages.filter((img): img is UploadedImage => img !== null);
-            
-            console.log(`✅ Multiple files uploaded for ID ${id}:`, validNewImages);
-            updateMultipleImages(parseInt(id), validNewImages);
+    const uploadPromises = Object.entries(filesByQuestionId).map(async ([id, { files, isMultiple }]) => {
+      try {
+        const numericId = parseInt(id);
+        
+        if (isMultiple) {
+          console.log(`📤 Uploading ${files.length} files for question ${id}:`, files.map(f => f.name));
+          
+          // Subir todos los archivos en paralelo
+          const s3Urls = await uploadMultipleFilesToS3(files);
+          
+          const uploadedImages = files.map((file, index) => ({
+            id: `${Date.now()}-${file.name}`,
+            fileName: file.name,
+            url: s3Urls[index],
+            format: file.type,
+            size: file.size,
+            uploadedAt: new Date(),
+            time: 0,
+            error: false
+          }));
+
+          console.log(`✅ All files uploaded for question ${id}:`, uploadedImages.map(img => img.fileName));
+          
+          // Actualizar el estado con todas las imágenes a la vez
+          if (updateMultipleImages) {
+            updateMultipleImages(numericId, uploadedImages);
           } else {
-            // Para imagen única, subimos solo el primer archivo
-            const file = files[0];
-            try {
-              const s3Url = await uploadFileToS3(file);
-              console.log(`✅ Single file uploaded to S3: ${file.name} -> ${s3Url}`);
-              const uploadedImage: UploadedImage = {
-                id: `${Date.now()}-${file.name}`,
-                fileName: file.name,
-                url: s3Url,
-                format: file.type,
-                size: file.size,
-                uploadedAt: new Date()
-              };
-              
-              console.log(`✅ Single file uploaded for ID ${id}:`, uploadedImage);
-              // Usamos la función genérica de actualización
-              updateImage(parseInt(id), uploadedImage);
-            } catch (error) {
-              console.error(`❌ Error uploading single file for ID ${id}:`, error);
-              throw error;
+            // Si no hay updateMultipleImages, actualizamos una por una
+            for (const image of uploadedImages) {
+              updateImage(numericId, image);
+              // Pequeña pausa entre actualizaciones para evitar problemas de estado
+              await new Promise(resolve => setTimeout(resolve, 100));
             }
           }
-        } catch (err) {
-          console.error(`❌ Error processing files for ID ${id}:`, err);
-          throw err;
+        } else {
+          console.log(`📤 Uploading single file for question ${id}:`, files[0].name);
+          const s3Url = await uploadFileToS3(files[0]);
+          
+          const uploadedImage: UploadedImage = {
+            id: `${Date.now()}-${files[0].name}`,
+            fileName: files[0].name,
+            url: s3Url,
+            format: files[0].type,
+            size: files[0].size,
+            uploadedAt: new Date(),
+            time: 0,
+            error: false
+          };
+          
+          console.log(`✅ Single file uploaded for question ${id}:`, uploadedImage.fileName);
+          updateImage(numericId, uploadedImage);
         }
-      })
-    );
+      } catch (err) {
+        console.error(`❌ Error processing files for question ${id}:`, err);
+        throw err;
+      }
+    });
+
+    // Esperar a que TODAS las subidas terminen
+    await Promise.all(uploadPromises);
+    
+    // Esperar un momento adicional para asegurar que el estado se ha actualizado completamente
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    console.log("✅ All files have been uploaded successfully");
+    store.setIsUploading(false);
   } catch (error) {
-    console.error("❌ Error uploading files:", error);
+    console.error("❌ Error during file upload process:", error);
+    useCognitiveTaskStore.getState().setIsUploading(false);
     throw error;
   }
 };

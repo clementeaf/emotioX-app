@@ -48,10 +48,27 @@ const questionSchema = new mongoose.Schema({
     
     // Campo unificado para imágenes
     images: {
-        type: [uploadedImageSchema],
+        type: [{
+            type: mongoose.Schema.Types.Mixed,
+            validate: {
+                validator: function(v: string | { url: string; fileName?: string; format?: string }) {
+                    // Validar si es una URL de S3
+                    if (typeof v === 'string') {
+                        return v.startsWith('https://') && v.includes('.s3.');
+                    }
+                    // Validar si es un objeto de imagen
+                    if (typeof v === 'object' && v !== null) {
+                        return typeof v.url === 'string' && v.url.startsWith('https://') && v.url.includes('.s3.');
+                    }
+                    return false;
+                },
+                message: (props: { value: string | { url: string } }) => 
+                    `${typeof props.value === 'string' ? props.value : props.value.url} is not a valid S3 URL or image object`
+            }
+        }],
         default: [],
         validate: [{
-            validator: function(this: any, images: any[]) {
+            validator: function(this: { choiceType: string }, images: Array<string | { url: string }>) {
                 // Para tipos que no son multipleImages, solo permitir una imagen
                 if (this.choiceType !== "multipleImages" && images.length > 1) {
                     return false;

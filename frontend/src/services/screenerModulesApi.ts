@@ -106,14 +106,46 @@ export const submitImplicitAssociationData = async (researchId: string): Promise
  */
 export const submitCognitiveTaskData = async (researchId: string): Promise<void> => {
   try {
-    const { required, questions } = useCognitiveTaskStore.getState();
-    console.log("🔍 Estado actual del store:", 
-      questions.map(q => ({
+    const store = useCognitiveTaskStore.getState();
+    const { required, questions, isUploading } = store;
+    
+    // Check if uploads are still in progress
+    if (isUploading) {
+      console.log("⏳ Upload still in progress, waiting...");
+      throw new Error('Please wait for all images to be uploaded to S3');
+    }
+    
+    // Verificar que todas las imágenes estén subidas a S3
+    const pendingUploads = questions.some(q => {
+      const hasPendingImages = q.images.some(img => img.tempFile || !img.url);
+      if (hasPendingImages) {
+        console.log(`⚠️ Question ${q.id} has pending uploads:`, 
+          q.images.map(img => ({
+            fileName: img.fileName,
+            hasTempFile: Boolean(img.tempFile),
+            hasUrl: Boolean(img.url)
+          }))
+        );
+      }
+      return hasPendingImages;
+    });
+
+    if (pendingUploads) {
+      console.log("❌ Found pending uploads, cannot submit yet");
+      throw new Error('Please wait for all images to be uploaded to S3');
+    }
+    
+    // Log detallado del estado inicial
+    const relevantQuestions = questions.filter(q => q.choiceType === "multipleImages");
+    console.log("🔍 Estado detallado de preguntas con múltiples imágenes:", 
+      relevantQuestions.map(q => ({
         id: q.id,
-        images: q.images.map(img => ({
+        totalImages: q.images.length,
+        imageDetails: q.images.map(img => ({
           fileName: img.fileName,
           url: img.url,
-          tempFile: img.tempFile ? 'present' : 'none'
+          hasUrl: Boolean(img.url),
+          hasTempFile: Boolean(img.tempFile)
         }))
       }))
     );
@@ -137,46 +169,71 @@ export const submitCognitiveTaskData = async (researchId: string): Promise<void>
         showOtherOption: q.showOtherOption,
       };
 
-      // Procesar imágenes
-      const images = q.images
-        .filter(img => img.url) // Solo incluimos imágenes que ya tienen URL de S3
-        .map((img) => ({
-          id: img.id,
-          fileName: img.fileName,
-          url: img.url,
-          format: img.format,
-          size: img.size ? (img.size / (1024 * 1024)).toFixed(2) : 0,
-          uploadedAt: img.uploadedAt,
-          time: img.time || 0,
-          error: img.error || false,
-        }));
+      // Procesar imágenes con logs detallados
+      console.log(`\n🔍 Procesando imágenes para pregunta ${q.id}:`);
+      console.log('Estado inicial de imágenes:', q.images);
+      
+      const processedImages = q.images
+        .filter(img => {
+          const hasUrl = Boolean(img.url);
+          console.log(`Imagen ${img.fileName}: tiene URL? ${hasUrl}`, img.url);
+          return hasUrl;
+        })
+        .map((img) => {
+          const processed = {
+            fileName: img.fileName,
+            url: img.url,
+            format: img.format,
+            size: img.size ? (img.size / (1024 * 1024)).toFixed(2) : 0,
+            uploadedAt: img.uploadedAt,
+            time: img.time || 0,
+            error: img.error || false,
+          };
+          console.log(`Imagen procesada ${img.fileName}:`, processed);
+          return processed;
+        });
 
-      console.log(`🔍 Imágenes procesadas para pregunta ${q.id}:`, images);
+      console.log(`Total de imágenes procesadas para pregunta ${q.id}:`, processedImages.length);
 
-      // Si es una pregunta con una sola imagen, incluimos la primera como image
+      // Si es una pregunta con una sola imagen
       if (q.choiceType !== "multipleImages") {
         const result = {
           ...baseData,
-          image: images[0] || null,
-          images: [] // Aseguramos que no haya conflicto
+          image: processedImages[0] || null,
+          images: []
         };
-        console.log(`🔍 Pregunta ${q.id} (single):`, { image: result.image });
+        console.log(`Pregunta ${q.id} (single):`, { image: result.image });
         return result;
       }
 
-      // Si es una pregunta con múltiples imágenes
+      // Para preguntas con múltiples imágenes
+      const urls = processedImages.map(img => img.url);
+      console.log(`URLs finales para pregunta ${q.id}:`, urls);
+      
       const result = {
         ...baseData,
-        images,
-        image: null // Aseguramos que no haya conflicto
+        images: urls,
+        image: null
       };
-      console.log(`🔍 Pregunta ${q.id} (multiple):`, { images: result.images });
+      console.log(`Pregunta ${q.id} (multiple) - Resultado final:`, { 
+        images: result.images,
+        totalImages: result.images.length 
+      });
       return result;
     });
 
     const payload = { researchId, required, questions: formattedQuestions };
-
     console.log("🚀 Payload final a enviar:", JSON.stringify(payload, null, 2));
+
+    // Verificación final de imágenes en preguntas multipleImages
+    const multipleImagesQuestions = payload.questions.filter(q => q.choiceType === "multipleImages");
+    console.log("📊 Verificación final de preguntas con múltiples imágenes:", 
+      multipleImagesQuestions.map(q => ({
+        id: q.id,
+        totalImages: q.images.length,
+        images: q.images
+      }))
+    );
 
     const response = await api.post("/cognitive-task", payload);
     console.log("✅ Cognitive Task data submitted successfully:", response.data);

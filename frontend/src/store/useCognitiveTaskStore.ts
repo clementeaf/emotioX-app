@@ -28,22 +28,18 @@ export interface Question {
 
 export interface CognitiveTaskStore {
   required: boolean;
-  setRequired: (value: boolean) => void;
-
   questions: Question[];
+  isUploading: boolean;
+  setRequired: (value: boolean) => void;
   toggleVisibility: (id: number) => void;
   setQuestionRequired: (id: number, value: boolean) => void;
   updateQuestionText: (id: number, text: string) => void;
-
-  // Funciones unificadas para manejo de imágenes
   updateImageFile: (id: number, file: File, isMultiple: boolean) => void;
   updateUploadedImage: (id: number, image: UploadedImage) => void;
   removeImage: (id: number, fileName: string) => void;
   updateImageTime: (id: number, fileName: string, time: number) => void;
-
   updateSelectedOption: (id: number, option: string) => void;
   updateSelectedFrame: (id: number, frame: string) => void;
-
   toggleConditionality: (id: number) => void;
   setChoiceType: (id: number, type: "singleChoice" | "multipleChoice" | "linearScale" | "multipleImages") => void;
   addChoice: (id: number) => void;
@@ -51,16 +47,13 @@ export interface CognitiveTaskStore {
   updateChoice: (id: number, choiceId: number, key: keyof Choice, value: string) => void;
   toggleRandomizeChoices: (id: number) => void;
   toggleShowOtherOption: (id: number) => void;
-
   getFilesToUpload: () => { id: number; file: File; isMultiple: boolean }[];
-
-  // Asegurarse de que images siempre sea un array al crear una nueva pregunta
   addQuestion: () => void;
+  setIsUploading: (status: boolean) => void;
 }
 
 export const useCognitiveTaskStore = create<CognitiveTaskStore>((set, get) => ({
   required: true,
-
   questions: [
     // 2 Single Choice
     {
@@ -230,6 +223,7 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set, get) => ({
       images: [] as UploadedImage[]
     },
   ],
+  isUploading: false,
 
   setRequired: (value) =>
     set(() => ({
@@ -244,7 +238,6 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set, get) => ({
           : q
       ),
     })),
-
 
   setQuestionRequired: (id, value) =>
     set((state) => ({
@@ -299,6 +292,18 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set, get) => ({
   updateUploadedImage: (id, image) => {
     console.log("🔍 updateUploadedImage - Entrada:", { id, image });
     set((state) => {
+      const question = state.questions.find(q => q.id === id);
+      if (!question) {
+        console.log("❌ Question not found:", id);
+        return state;
+      }
+
+      console.log("🔍 Current question state:", {
+        id: question.id,
+        choiceType: question.choiceType,
+        currentImages: question.images
+      });
+
       const newState = {
         questions: state.questions.map((q) =>
           q.id === id
@@ -315,9 +320,14 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set, get) => ({
             : q
         ),
       };
-      console.log("🔍 updateUploadedImage - Estado actualizado:", 
-        newState.questions.find(q => q.id === id)?.images
-      );
+
+      const updatedQuestion = newState.questions.find(q => q.id === id);
+      console.log("🔍 Updated question state:", {
+        id: updatedQuestion?.id,
+        choiceType: updatedQuestion?.choiceType,
+        updatedImages: updatedQuestion?.images
+      });
+
       return newState;
     });
   },
@@ -514,4 +524,6 @@ export const useCognitiveTaskStore = create<CognitiveTaskStore>((set, get) => ({
         }
       ],
     })),
+
+  setIsUploading: (status: boolean) => set({ isUploading: status }),
 }));
